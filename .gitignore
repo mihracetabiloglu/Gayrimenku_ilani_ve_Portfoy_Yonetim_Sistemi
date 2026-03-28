@@ -4,3 +4,4 @@ mvnw
 mvnw.cmd
 .idea/
 .vscode/
+src/main/resources/application.yml
