@@ -1,9 +1,14 @@
 package com.gayrimenkul.system.repository;
 
 import com.gayrimenkul.system.entity.SystemLog;
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SystemLogRepository extends JpaRepository<SystemLog, Long> {
+    // Kullanıcı ID'sine göre logları getirme metodu
+    List<SystemLog> findByUserId(Long userId);
 }
