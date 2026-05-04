@@ -50,4 +50,3 @@ Uygulama başarıyla çalıştığında http://localhost:8080 adresinden erişil
 - MySQL (Bulut üzerinde Railway.app aracılığıyla host edilmektedir)
 
 - Maven (Bağımlılık yönetimi)
-
