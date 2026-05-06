@@ -45,6 +45,10 @@ public class DistrictService {
                 .orElseThrow(() -> new RuntimeException("İlçe bulunamadı"));
     }
 
+    public List<District> getAllDistricts() {
+        return districtRepository.findAll();
+    }
+
     // Şehir bazlı listeleme
     public List<District> getDistrictsByCityId(Long cityId) {
         return districtRepository.findByCityId(cityId);

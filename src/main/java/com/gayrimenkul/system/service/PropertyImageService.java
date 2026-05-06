@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.Map;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,7 +45,7 @@ public class PropertyImageService {
 
     private String uploadToCloudinary(MultipartFile image) throws IOException {
         // Cloudinary kütüphanesini kullanarak gerçek yükleme yapıyoruz
-        Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.emptyMap());
+        Map<String, Object> uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.emptyMap());
         // Cloudinary'nin bize döndürdüğü sonuçtan gerçek URL'yi alıyoruz
         return uploadResult.get("url").toString(); // Cloudinary'nin verdiği gerçek link
     }
