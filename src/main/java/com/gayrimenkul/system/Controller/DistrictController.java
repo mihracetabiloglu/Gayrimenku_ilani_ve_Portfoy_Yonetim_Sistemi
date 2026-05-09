@@ -5,6 +5,7 @@ import com.gayrimenkul.system.service.DistrictService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,17 +33,20 @@ public class DistrictController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<District> addDistrict(@RequestBody District district) {
         District savedDistrict = districtService.addDistrict(district);
         return new ResponseEntity<>(savedDistrict, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<District> updateDistrict(@PathVariable Long id, @RequestBody District district) {
         return ResponseEntity.ok(districtService.updateDistrict(id, district));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteDistrict(@PathVariable Long id) {
         districtService.deleteDistrict(id);
         return ResponseEntity.noContent().build();

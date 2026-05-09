@@ -5,6 +5,7 @@ import com.gayrimenkul.system.service.SystemLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,16 +18,19 @@ public class SystemLogController {
     private final SystemLogService systemLogService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<SystemLog>> getAllLogs() {
         return ResponseEntity.ok(systemLogService.getAllLogs());
     }
 
     @GetMapping("/user/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<SystemLog>> getLogsByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(systemLogService.getLogsByUserId(userId));
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SystemLog> saveLog(@RequestBody SystemLog systemLog) {
         SystemLog savedLog = systemLogService.saveLog(systemLog);
         return new ResponseEntity<>(savedLog, HttpStatus.CREATED);

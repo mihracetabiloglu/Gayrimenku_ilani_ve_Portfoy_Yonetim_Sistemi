@@ -5,6 +5,7 @@ import com.gayrimenkul.system.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class CategoryController {
 
     // 3. Yeni kategori ekle
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Category> addCategory(@RequestBody Category category) {
         Category newCategory = categoryService.addCategory(category);
         return new ResponseEntity<>(newCategory, HttpStatus.CREATED); // 201 Created döner
@@ -39,6 +41,7 @@ public class CategoryController {
 
     // 4. Kategori güncelle
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category updatedCategory) {
         Category category = categoryService.updateCategory(id, updatedCategory);
         return ResponseEntity.ok(category);
@@ -46,6 +49,7 @@ public class CategoryController {
 
     // 5. Kategori sil
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build(); // 204 No Content döner

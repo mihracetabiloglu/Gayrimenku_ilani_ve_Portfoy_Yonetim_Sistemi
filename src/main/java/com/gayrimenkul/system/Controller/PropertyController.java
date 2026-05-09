@@ -5,6 +5,7 @@ import com.gayrimenkul.system.service.PropertyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -28,17 +29,20 @@ public class PropertyController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
     public ResponseEntity<Property> createProperty(@RequestBody Property property) {
         Property savedProperty = propertyService.createProperty(property);
         return new ResponseEntity<>(savedProperty, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
     public ResponseEntity<Property> updateProperty(@PathVariable Long id, @RequestBody Property property) {
         return ResponseEntity.ok(propertyService.updateProperty(id, property));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
     public ResponseEntity<Void> deleteProperty(@PathVariable Long id) {
         propertyService.deleteProperty(id);
         return ResponseEntity.noContent().build();

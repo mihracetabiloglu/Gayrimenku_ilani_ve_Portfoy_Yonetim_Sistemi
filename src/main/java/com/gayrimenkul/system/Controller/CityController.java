@@ -5,6 +5,7 @@ import com.gayrimenkul.system.service.CityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class CityController {
 
     // 3. Yeni şehir ekle
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<City> addCity(@RequestBody City city) {
         // Yeni kayıtlarda ID'nin boş olduğundan emin olmak iyi bir güvenlik pratiğidir
         city.setId(null); 
@@ -41,6 +43,7 @@ public class CityController {
 
     // 4. Şehir güncelle
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<City> updateCity(@PathVariable Long id, @RequestBody City city) {
         // URL'den gelen ID ile Body'den gelen nesneyi eşleştiriyoruz
         city.setId(id);
@@ -50,6 +53,7 @@ public class CityController {
 
     // 5. Şehir sil
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCity(@PathVariable Long id) {
         cityService.deleteCity(id);
         return ResponseEntity.noContent().build(); // 204 No Content
