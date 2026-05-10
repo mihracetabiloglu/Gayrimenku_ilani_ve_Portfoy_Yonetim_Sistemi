@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EmlakPrime | Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B1F3A;--navy-mid:#163258;--navy-light:#1E4480;
+  --accent:#C9A84C;--accent-light:#E8C97A;
+  --white:#FFFFFF;--gray-50:#F8F9FB;--gray-100:#EFF1F5;
+  --gray-200:#DDE1EA;--gray-400:#9AA3B2;--gray-600:#5A6478;--gray-800:#2C3447;
+  --success:#1D9E75;--danger:#E24B4A;--warning:#BA7517;--info:#185FA5;
+  --shadow-lg:0 12px 40px rgba(11,31,58,.18);
+  --radius-sm:6px;--radius-md:12px;
+  --font-display:'Playfair Display',serif;--font-body:'DM Sans',sans-serif;
+  --transition:all .25s cubic-bezier(.4,0,.2,1);
+  --sidebar-w:260px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:#F0F2F7;color:var(--gray-800);min-height:100vh;display:flex;overflow-x:hidden}
+.sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);height:100vh;position:fixed;top:0;left:0;z-index:200;background:var(--navy);display:flex;flex-direction:column;overflow-y:auto;border-right:1px solid rgba(255,255,255,.06)}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:1.25rem 1.25rem 1rem;border-bottom:1px solid rgba(255,255,255,.07);text-decoration:none}
+.logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--accent),var(--accent-light));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--navy);font-family:var(--font-display);flex-shrink:0}
+.logo-text{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--white);letter-spacing:-.3px}
+.logo-text span{color:var(--accent)}
+.logo-sub{font-size:.65rem;font-weight:500;color:rgba(201,168,76,.7);letter-spacing:.8px;text-transform:uppercase;display:block;margin-top:1px}
+.sidebar-section{padding:.75rem 0 .25rem}
+.sidebar-section-label{font-size:.65rem;font-weight:700;color:rgba(255,255,255,.28);letter-spacing:1.2px;text-transform:uppercase;padding:.25rem 1.25rem .35rem}
+.nav-item{display:flex;align-items:center;gap:10px;padding:.6rem 1.25rem;cursor:pointer;color:rgba(255,255,255,.6);font-size:.875rem;font-weight:500;border:none;background:none;width:100%;text-align:left;transition:var(--transition);font-family:var(--font-body);position:relative}
+.nav-item:hover{color:var(--white);background:rgba(255,255,255,.05)}
+.nav-item.active{color:var(--accent-light);background:rgba(201,168,76,.1)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);border-radius:0 3px 3px 0}
+.nav-icon{font-size:1rem;width:18px;text-align:center;flex-shrink:0}
+.nav-group-toggle{display:flex;align-items:center;gap:10px;padding:.6rem 1.25rem;cursor:pointer;color:rgba(255,255,255,.6);font-size:.875rem;font-weight:500;border:none;background:none;width:100%;text-align:left;transition:var(--transition);font-family:var(--font-body)}
+.nav-group-toggle:hover{color:var(--white);background:rgba(255,255,255,.05)}
+.nav-group-toggle .arrow{margin-left:auto;font-size:.7rem;transition:transform .2s;color:rgba(255,255,255,.3)}
+.nav-group-toggle.open .arrow{transform:rotate(180deg)}
+.nav-sub{overflow:hidden;max-height:0;transition:max-height .3s ease}
+.nav-sub.open{max-height:500px}
+.nav-sub-item{display:flex;align-items:center;gap:8px;padding:.48rem 1.25rem .48rem 2.75rem;cursor:pointer;color:rgba(255,255,255,.45);font-size:.82rem;font-weight:400;border:none;background:none;width:100%;text-align:left;transition:var(--transition);font-family:var(--font-body)}
+.nav-sub-item:hover{color:rgba(255,255,255,.85);background:rgba(255,255,255,.04)}
+.nav-sub-item.active{color:var(--accent-light)}
+.nav-sub-item[onclick*="user-detail"]{display:none}
+.nav-sub-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.sidebar-logout{margin-top:auto;border-top:1px solid rgba(255,255,255,.07);padding:.75rem}
+.btn-logout{display:flex;align-items:center;gap:10px;width:100%;padding:.65rem 1rem;border-radius:var(--radius-sm);background:rgba(226,75,74,.1);color:#F07F7E;font-size:.875rem;font-weight:600;border:1px solid rgba(226,75,74,.2);cursor:pointer;transition:var(--transition);font-family:var(--font-body)}
+.btn-logout:hover{background:rgba(226,75,74,.2)}
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--gray-100);padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between}
+.page-breadcrumb{font-size:.82rem;color:var(--gray-400)}
+.page-breadcrumb span{color:var(--navy);font-weight:600}
+.topbar-right{display:flex;align-items:center;gap:.75rem}
+.topbar-btn{display:flex;align-items:center;gap:.35rem;padding:.4rem .85rem;border-radius:var(--radius-sm);font-size:.82rem;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);color:var(--gray-600);background:var(--white);transition:var(--transition);font-family:var(--font-body)}
+.topbar-btn:hover{border-color:var(--navy);color:var(--navy)}
+.notif-dot{width:7px;height:7px;background:var(--danger);border-radius:50%;margin-left:-.1rem;margin-bottom:.6rem}
+.admin-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--navy-light));color:var(--accent-light);font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.content{flex:1;padding:2rem}
+.page{display:none}
+.page.active{display:block}
+.page-header{margin-bottom:1.75rem}
+.page-title{font-family:var(--font-display);font-size:1.6rem;font-weight:700;color:var(--navy);margin-bottom:.25rem}
+.page-desc{font-size:.88rem;color:var(--gray-400)}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;margin-bottom:2rem}
+.stat-card{background:var(--white);border-radius:var(--radius-md);padding:1.25rem;border:1px solid var(--gray-100);position:relative;overflow:hidden}
+.stat-card::after{content:'';position:absolute;top:0;right:0;bottom:0;width:4px}
+.stat-card.blue::after{background:var(--info)}
+.stat-card.green::after{background:var(--success)}
+.stat-card.gold::after{background:var(--accent)}
+.stat-card.red::after{background:var(--danger)}
+.stat-icon{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:.75rem}
+.stat-icon.blue{background:rgba(24,95,165,.1);color:var(--info)}
+.stat-icon.green{background:rgba(29,158,117,.1);color:var(--success)}
+.stat-icon.gold{background:rgba(201,168,76,.12);color:#a07b25}
+.stat-icon.red{background:rgba(226,75,74,.1);color:var(--danger)}
+.stat-num{font-family:var(--font-display);font-size:1.7rem;font-weight:700;color:var(--navy);line-height:1}
+.stat-label{font-size:.78rem;color:var(--gray-400);margin-top:.3rem}
+.table-card{background:var(--white);border-radius:var(--radius-md);border:1px solid var(--gray-100);overflow:hidden;margin-bottom:1.5rem}
+.table-head{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--gray-100)}
+.table-title{font-size:.95rem;font-weight:700;color:var(--navy)}
+.btn-sm{padding:.35rem .85rem;border-radius:var(--radius-sm);font-size:.78rem;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);color:var(--gray-600);background:var(--white);transition:var(--transition);font-family:var(--font-body)}
+.btn-sm:hover{border-color:var(--navy);color:var(--navy)}
+.btn-sm.primary{background:var(--navy);color:var(--white);border-color:var(--navy)}
+.btn-sm.primary:hover{background:var(--navy-light)}
+.btn-sm.danger{background:rgba(226,75,74,.08);color:var(--danger);border-color:rgba(226,75,74,.25)}
+.btn-sm.danger:hover{background:rgba(226,75,74,.18)}
+.btn-sm.success{background:rgba(29,158,117,.08);color:var(--success);border-color:rgba(29,158,117,.25)}
+table{width:100%;border-collapse:collapse}
+th{font-size:.72rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.7px;padding:.75rem 1.25rem;text-align:left;border-bottom:1px solid var(--gray-100);background:var(--gray-50)}
+td{padding:.85rem 1.25rem;font-size:.875rem;color:var(--gray-800);border-bottom:1px solid var(--gray-100)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--gray-50)}
+.empty-row td{text-align:center;color:var(--gray-400);font-style:italic;padding:2rem}
+.badge{display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:50px;font-size:.72rem;font-weight:700}
+.badge-active{background:rgba(29,158,117,.1);color:#0b6b4a}
+.badge-passive{background:rgba(90,100,120,.1);color:var(--gray-600)}
+.badge-admin{background:rgba(83,74,183,.12);color:#3e37a0}
+.badge-agent{background:rgba(24,95,165,.1);color:var(--info)}
+.badge-user{background:var(--gray-100);color:var(--gray-600)}
+.badge-satilik{background:rgba(11,31,58,.08);color:var(--navy)}
+.badge-kiralik{background:rgba(201,168,76,.12);color:#8a6b25}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.5rem}
+.form-card{background:var(--white);border-radius:var(--radius-md);border:1px solid var(--gray-100);padding:1.5rem;margin-bottom:1.5rem}
+.form-card-title{font-size:.95rem;font-weight:700;color:var(--navy);margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:1px solid var(--gray-100)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-grid.one{grid-template-columns:1fr}
+.field label{font-size:.75rem;font-weight:600;color:var(--gray-600);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:.4rem}
+.field input,.field select,.field textarea{width:100%;padding:.6rem .9rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:.9rem;font-family:var(--font-body);color:var(--gray-800);background:var(--gray-50);transition:var(--transition);outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--navy);background:var(--white);box-shadow:0 0 0 3px rgba(11,31,58,.06)}
+.field textarea{resize:vertical;min-height:90px}
+.form-actions{display:flex;gap:.75rem;justify-content:flex-end;padding-top:1rem;border-top:1px solid var(--gray-100);margin-top:.5rem}
+.btn-primary{padding:.6rem 1.5rem;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--navy),var(--navy-light));color:var(--white);font-size:.875rem;font-weight:600;border:none;cursor:pointer;transition:var(--transition);font-family:var(--font-body)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(11,31,58,.25)}
+.btn-ghost{padding:.6rem 1.25rem;border-radius:var(--radius-sm);background:none;color:var(--gray-600);font-size:.875rem;font-weight:600;border:1.5px solid var(--gray-200);cursor:pointer;transition:var(--transition);font-family:var(--font-body)}
+.btn-ghost:hover{border-color:var(--gray-400);color:var(--gray-800)}
+.log-item{display:flex;align-items:flex-start;gap:1rem;padding:.85rem 1.25rem;border-bottom:1px solid var(--gray-100)}
+.log-item:last-child{border-bottom:none}
+.log-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:.35rem}
+.log-dot.info{background:var(--info)}.log-dot.success{background:var(--success)}.log-dot.warn{background:var(--warning)}.log-dot.error{background:var(--danger)}
+.log-body{flex:1}
+.log-msg{font-size:.875rem;color:var(--gray-800)}
+.log-meta{font-size:.75rem;color:var(--gray-400);margin-top:.2rem}
+.log-level{font-size:.68rem;font-weight:700;padding:.15rem .55rem;border-radius:50px;flex-shrink:0;margin-top:.15rem}
+.log-level.info{background:rgba(24,95,165,.1);color:var(--info)}
+.log-level.success{background:rgba(29,158,117,.1);color:var(--success)}
+.log-level.warn{background:rgba(186,117,23,.12);color:var(--warning)}
+.log-level.error{background:rgba(226,75,74,.1);color:var(--danger)}
+.empty-log{padding:2rem 1.25rem;text-align:center;color:var(--gray-400);font-style:italic;font-size:.875rem}
+.search-bar{display:flex;gap:.75rem;margin-bottom:1.25rem;align-items:center;flex-wrap:wrap}
+.search-bar input{flex:1;min-width:180px;padding:.55rem .9rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:.875rem;font-family:var(--font-body);color:var(--gray-800);background:var(--white);outline:none;transition:var(--transition)}
+.search-bar input:focus{border-color:var(--navy)}
+.search-bar select{padding:.55rem .9rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:.82rem;font-family:var(--font-body);color:var(--gray-700);background:var(--white);outline:none;cursor:pointer}
+.sys-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:1.5rem}
+.sys-card{background:var(--white);border-radius:var(--radius-md);padding:1.25rem;border:1px solid var(--gray-100)}
+.sys-label{font-size:.75rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.7px;margin-bottom:.4rem}
+.sys-val{font-size:1.1rem;font-weight:700;color:var(--navy)}
+.progress-bar{height:6px;background:var(--gray-100);border-radius:50px;overflow:hidden;margin-top:.5rem}
+.progress-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--accent),var(--accent-light))}
+.progress-fill.blue{background:linear-gradient(90deg,var(--info),#378ADD)}
+.progress-fill.green{background:linear-gradient(90deg,var(--success),#5DCAA5)}
+.detail-card{background:var(--white);border-radius:var(--radius-md);border:1px solid var(--gray-100);padding:1.5rem;margin-bottom:1.5rem}
+.detail-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--gray-100)}
+.user-ava{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--navy-mid),var(--navy-light));display:flex;align-items:center;justify-content:center;color:var(--accent-light);font-size:1.1rem;font-weight:700;flex-shrink:0}
+.detail-info h3{font-size:1rem;font-weight:700;color:var(--navy)}
+.detail-info p{font-size:.82rem;color:var(--gray-400);margin-top:.2rem}
+.detail-rows{display:flex;flex-direction:column;gap:.65rem}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--gray-50)}
+.detail-row:last-child{border-bottom:none}
+.detail-key{font-size:.82rem;color:var(--gray-500)}
+.detail-val{font-size:.875rem;font-weight:600;color:var(--gray-800)}
+.toast{position:fixed;bottom:1.75rem;right:1.75rem;z-index:9999;background:var(--navy);color:var(--white);padding:.8rem 1.4rem;border-radius:var(--radius-md);font-size:.875rem;font-weight:500;box-shadow:var(--shadow-lg);transform:translateY(80px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;border-left:4px solid var(--accent)}
+.toast.show{transform:translateY(0);opacity:1}
+.modal-overlay{position:fixed;inset:0;z-index:800;background:rgba(11,31,58,.45);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-box{background:var(--white);border-radius:var(--radius-md);padding:1.75rem;max-width:400px;width:90%;transform:translateY(20px) scale(.97);transition:transform .25s ease;box-shadow:var(--shadow-lg)}
+.modal-overlay.open .modal-box{transform:translateY(0) scale(1)}
+.modal-title{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:.5rem}
+.modal-desc{font-size:.875rem;color:var(--gray-600);margin-bottom:1.25rem;line-height:1.6}
+.modal-actions{display:flex;gap:.75rem;justify-content:flex-end}
+@media(max-width:900px){.stats-grid{grid-template-columns:1fr 1fr}.two-col{grid-template-columns:1fr}.sys-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}}
+@media(max-width:640px){.sidebar{transform:translateX(-100%);transition:transform .3s}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.stats-grid{grid-template-columns:1fr}.sys-grid{grid-template-columns:1fr}}
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1rem;margin-top:1rem}
+.img-thumb{position:relative;border-radius:var(--radius-sm);overflow:hidden;border:1.5px solid var(--gray-200);aspect-ratio:4/3;background:var(--gray-100)}
+.img-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.img-del{position:absolute;top:.35rem;right:.35rem;background:rgba(226,75,74,.88);color:#fff;border:none;border-radius:4px;font-size:.72rem;font-weight:700;padding:.2rem .5rem;cursor:pointer;transition:background .15s}
+.img-del:hover{background:var(--danger)}
+.img-empty{grid-column:1/-1;text-align:center;color:var(--gray-400);font-size:.875rem;padding:1.5rem;font-style:italic}
+.upload-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.75rem;margin-top:.75rem}
+.upload-preview-thumb{border-radius:var(--radius-sm);overflow:hidden;border:1.5px dashed var(--accent);aspect-ratio:4/3;background:var(--gray-50)}
+.upload-preview-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+</style>
+<script src="auth-session.js"></script>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">İşlemi Onayla</div>
+    <div class="modal-desc" id="modalDesc">Bu işlemi gerçekleştirmek istediğinizden emin misiniz?</div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeModal()">İptal</button>
+      <button class="btn-sm danger" id="modalConfirmBtn" data-action="">Onayla</button>
+    </div>
+  </div>
+</div>
+
+<aside class="sidebar" id="sidebar">
+  <a class="sidebar-logo" href="#">
+    <div class="logo-mark">E</div>
+    <div>
+      <span class="logo-text">Emlak<span>Prime</span></span>
+      <span class="logo-sub">Admin Panel</span>
+    </div>
+  </a>
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Genel</div>
+    <button class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span> Dashboard</button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Yönetim</div>
+    <button class="nav-group-toggle" onclick="toggleGroup(this,'grp-users')"><span class="nav-icon">👥</span> Kullanıcı Yönetimi <span class="arrow">▾</span></button>
+    <div class="nav-sub" id="grp-users">
+      <button class="nav-sub-item" onclick="showPage('user-list',this)"><span class="nav-sub-dot"></span>Kullanıcı Listesi</button>
+      <button class="nav-sub-item" onclick="showPage('user-add',this)"><span class="nav-sub-dot"></span>Kullanıcı Ekle</button>
+      <button class="nav-sub-item" onclick="showPage('user-update',this)"><span class="nav-sub-dot"></span>Kullanıcı Güncelle</button>
+      <button class="nav-sub-item" onclick="showPage('user-delete',this)"><span class="nav-sub-dot"></span>Kullanıcı Sil</button>
+    </div>
+    <button class="nav-group-toggle" onclick="toggleGroup(this,'grp-roles')"><span class="nav-icon">🔐</span> Rol Yönetimi <span class="arrow">▾</span></button>
+    <div class="nav-sub" id="grp-roles">
+      <button class="nav-sub-item" onclick="showPage('role-list',this)"><span class="nav-sub-dot"></span>Rol Listesi</button>
+      <button class="nav-sub-item" onclick="showPage('role-add',this)"><span class="nav-sub-dot"></span>Yeni Rol Ekle</button>
+      <button class="nav-sub-item" onclick="showPage('role-update',this)"><span class="nav-sub-dot"></span>Rol Güncelle</button>
+      <button class="nav-sub-item" onclick="showPage('role-delete',this)"><span class="nav-sub-dot"></span>Rol Sil</button>
+    </div>
+    <button class="nav-group-toggle" onclick="toggleGroup(this,'grp-listings')"><span class="nav-icon">🏠</span> İlan Yönetimi <span class="arrow">▾</span></button>
+    <div class="nav-sub" id="grp-listings">
+      <button class="nav-sub-item" onclick="showPage('listing-all',this)"><span class="nav-sub-dot"></span>Tüm İlanlar</button>
+      <button class="nav-sub-item" onclick="showPage('listing-add',this)"><span class="nav-sub-dot"></span>Yeni İlan Ekle</button>
+      <button class="nav-sub-item" onclick="showPage('listing-delete',this)"><span class="nav-sub-dot"></span>İlan Sil</button>
+    </div>
+    <button class="nav-group-toggle" onclick="toggleGroup(this,'grp-cat')"><span class="nav-icon">🏷</span> Kategori Yönetimi <span class="arrow">▾</span></button>
+    <div class="nav-sub" id="grp-cat">
+      <button class="nav-sub-item" onclick="showPage('cat-list',this)"><span class="nav-sub-dot"></span>Kategori Listesi</button>
+      <button class="nav-sub-item" onclick="showPage('cat-add',this)"><span class="nav-sub-dot"></span>Kategori Ekle</button>
+      <button class="nav-sub-item" onclick="showPage('cat-delete',this)"><span class="nav-sub-dot"></span>Kategori Sil</button>
+    </div>
+    <button class="nav-group-toggle" onclick="toggleGroup(this,'grp-city')"><span class="nav-icon">📍</span> Şehir / İlçe Yönetimi <span class="arrow">▾</span></button>
+    <div class="nav-sub" id="grp-city">
+      <button class="nav-sub-item" onclick="showPage('city-list',this)"><span class="nav-sub-dot"></span>Şehir Listesi</button>
+      <button class="nav-sub-item" onclick="showPage('city-add',this)"><span class="nav-sub-dot"></span>Şehir Ekle</button>
+      <button class="nav-sub-item" onclick="showPage('city-delete',this)"><span class="nav-sub-dot"></span>Şehir Sil</button>
+      <button class="nav-sub-item" onclick="showPage('district-list',this)"><span class="nav-sub-dot"></span>İlçe Listesi</button>
+      <button class="nav-sub-item" onclick="showPage('district-add',this)"><span class="nav-sub-dot"></span>İlçe Ekle</button>
+      <button class="nav-sub-item" onclick="showPage('district-delete',this)"><span class="nav-sub-dot"></span>İlçe Sil</button>
+    </div>
+    <button class="nav-group-toggle" onclick="toggleGroup(this,'grp-listtype')"><span class="nav-icon">📋</span> İlan Tipi Yönetimi <span class="arrow">▾</span></button>
+    <div class="nav-sub" id="grp-listtype">
+      <button class="nav-sub-item" onclick="showPage('listtype-list',this)"><span class="nav-sub-dot"></span>İlan Tipi Listesi</button>
+      <button class="nav-sub-item" onclick="showPage('listtype-add',this)"><span class="nav-sub-dot"></span>İlan Tipi Ekle</button>
+      <button class="nav-sub-item" onclick="showPage('listtype-delete',this)"><span class="nav-sub-dot"></span>İlan Tipi Sil</button>
+    </div>
+    <button class="nav-group-toggle" onclick="toggleGroup(this,'grp-logs')"><span class="nav-icon">🗂</span> Sistem Logları <span class="arrow">▾</span></button>
+    <div class="nav-sub" id="grp-logs">
+      <button class="nav-sub-item" onclick="showPage('log-all',this)"><span class="nav-sub-dot"></span>Tüm Loglar</button>
+      <button class="nav-sub-item" onclick="showPage('log-login',this)"><span class="nav-sub-dot"></span>Giriş Kayıtları</button>
+      <button class="nav-sub-item" onclick="showPage('log-error',this)"><span class="nav-sub-dot"></span>Hata Logları</button>
+      <button class="nav-sub-item" onclick="showPage('log-history',this)"><span class="nav-sub-dot"></span>İşlem Geçmişi</button>
+      <button class="nav-sub-item" onclick="showPage('log-unauth',this)"><span class="nav-sub-dot"></span>Yetkisiz Erişim Denemeleri</button>
+    </div>
+  </div>
+  <div class="sidebar-logout">
+    <button class="btn-logout" onclick="logout()">🚪 Çıkış Yap</button>
+  </div>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <div class="page-breadcrumb">Admin Panel / <span id="breadcrumb">Dashboard</span></div>
+    <div class="topbar-right">
+      <a href="index.html" class="topbar-btn" style="text-decoration:none">🏠 Ana Sayfa</a>
+      <div class="admin-avatar" title="Admin">A</div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div class="page-title">Dashboard</div>
+        <div class="page-desc">EmlakPrime platformuna genel bakış</div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card blue"><div class="stat-icon blue">🏠</div><div class="stat-num">—</div><div class="stat-label">Toplam İlan</div></div>
+        <div class="stat-card green"><div class="stat-icon green">👤</div><div class="stat-num">—</div><div class="stat-label">Kayıtlı Kullanıcı</div></div>
+      </div>
+      <div class="two-col">
+        <div class="table-card">
+          <div class="table-head"><div class="table-title">Son Eklenen İlanlar</div><button class="btn-sm" onclick="showPage('listing-all',null)">Tümü →</button></div>
+          <table><thead><tr><th>Başlık</th><th>Tür</th><th>Fiyat</th></tr></thead>
+          <tbody><tr class="empty-row"><td colspan="3">Veri yükleniyor...</td></tr></tbody></table>
+        </div>
+        <div class="table-card">
+          <div class="table-head"><div class="table-title">Son Kullanıcılar</div><button class="btn-sm" onclick="showPage('user-list',null)">Tümü →</button></div>
+          <table><thead><tr><th>Ad Soyad</th><th>Rol</th><th>Durum</th></tr></thead>
+          <tbody><tr class="empty-row"><td colspan="3">Veri yükleniyor...</td></tr></tbody></table>
+        </div>
+      </div>
+      <div class="sys-grid">
+        <div class="sys-card"><div class="sys-label">Sunucu Yükü</div><div class="sys-val">—</div><div class="progress-bar"><div class="progress-fill blue" style="width:0%"></div></div></div>
+        <div class="sys-card"><div class="sys-label">Disk Kullanımı</div><div class="sys-val">—</div><div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div></div>
+        <div class="sys-card"><div class="sys-label">Günlük Ziyaretçi</div><div class="sys-val">—</div><div class="progress-bar"><div class="progress-fill green" style="width:0%"></div></div></div>
+      </div>
+    </div>
+
+    <!-- KULLANICI LİSTESİ -->
+    <div class="page" id="page-user-list">
+      <div class="page-header"><div class="page-title">Kullanıcı Listesi</div><div class="page-desc">Tüm kayıtlı kullanıcıları görüntüleyin ve yönetin</div></div>
+      <div class="search-bar">
+        <input type="text" placeholder="Kullanıcı ara...">
+        <select><option>Tüm Roller</option><option>Admin</option><option>Emlakçı</option><option>Kullanıcı</option></select>
+        <select><option>Tüm Durumlar</option><option>Aktif</option><option>Pasif</option></select>
+        <button class="btn-sm primary" onclick="showPage('user-add',null)">+ Kullanıcı Ekle</button>
+      </div>
+      <div class="table-card"><table>
+        <thead><tr><th>ID</th><th>Ad Soyad</th><th>Kullanıcı Adı</th><th>E-posta</th><th>Rol</th><th>Kayıt Tarihi</th><th>Durum</th><th>İşlemler</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="8">Henüz kullanıcı bulunmuyor.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- KULLANICI EKLE -->
+    <div class="page" id="page-user-add">
+      <div class="page-header"><div class="page-title">Kullanıcı Ekle</div><div class="page-desc">Yeni kullanıcı kaydı oluşturun</div></div>
+      <div class="form-card">
+        <div class="form-card-title">Kullanıcı Bilgileri</div>
+        <div class="form-grid">
+          <div class="field"><label>Ad</label><input type="text" placeholder="Ad"></div>
+          <div class="field"><label>Soyad</label><input type="text" placeholder="Soyad"></div>
+          <div class="field"><label>E-posta</label><input type="email" placeholder="ornek@mail.com"></div>
+          <div class="field"><label>Şifre</label><input type="password" placeholder="••••••••"></div>
+          <div class="field"><label>Şifre Tekrar</label><input type="password" placeholder="••••••••"></div>
+          <div class="field"><label>Durum</label><select><option>Aktif</option><option>Pasif</option></select></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-ghost" onclick="showPage('user-list',null)">İptal</button>
+          <button class="btn-primary" onclick="showToast('Kaydediliyor...')">Kaydet</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- KULLANICI GÜNCELLE -->
+    <div class="page" id="page-user-update">
+      <div class="page-header"><div class="page-title">Kullanıcı Güncelle</div><div class="page-desc">Mevcut kullanıcı bilgilerini düzenleyin</div></div>
+      <div class="form-card">
+        <div class="form-card-title">Kullanıcı Bilgileri</div>
+        <div class="form-grid">
+          <div class="field"><label>Ad</label><input type="text" placeholder="Ad"></div>
+          <div class="field"><label>Soyad</label><input type="text" placeholder="Soyad"></div>
+          <div class="field"><label>E-posta</label><input type="email" placeholder="ornek@mail.com"></div>
+          <div class="field"><label>Durum</label><select><option>Aktif</option><option>Pasif</option></select></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-ghost" onclick="showPage('user-list',null)">İptal</button>
+          <button class="btn-primary" onclick="showToast('Güncelleniyor...')">Güncelle</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- KULLANICI SİL -->
+    <div class="page" id="page-user-delete">
+      <div class="page-header"><div class="page-title">Kullanıcı Sil</div><div class="page-desc">Kullanıcıları sistemden kaldırın</div></div>
+      <div class="search-bar"><input type="text" placeholder="Kullanıcı ara..."><button class="btn-sm">Ara</button></div>
+      <div class="table-card"><table>
+        <thead><tr><th>ID</th><th>Ad Soyad</th><th>E-posta</th><th>Rol</th><th>İşlem</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="5">Kullanıcı aramak için yukarıdaki alanı kullanın.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- KULLANICI DETAYI -->
+    <div class="page" id="page-user-detail">
+      <div class="page-header">
+        <div><div class="page-title">Kullanıcı Detayı</div><div class="page-desc">Kullanıcının temel bilgileri ve agent ilanları</div></div>
+        <button class="btn-sm" id="userDetailBackBtn">Geri Dön</button>
+      </div>
+      <div class="two-col">
+        <div class="detail-card">
+          <div class="detail-header">
+            <div class="user-ava">—</div>
+            <div class="detail-info"><h3>Kullanıcı seçilmedi</h3><p>Listeden bir kullanıcı seçin</p></div>
+          </div>
+          <div class="detail-rows">
+            <div class="detail-row"><span class="detail-key">ID</span><span class="detail-val" data-user-field="id">—</span></div>
+            <div class="detail-row"><span class="detail-key">Ad Soyad</span><span class="detail-val" data-user-field="fullName">—</span></div>
+            <div class="detail-row"><span class="detail-key">Kullanıcı Adı</span><span class="detail-val" data-user-field="username">—</span></div>
+            <div class="detail-row"><span class="detail-key">E-posta</span><span class="detail-val" data-user-field="email">—</span></div>
+            <div class="detail-row"><span class="detail-key">Rol</span><span class="detail-val" data-user-field="roles">—</span></div>
+            <div class="detail-row"><span class="detail-key">Kayıt Tarihi</span><span class="detail-val" data-user-field="createdAt">—</span></div>
+            <div class="detail-row"><span class="detail-key">Durum</span><span class="detail-val" data-user-field="status">—</span></div>
+            <div class="detail-row" id="agentListingCountRow"><span class="detail-key">Toplam İlan Sayısı</span><span class="detail-val" data-user-field="listingCount">—</span></div>
+          </div>
+        </div>
+        <div class="table-card" id="agentListingsCard">
+          <div class="table-head"><div class="table-title">İlanları</div></div>
+          <table><thead><tr><th>ID</th><th>Başlık</th><th>Fiyat</th><th>Kategori</th><th>İlan Tipi</th><th>Şehir</th><th>İlçe</th><th>Durum</th><th>Eklenme</th></tr></thead>
+          <tbody><tr class="empty-row"><td colspan="9">Kullanıcı seçilmedi.</td></tr></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROL LİSTESİ -->
+    <div class="page" id="page-role-list">
+      <div class="page-header"><div class="page-title">Rol Listesi</div><div class="page-desc">Sistemdeki tüm roller</div></div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:1rem"><button class="btn-sm primary" onclick="showPage('role-add',null)">+ Yeni Rol</button></div>
+      <div class="table-card"><table>
+        <thead><tr><th>Rol Adı</th><th>Açıklama</th><th>Kullanıcı Sayısı</th><th>Oluşturma Tarihi</th><th>İşlemler</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="5">Henüz rol tanımlanmamış.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- YENİ ROL EKLE -->
+    <div class="page" id="page-role-add">
+      <div class="page-header"><div class="page-title">Yeni Rol Ekle</div></div>
+      <div class="form-card">
+        <div class="form-card-title">Rol Bilgileri</div>
+        <div class="form-grid">
+          <div class="field"><label>Rol Adı</label><input type="text" placeholder="örn. Moderatör"></div>
+          <div class="field"><label>Renk Etiketi</label><select><option>Mavi</option><option>Yeşil</option><option>Turuncu</option><option>Mor</option></select></div>
+        </div>
+        <div class="field" style="margin-top:1rem"><label>Açıklama</label><textarea placeholder="Bu rolün açıklaması..."></textarea></div>
+        <div class="form-actions">
+          <button class="btn-ghost" onclick="showPage('role-list',null)">İptal</button>
+          <button class="btn-primary" onclick="showToast('Kaydediliyor...')">Kaydet</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROL GÜNCELLE -->
+    <div class="page" id="page-role-update">
+      <div class="page-header"><div class="page-title">Rol Güncelle</div></div>
+      <div class="form-card">
+        <div class="form-card-title">Rol Bilgileri</div>
+        <div class="form-grid">
+          <div class="field"><label>Rol Adı</label><input type="text" placeholder="Rol adı"></div>
+          <div class="field"><label>Renk Etiketi</label><select><option>Mavi</option><option>Yeşil</option><option>Turuncu</option><option>Mor</option></select></div>
+        </div>
+        <div class="field" style="margin-top:1rem"><label>Açıklama</label><textarea placeholder="Açıklama..."></textarea></div>
+        <div class="form-actions">
+          <button class="btn-ghost" onclick="showPage('role-list',null)">İptal</button>
+          <button class="btn-primary" onclick="showToast('Güncelleniyor...')">Güncelle</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROL SİL -->
+    <div class="page" id="page-role-delete">
+      <div class="page-header"><div class="page-title">Rol Sil</div></div>
+      <div class="table-card"><table>
+        <thead><tr><th>Rol</th><th>Kullanıcı Sayısı</th><th>İşlem</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="3">Silinebilir rol bulunmuyor.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- TÜM İLANLAR -->
+    <div class="page" id="page-listing-all">
+      <div class="page-header"><div class="page-title">Tüm İlanlar</div><div class="page-desc">Platformdaki tüm ilanları yönetin</div></div>
+      <div class="search-bar">
+        <input type="text" placeholder="İlan ara...">
+        <select><option>Tüm Türler</option><option>Satılık</option><option>Kiralık</option></select>
+        <select><option value="">Tüm Kategoriler</option></select>
+        <button class="btn-sm primary" onclick="showPage('listing-add',null)">+ Yeni İlan</button>
+      </div>
+      <div class="table-card"><table>
+        <thead><tr><th>ID</th><th>Başlık</th><th>Tür</th><th>Kategori</th><th>Şehir</th><th>Fiyat</th><th>İşlemler</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="7">Henüz ilan bulunmuyor.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- YENİ İLAN EKLE -->
+    <div class="page" id="page-listing-add">
+      <div class="page-header"><div class="page-title">Yeni İlan Ekle</div><div class="page-desc">Platforma yeni gayrimenkul ilanı ekleyin</div></div>
+      <div class="form-card">
+        <div class="form-card-title">İlan Bilgileri</div>
+        <div class="form-grid">
+          <div class="field"><label>İlan Başlığı</label><input type="text" placeholder="İlan başlığı..."></div>
+          <div class="field"><label>İlan Tipi</label><select><option value="">Seçin...</option><option>Satılık</option><option>Kiralık</option></select></div>
+          <div class="field"><label>Kategori</label><select><option value="">Seçin...</option></select></div>
+          <div class="field"><label>Şehir</label><select><option value="">Şehir seçin...</option></select></div>
+          <div class="field"><label>İlçe</label><select><option value="">İlçe seçin...</option></select></div>
+          <div class="field"><label>Fiyat (₺)</label><input type="number" placeholder="0"></div>
+          <div class="field"><label>Oda Sayısı</label><select><option value="">Seçin...</option><option>1+0</option><option>1+1</option><option>2+1</option><option>3+1</option><option>4+1</option><option>5+1</option></select></div>
+          <div class="field"><label>Alan (m²)</label><input type="number" placeholder="0"></div>
+        </div>
+        <div class="field" style="margin-top:1rem"><label>Açıklama</label><textarea placeholder="İlan açıklaması..."></textarea></div>
+        <div class="field" style="margin-top:1rem"><label>Fotoğraflar</label><input type="file" multiple accept="image/*"></div>
+        <div class="form-actions">
+          <button class="btn-ghost" onclick="showPage('listing-all',null)">İptal</button>
+          <button class="btn-primary">Kaydet</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- İLAN GÜNCELLE -->
+    <div class="page" id="page-listing-update">
+      <div class="page-header"><div class="page-title">İlan Güncelle</div><div class="page-desc">Mevcut ilan bilgilerini düzenleyin</div></div>
+      <div class="form-card">
+        <div class="form-card-title">İlan Bilgileri</div>
+        <div class="form-grid">
+          <div class="field"><label>İlan Başlığı</label><input type="text" placeholder="İlan başlığı..."></div>
+          <div class="field"><label>İlan Tipi</label><select><option value="">Seçin...</option></select></div>
+          <div class="field"><label>Kategori</label><select><option value="">Seçin...</option></select></div>
+          <div class="field"><label>Şehir</label><select><option value="">Şehir seçin...</option></select></div>
+          <div class="field"><label>İlçe</label><select><option value="">İlçe seçin...</option></select></div>
+          <div class="field"><label>Fiyat (₺)</label><input type="number" placeholder="0"></div>
+        </div>
+        <div class="form-grid one" style="margin-top:.75rem">
+          <div class="field"><label>İlan Açıklaması</label><textarea placeholder="İlan açıklamasını buraya yazın..." style="min-height:110px"></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-ghost" onclick="showPage('listing-all',null)">İptal</button>
+          <button class="btn-primary">Güncelle</button>
+        </div>
+      </div>
+      <div class="form-card">
+        <div class="form-card-title">İlan Görselleri</div>
+        <div id="updateImgGrid" class="img-grid"><div class="img-empty">Görsel yükleniyor...</div></div>
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--gray-100)">
+          <div class="field"><label>Yeni Görsel Ekle</label><input type="file" id="updateImgInput" multiple accept="image/*"></div>
+          <div id="updateImgPreview" class="upload-preview"></div>
+          <div class="form-actions" style="border-top:none;padding-top:.75rem">
+            <button class="btn-primary" id="updateImgUploadBtn" style="background:linear-gradient(135deg,var(--success),#5DCAA5)">Görselleri Yükle</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- İLAN SİL -->
+    <div class="page" id="page-listing-delete">
+      <div class="page-header"><div class="page-title">İlan Sil</div></div>
+      <div class="search-bar"><input type="text" placeholder="İlan ara..."><button class="btn-sm">Ara</button></div>
+      <div class="table-card"><table>
+        <thead><tr><th>ID</th><th>Başlık</th><th>Tür</th><th>İşlem</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="4">Silinecek ilan aramak için yukarıdaki alanı kullanın.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- ILAN DETAYI -->
+    <div class="page" id="page-listing-detail">
+      <div class="page-header"><div class="page-title">Ilan Detayi</div><div class="page-desc">Secili ilanin temel bilgileri</div></div>
+      <div class="two-col">
+        <div class="detail-card">
+          <div class="detail-header">
+            <div class="user-ava">#</div>
+            <div class="detail-info"><h3>Ilan secilmedi</h3><p>Listeden bir ilan secin</p></div>
+          </div>
+          <div class="detail-rows">
+            <div class="detail-row"><span class="detail-key">Tur</span><span class="detail-val">-</span></div>
+            <div class="detail-row"><span class="detail-key">Kategori</span><span class="detail-val">-</span></div>
+            <div class="detail-row"><span class="detail-key">Sehir</span><span class="detail-val">-</span></div>
+            <div class="detail-row"><span class="detail-key">Ilce</span><span class="detail-val">-</span></div>
+            <div class="detail-row"><span class="detail-key">Fiyat</span><span class="detail-val">-</span></div>
+            <div class="detail-row"><span class="detail-key">Olusturma</span><span class="detail-val">-</span></div>
+            <div class="detail-row">
+              <span class="detail-key">❤ Favorileyen Kullanıcı</span>
+              <span class="detail-val" id="listingFavCount" style="color:var(--accent);font-weight:700">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="detail-card">
+          <div class="table-head"><div class="table-title">Aciklama</div></div>
+          <p id="listingDetailDesc" style="font-size:.875rem;line-height:1.7;color:var(--gray-600);margin-top:.75rem">-</p>
+          <div class="form-actions" style="margin-top:1rem">
+            <button class="btn-ghost" onclick="showPage('listing-all',null)">Listeye Don</button>
+            <button class="btn-primary" id="listingPublicDetailBtn">Sitede Ac</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- İLAN GÖRSELLERİ -->
+    <div class="page" id="page-listing-images">
+      <div class="page-header"><div class="page-title">İlan Görselleri</div><div class="page-desc">İlanlara ait fotoğrafları yönetin</div></div>
+      <div class="form-card">
+        <div class="form-card-title">Görsel Yükle</div>
+        <div class="form-grid">
+          <div class="field"><label>İlan Seçin</label><select><option value="">İlan seçin...</option></select></div>
+          <div class="field"><label>Görsel Yükle</label><input type="file" multiple accept="image/*"></div>
+        </div>
+        <div class="form-actions"><button class="btn-primary">Yükle</button></div>
+      </div>
+      <div class="table-card">
+        <div class="table-head"><div class="table-title">Mevcut Görseller</div></div>
+        <table><thead><tr><th>Dosya Adı</th><th>Boyut</th><th>Yükleme Tarihi</th><th>İşlem</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="4">İlan seçin.</td></tr></tbody></table>
+      </div>
+    </div>
+
+    <!-- KATEGORİ LİSTESİ -->
+    <div class="page" id="page-cat-list">
+      <div class="page-header"><div class="page-title">Kategori Listesi</div></div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:1rem"><button class="btn-sm primary" onclick="showPage('cat-add',null)">+ Kategori Ekle</button></div>
+      <div class="table-card"><table>
+        <thead><tr><th>Kategori</th><th>İlan Sayısı</th><th>İşlemler</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="3">Henüz kategori eklenmemiş.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- KATEGORİ EKLE -->
+    <div class="page" id="page-cat-add">
+      <div class="page-header"><div class="page-title">Kategori Ekle</div></div>
+      <div class="form-card">
+        <div class="form-card-title">Yeni Kategori</div>
+        <div class="form-grid">
+          <div class="field"><label>Kategori Adı</label><input type="text" placeholder="örn. Çiftlik"></div>
+          <div class="field"><label>İkon (emoji)</label><input type="text" placeholder="🏡"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-ghost" onclick="showPage('cat-list',null)">İptal</button>
+          <button class="btn-primary" onclick="showToast('Kaydediliyor...')">Kaydet</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- KATEGORİ GÜNCELLE -->
+    <div class="page" id="page-cat-update">
+      <div class="page-header"><div class="page-title">Kategori Güncelle</div></div>
+      <div class="form-card">
+        <div class="form-card-title">Kategori Bilgileri</div>
+        <div class="form-grid">
+          <div class="field"><label>Kategori Adı</label><input type="text" placeholder="Kategori adı"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-ghost" onclick="showPage('cat-list',null)">İptal</button>
+          <button class="btn-primary" onclick="showToast('Güncelleniyor...')">Güncelle</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- KATEGORİ SİL -->
+    <div class="page" id="page-cat-delete">
+      <div class="page-header"><div class="page-title">Kategori Sil</div></div>
+      <div class="table-card"><table>
+        <thead><tr><th>Kategori</th><th>İlan Sayısı</th><th>İşlem</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="3">Silinebilir kategori yok.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- ŞEHİR LİSTESİ -->
+    <div class="page" id="page-city-list">
+      <div class="page-header"><div class="page-title">Şehir Listesi</div></div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:1rem"><button class="btn-sm primary" onclick="showPage('city-add',null)">+ Şehir Ekle</button></div>
+      <div class="table-card"><table>
+        <thead><tr><th>Şehir</th><th>İlçe Sayısı</th><th>İlan Sayısı</th><th>İşlemler</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="4">Henüz şehir eklenmemiş.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- ŞEHİR EKLE -->
+    <div class="page" id="page-city-add">
+      <div class="page-header"><div class="page-title">Şehir Ekle</div></div>
+      <div class="form-card">
+        <div class="form-card-title">Yeni Şehir</div>
+        <div class="form-grid">
+          <div class="field"><label>Şehir Adı</label><input type="text" placeholder="Şehir adı"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-ghost" onclick="showPage('city-list',null)">İptal</button>
+          <button class="btn-primary" onclick="showToast('Kaydediliyor...')">Kaydet</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ŞEHİR GÜNCELLE -->
+    <div class="page" id="page-city-update">
+      <div class="page-header"><div class="page-title">Şehir Güncelle</div></div>
+      <div class="form-card">
+        <div class="form-card-title">Şehir Bilgileri</div>
+        <div class="form-grid">
+          <div class="field"><label>Şehir Adı</label><input type="text" placeholder="Şehir adı"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-ghost" onclick="showPage('city-list',null)">İptal</button>
+          <button class="btn-primary" onclick="showToast('Güncelleniyor...')">Güncelle</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ŞEHİR SİL -->
+    <div class="page" id="page-city-delete">
+      <div class="page-header"><div class="page-title">Şehir Sil</div></div>
+      <div class="table-card"><table>
+        <thead><tr><th>Şehir</th><th>İlan Sayısı</th><th>İşlem</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="3">Şehir seçilmedi.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- İLÇE LİSTESİ -->
+    <div class="page" id="page-district-list">
+      <div class="page-header"><div class="page-title">İlçe Listesi</div></div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:1rem"><button class="btn-sm primary" onclick="showPage('district-add',null)">+ İlçe Ekle</button></div>
+      <div class="table-card"><table>
+        <thead><tr><th>İlçe</th><th>Şehir</th><th>İlan Sayısı</th><th>İşlemler</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="4">Henüz ilçe eklenmemiş.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- İLÇE EKLE -->
+    <div class="page" id="page-district-add">
+      <div class="page-header"><div class="page-title">İlçe Ekle</div></div>
+      <div class="form-card">
+        <div class="form-card-title">Yeni İlçe</div>
+        <div class="form-grid">
+          <div class="field"><label>İlçe Adı</label><input type="text" placeholder="İlçe adı"></div>
+          <div class="field"><label>Bağlı Şehir</label><select><option value="">Şehir seçin...</option></select></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-ghost" onclick="showPage('district-list',null)">İptal</button>
+          <button class="btn-primary" onclick="showToast('Kaydediliyor...')">Kaydet</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- İLÇE GÜNCELLE -->
+    <div class="page" id="page-district-update">
+      <div class="page-header"><div class="page-title">İlçe Güncelle</div></div>
+      <div class="form-card">
+        <div class="form-card-title">İlçe Bilgileri</div>
+        <div class="form-grid">
+          <div class="field"><label>İlçe Adı</label><input type="text" placeholder="İlçe adı"></div>
+          <div class="field"><label>Bağlı Şehir</label><select><option value="">Şehir seçin...</option></select></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-ghost" onclick="showPage('district-list',null)">İptal</button>
+          <button class="btn-primary" onclick="showToast('Güncelleniyor...')">Güncelle</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- İLÇE SİL -->
+    <div class="page" id="page-district-delete">
+      <div class="page-header"><div class="page-title">İlçe Sil</div></div>
+      <div class="table-card"><table>
+        <thead><tr><th>İlçe</th><th>Şehir</th><th>İşlem</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="3">İlçe seçilmedi.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- İLAN TİPİ LİSTESİ -->
+    <div class="page" id="page-listtype-list">
+      <div class="page-header"><div class="page-title">İlan Tipi Listesi</div></div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:1rem"><button class="btn-sm primary" onclick="showPage('listtype-add',null)">+ İlan Tipi Ekle</button></div>
+      <div class="table-card"><table>
+        <thead><tr><th>Tip</th><th>İlan Sayısı</th><th>İşlemler</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="3">Henüz ilan tipi eklenmemiş.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- İLAN TİPİ EKLE -->
+    <div class="page" id="page-listtype-add">
+      <div class="page-header"><div class="page-title">İlan Tipi Ekle</div></div>
+      <div class="form-card">
+        <div class="form-card-title">Yeni İlan Tipi</div>
+        <div class="form-grid">
+          <div class="field"><label>Tip Adı</label><input type="text" placeholder="örn. Devren Satılık"></div>
+          <div class="field"><label>Renk</label><select><option>Lacivert</option><option>Altın</option><option>Yeşil</option><option>Kırmızı</option></select></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-ghost" onclick="showPage('listtype-list',null)">İptal</button>
+          <button class="btn-primary" onclick="showToast('Kaydediliyor...')">Kaydet</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- İLAN TİPİ GÜNCELLE -->
+    <div class="page" id="page-listtype-update">
+      <div class="page-header"><div class="page-title">İlan Tipi Güncelle</div></div>
+      <div class="form-card">
+        <div class="form-card-title">İlan Tipi Bilgileri</div>
+        <div class="form-grid">
+          <div class="field"><label>Tip Adı</label><input type="text" placeholder="Tip adı"></div>
+          <div class="field"><label>Renk</label><select><option>Lacivert</option><option>Altın</option><option>Yeşil</option></select></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-ghost" onclick="showPage('listtype-list',null)">İptal</button>
+          <button class="btn-primary" onclick="showToast('Güncelleniyor...')">Güncelle</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- İLAN TİPİ SİL -->
+    <div class="page" id="page-listtype-delete">
+      <div class="page-header"><div class="page-title">İlan Tipi Sil</div></div>
+      <div class="table-card"><table>
+        <thead><tr><th>Tip</th><th>İlan Sayısı</th><th>İşlem</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="3">Silinebilir ilan tipi yok.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- TÜM LOGLAR -->
+    <div class="page" id="page-log-all">
+      <div class="page-header"><div class="page-title">Tüm Loglar</div></div>
+      <div class="search-bar">
+        <input type="text" placeholder="Log ara...">
+        <select><option>Tüm Seviyeler</option><option>Bilgi</option><option>Başarı</option><option>Uyarı</option><option>Hata</option></select>
+        <select><option>Son 24 Saat</option><option>Son 7 Gün</option><option>Son 30 Gün</option></select>
+      </div>
+      <div class="table-card"><div class="empty-log">Log kaydı bulunmuyor.</div></div>
+    </div>
+
+    <!-- GİRİŞ KAYITLARI -->
+    <div class="page" id="page-log-login">
+      <div class="page-header"><div class="page-title">Giriş Kayıtları</div></div>
+      <div class="table-card"><table>
+        <thead><tr><th>Kullanıcı</th><th>IP Adresi</th><th>Tarih</th><th>Durum</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="4">Giriş kaydı bulunmuyor.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- HATA LOGLARI -->
+    <div class="page" id="page-log-error">
+      <div class="page-header"><div class="page-title">Hata Logları</div></div>
+      <div class="table-card"><div class="empty-log">Hata logu bulunmuyor.</div></div>
+    </div>
+
+    <!-- İŞLEM GEÇMİŞİ -->
+    <div class="page" id="page-log-history">
+      <div class="page-header"><div class="page-title">İşlem Geçmişi</div></div>
+      <div class="table-card"><table>
+        <thead><tr><th>İşlem</th><th>Kullanıcı</th><th>Etkilenen</th><th>Tarih</th></tr></thead>
+        <tbody><tr class="empty-row"><td colspan="4">İşlem kaydı bulunmuyor.</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- YETKİSİZ ERİŞİM -->
+    <div class="page" id="page-log-unauth">
+      <div class="page-header"><div class="page-title">Yetkisiz Erişim Denemeleri</div></div>
+      <div class="table-card"><div class="empty-log">Yetkisiz erişim denemesi bulunmuyor.</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+const pageLabels={
+  'dashboard':'Dashboard','user-list':'Kullanıcı Listesi','user-add':'Kullanıcı Ekle',
+  'user-update':'Kullanıcı Güncelle','user-delete':'Kullanıcı Sil','user-detail':'Kullanıcı Detayı',
+  'role-list':'Rol Listesi','role-add':'Yeni Rol Ekle',
+  'role-update':'Rol Güncelle','role-delete':'Rol Sil',
+  'listing-all':'Tüm İlanlar','listing-add':'Yeni İlan Ekle','listing-update':'İlan Güncelle',
+  'listing-delete':'İlan Sil',
+  'listing-images':'İlan Görselleri','cat-list':'Kategori Listesi','cat-add':'Kategori Ekle',
+  'cat-update':'Kategori Güncelle','cat-delete':'Kategori Sil',
+  'city-list':'Şehir Listesi','city-add':'Şehir Ekle','city-update':'Şehir Güncelle','city-delete':'Şehir Sil',
+  'district-list':'İlçe Listesi','district-add':'İlçe Ekle','district-update':'İlçe Güncelle','district-delete':'İlçe Sil',
+  'listtype-list':'İlan Tipi Listesi','listtype-add':'İlan Tipi Ekle','listtype-update':'İlan Tipi Güncelle','listtype-delete':'İlan Tipi Sil',
+  'log-all':'Tüm Loglar','log-login':'Giriş Kayıtları','log-error':'Hata Logları',
+  'log-history':'İşlem Geçmişi','log-unauth':'Yetkisiz Erişim'
+};
+
+function showPage(id,triggerEl){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg=document.getElementById('page-'+id);
+  if(pg){pg.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+  document.querySelectorAll('.nav-item,.nav-sub-item').forEach(el=>el.classList.remove('active'));
+  const activeNav=triggerEl||Array.from(document.querySelectorAll('.nav-item,.nav-sub-item')).find(el=>el.getAttribute('onclick')?.includes(`showPage('${id}'`));
+  if(activeNav){
+    activeNav.classList.add('active');
+    const group=activeNav.closest('.nav-sub');
+    if(group){
+      group.classList.add('open');
+      group.previousElementSibling?.classList.add('open');
+    }
+  }
+  document.getElementById('breadcrumb').textContent=pageLabels[id]||id;
+}
+
+function toggleGroup(btn,grpId){
+  document.getElementById(grpId).classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function logout() {
+  localStorage.removeItem('emlakprime_user');
+  localStorage.removeItem('emlakprime_token');
+  localStorage.removeItem('emlakprime_favorites');
+  window.location.href = 'index.html';
+}
+
+function confirmAction(title,desc,confirmLabel,onConfirm){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalDesc').textContent=desc;
+  const btn=document.getElementById('modalConfirmBtn');
+  btn.textContent=confirmLabel;
+  btn.onclick=function(){
+    closeModal();
+    if(typeof onConfirm==='function')onConfirm();
+  };
+  document.getElementById('confirmModal').classList.add('open');
+}
+function closeModal(){document.getElementById('confirmModal').classList.remove('open');}
+document.getElementById('confirmModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+const AdminApi=(function(){
+  const state={users:[],roles:[],properties:[],categories:[],cities:[],districts:[],types:[],logs:[],activePage:'dashboard'};
+  const originalShowPage=showPage;
+  showPage=function(id,triggerEl){
+    originalShowPage(id,triggerEl);
+    state.activePage=id;
+    loadAdminPage(id);
+  };
+
+  function token(){
+    try{
+      const user=JSON.parse(localStorage.getItem('emlakprime_user')||'null');
+      return localStorage.getItem('emlakprime_token')||localStorage.getItem('jwtToken')||(user&&user.token)||'';
+    }catch(e){return localStorage.getItem('emlakprime_token')||localStorage.getItem('jwtToken')||'';}
+  }
+
+  function localUser(){
+    try{return JSON.parse(localStorage.getItem('emlakprime_user')||'null');}catch(e){return null;}
+  }
+
+  function hasAdminRole(user){
+    return (user?.roles||[]).some(role=>String(role?.name||role).toUpperCase().includes('ADMIN'));
+  }
+
+  function requireAdmin(){
+    const user=localUser();
+    if(!token()||!hasAdminRole(user)){
+      localStorage.removeItem('emlakprime_user');
+      localStorage.removeItem('emlakprime_token');
+      window.location.href='login.html?redirect=admin.html';
+      return false;
+    }
+    return true;
+  }
+
+  function authHeaders(){
+    const t=token();
+    return t?{Authorization:'Bearer '+t}:{};
+  }
+
+  async function api(path,options={}){
+    const headers={...(options.body instanceof FormData?{}:{'Content-Type':'application/json'}),...authHeaders(),...(options.headers||{})};
+    const res=await fetch(path,{...options,headers});
+    if(res.status===401||res.status===403){
+      console.error('Admin API yetki hatasi',res.status,path);
+      showToast('Admin yetkisi gerekiyor. Giris sayfasina yonlendiriliyorsunuz.');
+      setTimeout(()=>window.location.href='login.html?redirect=admin.html',900);
+      throw new Error('Yetkisiz erisim');
+    }
+    if(!res.ok){
+      const text=await res.text().catch(()=>'');
+      throw new Error(text||('HTTP '+res.status));
+    }
+    if(res.status===204)return null;
+    const contentType=res.headers.get('content-type')||'';
+    return contentType.includes('application/json')?res.json():res.text();
+  }
+
+  function page(id){return document.getElementById('page-'+id);}
+  function tbody(id,index=0){return page(id)?.querySelectorAll('tbody')[index];}
+  function inputs(id){return Array.from(page(id)?.querySelectorAll('input,select,textarea')||[]);}
+  function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  function fmtDate(v){return v?new Date(v).toLocaleDateString('tr-TR'):'-';}
+  function fmtMoney(v){return Number(v||0).toLocaleString('tr-TR',{style:'currency',currency:'TRY',maximumFractionDigits:0});}
+  function roleNames(u){return (u.roles||[]).map(r=>r.name||String(r).replace('ROLE_','')).join(', ')||'USER';}
+  function badge(text,cls='badge-active'){return `<span class="badge ${cls}">${esc(text)}</span>`;}
+  function isActiveUser(u){return u.active !== false;}
+  function userStatus(u){return isActiveUser(u)?'Aktif':'Pasif';}
+  function userStatusBadge(u){return badge(userStatus(u),isActiveUser(u)?'badge-active':'badge-passive');}
+  function hasRoleName(u,name){
+    const target=String(name||'').replace(/^ROLE_/,'').toUpperCase();
+    return (u?.roles||[]).some(role=>String(role?.name||role).replace(/^ROLE_/,'').toUpperCase()===target);
+  }
+  function setRows(body,html,colspan,msg){
+    if(!body)return;
+    body.innerHTML=html||`<tr class="empty-row"><td colspan="${colspan}">${esc(msg||'Kayit bulunamadi.')}</td></tr>`;
+  }
+  function setOptions(select,items,label,value='id',placeholder='Secin...'){
+    if(!select)return;
+    select.innerHTML=`<option value="">${placeholder}</option>`+items.map(x=>`<option value="${esc(x[value])}">${esc(label(x))}</option>`).join('');
+  }
+  function currentUserId(){
+    try{const u=JSON.parse(localStorage.getItem('emlakprime_user')||'{}');return u.id||u.userId||null;}catch(e){return null;}
+  }
+
+  async function loadBase(){
+    const [properties,categories,cities,districts,types]=await Promise.all([
+      api('/api/properties').catch(()=>[]),
+      api('/api/categories').catch(()=>[]),
+      api('/api/cities').catch(()=>[]),
+      api('/api/districts').catch(()=>[]),
+      api('/api/property-types').catch(()=>[])
+    ]);
+    Object.assign(state,{properties,categories,cities,districts,types});
+    if(token()){
+      const [users,roles,logs]=await Promise.all([
+        api('/api/users').catch(()=>[]),
+        api('/api/roles').catch(()=>[]),
+        api('/api/logs').catch(()=>[])
+      ]);
+      Object.assign(state,{users,roles,logs});
+    }
+    fillSelects();
+  }
+
+  function fillSelects(){
+    const allListing=inputs('listing-all');
+    setOptions(allListing[1],state.types,x=>x.name,'id','Tum Turler');
+    setOptions(allListing[2],state.categories,x=>x.name,'id','Tüm Kategoriler');
+    const addListing=inputs('listing-add');
+    setOptions(addListing[1],state.types,x=>x.name);
+    setOptions(addListing[2],state.categories,x=>x.name);
+    setOptions(addListing[3],state.cities,x=>x.name,'id','Sehir secin...');
+    setOptions(addListing[4],state.districts,x=>`${x.name} (${x.city?.name||''})`,'id','Ilce secin...');
+    const updateListing=inputs('listing-update');
+    setOptions(updateListing[1],state.types,x=>x.name);
+    setOptions(updateListing[2],state.categories,x=>x.name);
+    setOptions(updateListing[3],state.cities,x=>x.name,'id','Şehir seçin...');
+    setOptions(updateListing[4],state.districts,x=>`${x.name} (${x.city?.name||''})`,'id','İlçe seçin...');
+    setOptions(inputs('listing-images')[0],state.properties,x=>`#${x.id} ${x.title}`);
+    setOptions(inputs('district-add')[1],state.cities,x=>x.name,'id','Sehir secin...');
+    setOptions(inputs('district-update')[1],state.cities,x=>x.name,'id','Sehir secin...');
+    setOptions(inputs('user-list')[1],state.roles,x=>x.name,'id','Tum Roller');
+  }
+
+  function renderDashboard(){
+    const nums=page('dashboard')?.querySelectorAll('.stats-grid .stat-num')||[];
+    if(nums[0])nums[0].textContent=state.properties.length;
+    if(nums[1])nums[1].textContent=state.users.length;
+    setRows(tbody('dashboard',0),state.properties.slice(-5).reverse().map(p=>`<tr><td>${esc(p.title)}</td><td>${esc(p.category?.name||'-')}</td><td>${fmtMoney(p.price)}</td></tr>`).join(''),3,'Ilan yok.');
+    setRows(tbody('dashboard',1),state.users.slice(-5).reverse().map(u=>`<tr><td>${esc(u.fullName||u.username)}</td><td>${badge(roleNames(u),'badge-user')}</td><td>${userStatusBadge(u)}</td></tr>`).join(''),3,'Kullanici yok.');
+    const sys=page('dashboard')?.querySelectorAll('.sys-val')||[];
+    if(sys[0])sys[0].textContent='Canli';
+    if(sys[1])sys[1].textContent='API bagli';
+    if(sys[2])sys[2].textContent=new Date().toLocaleDateString('tr-TR');
+  }
+
+  function normalizeText(value){
+    return String(value??'').toLocaleLowerCase('tr-TR');
+  }
+
+  function filterPropertiesFor(pageId){
+    const f=inputs(pageId);
+    const query=normalizeText(f[0]?.value);
+    const typeId=f[1]?.value||'';
+    const categoryId=f[2]?.value||'';
+    return state.properties.filter(p=>{
+      const haystack=normalizeText([
+        p.id,
+        p.title,
+        p.description,
+        p.propertyType?.name,
+        p.category?.name,
+        p.city?.name,
+        p.district?.name,
+        p.price
+      ].join(' '));
+      const typeOk=!typeId||String(p.propertyType?.id)===String(typeId);
+      const categoryOk=!categoryId||String(p.category?.id)===String(categoryId);
+      return (!query||haystack.includes(query))&&typeOk&&categoryOk;
+    });
+  }
+
+  function filterUsersFor(pageId){
+    const f=inputs(pageId);
+    const query=normalizeText(f[0]?.value);
+    const roleId=f[1]?.value||'';
+    const status=f[2]?.selectedIndex > 0 ? normalizeText(f[2].value) : '';
+    return state.users.filter(u=>{
+      const haystack=normalizeText([u.id,u.fullName,u.username,u.email,roleNames(u)].join(' '));
+      const roleOk=!roleId||(u.roles||[]).some(r=>String(r.id)===String(roleId));
+      const statusOk=!status||normalizeText(userStatus(u))===status;
+      return (!query||haystack.includes(query))&&roleOk&&statusOk;
+    });
+  }
+
+  function renderUsers(){
+    const listUsers=filterUsersFor('user-list');
+    const deleteUsers=filterUsersFor('user-delete');
+    const rows=listUsers.map(u=>`<tr><td>${u.id}</td><td>${esc(u.fullName||u.username)}</td><td>${esc(u.username||'-')}</td><td>${esc(u.email)}</td><td>${badge(roleNames(u),'badge-user')}</td><td>${fmtDate(u.createdAt)}</td><td>${userStatusBadge(u)}</td><td><button class="btn-sm" data-detail-user="${u.id}">Detay</button> <button class="btn-sm" data-edit-user="${u.id}">Duzenle</button> <button class="btn-sm danger" data-delete-user="${u.id}">Sil</button></td></tr>`).join('');
+    setRows(tbody('user-list'),rows,8,'Kullanici bulunmuyor.');
+    setRows(tbody('user-delete'),deleteUsers.map(u=>`<tr><td>${u.id}</td><td>${esc(u.fullName||u.username)}</td><td>${esc(u.email)}</td><td>${esc(roleNames(u))}</td><td><button class="btn-sm danger" data-delete-user="${u.id}">Sil</button></td></tr>`).join(''),5,'Kullanici bulunmuyor.');
+  }
+
+  function renderRoles(){
+    const counts=new Map();
+    state.users.forEach(u=>(u.roles||[]).forEach(r=>counts.set(r.name,(counts.get(r.name)||0)+1)));
+    setRows(tbody('role-list'),state.roles.map(r=>`<tr><td>${esc(r.name)}</td><td>-</td><td>${counts.get(r.name)||0}</td><td>${fmtDate(r.createdAt)}</td><td><button class="btn-sm" data-edit-role="${r.id}">Duzenle</button> <button class="btn-sm danger" data-delete-role="${r.id}">Sil</button></td></tr>`).join(''),5,'Rol bulunmuyor.');
+    setRows(tbody('role-delete'),state.roles.map(r=>`<tr><td>${esc(r.name)}</td><td>${counts.get(r.name)||0}</td><td><button class="btn-sm danger" data-delete-role="${r.id}">Sil</button></td></tr>`).join(''),3,'Rol bulunmuyor.');
+  }
+
+  function renderProperties(){
+    const allProperties=filterPropertiesFor('listing-all');
+    const deleteQuery=normalizeText(inputs('listing-delete')[0]?.value);
+    const deleteProperties=state.properties.filter(p=>{
+      const haystack=normalizeText([p.id,p.title,p.propertyType?.name,p.category?.name,p.city?.name,p.district?.name,p.price].join(' '));
+      return !deleteQuery||haystack.includes(deleteQuery);
+    });
+    const rows=allProperties.map(p=>`<tr><td>${p.id}</td><td>${esc(p.title)}</td><td>${esc(p.propertyType?.name||'-')}</td><td>${esc(p.category?.name||'-')}</td><td>${esc(p.city?.name||'-')}</td><td>${fmtMoney(p.price)}</td><td><button class="btn-sm" data-detail-property="${p.id}">Detay</button> <button class="btn-sm" data-edit-property="${p.id}">Duzenle</button> <button class="btn-sm danger" data-delete-property="${p.id}">Sil</button></td></tr>`).join('');
+    setRows(tbody('listing-all'),rows,7,'Ilan bulunmuyor.');
+    setRows(tbody('listing-delete'),deleteProperties.map(p=>`<tr><td>${p.id}</td><td>${esc(p.title)}</td><td>${esc(p.propertyType?.name||'-')}</td><td><button class="btn-sm" data-detail-property="${p.id}">Detay</button> <button class="btn-sm danger" data-delete-property="${p.id}">Sil</button></td></tr>`).join(''),4,'Ilan bulunmuyor.');
+    renderListingImages();
+  }
+
+  function renderTaxonomies(){
+    const countBy=(field,id)=>state.properties.filter(p=>p[field]?.id===id).length;
+    setRows(tbody('cat-list'),state.categories.map(c=>`<tr><td>${esc(c.name)}</td><td>${countBy('category',c.id)}</td><td><button class="btn-sm" data-edit-cat="${c.id}">Duzenle</button> <button class="btn-sm danger" data-delete-cat="${c.id}">Sil</button></td></tr>`).join(''),3,'Kategori bulunmuyor.');
+    setRows(tbody('cat-delete'),state.categories.map(c=>`<tr><td>${esc(c.name)}</td><td>${countBy('category',c.id)}</td><td><button class="btn-sm danger" data-delete-cat="${c.id}">Sil</button></td></tr>`).join(''),3,'Kategori bulunmuyor.');
+    setRows(tbody('city-list'),state.cities.map(c=>`<tr><td>${esc(c.name)}</td><td>${state.districts.filter(d=>d.city?.id===c.id).length}</td><td>${countBy('city',c.id)}</td><td><button class="btn-sm" data-edit-city="${c.id}">Duzenle</button> <button class="btn-sm danger" data-delete-city="${c.id}">Sil</button></td></tr>`).join(''),4,'Sehir bulunmuyor.');
+    setRows(tbody('city-delete'),state.cities.map(c=>`<tr><td>${esc(c.name)}</td><td>${countBy('city',c.id)}</td><td><button class="btn-sm danger" data-delete-city="${c.id}">Sil</button></td></tr>`).join(''),3,'Sehir bulunmuyor.');
+    setRows(tbody('district-list'),state.districts.map(d=>`<tr><td>${esc(d.name)}</td><td>${esc(d.city?.name||'-')}</td><td>${countBy('district',d.id)}</td><td><button class="btn-sm" data-edit-district="${d.id}">Duzenle</button> <button class="btn-sm danger" data-delete-district="${d.id}">Sil</button></td></tr>`).join(''),4,'Ilce bulunmuyor.');
+    setRows(tbody('district-delete'),state.districts.map(d=>`<tr><td>${esc(d.name)}</td><td>${esc(d.city?.name||'-')}</td><td><button class="btn-sm danger" data-delete-district="${d.id}">Sil</button></td></tr>`).join(''),3,'Ilce bulunmuyor.');
+    setRows(tbody('listtype-list'),state.types.map(t=>`<tr><td>${esc(t.name)}</td><td>${countBy('propertyType',t.id)}</td><td><button class="btn-sm" data-edit-type="${t.id}">Duzenle</button> <button class="btn-sm danger" data-delete-type="${t.id}">Sil</button></td></tr>`).join(''),3,'Ilan tipi bulunmuyor.');
+    setRows(tbody('listtype-delete'),state.types.map(t=>`<tr><td>${esc(t.name)}</td><td>${countBy('propertyType',t.id)}</td><td><button class="btn-sm danger" data-delete-type="${t.id}">Sil</button></td></tr>`).join(''),3,'Ilan tipi bulunmuyor.');
+  }
+
+  function renderLogs(){
+    renderLogTable('log-all',state.logs,'Log kaydi bulunmuyor.');
+  }
+
+  function renderLogTable(pageId,logs,emptyMessage){
+    const box=page(pageId)?.querySelector('.table-card');
+    if(!box)return;
+    if(!logs?.length){box.innerHTML=`<div class="empty-log">${esc(emptyMessage)}</div>`;return;}
+    const rows=logs.map(l=>`<tr><td>${esc(l.id)}</td><td>${esc(l.user||l.userName||'Sistem')}</td><td>${esc(l.action||'-')}</td><td>${esc(l.description||l.details||'-')}</td><td>${esc(l.ipAddress||'-')}</td><td>${fmtDate(l.createdAt||l.timestamp)}</td><td>${esc(l.status||'-')}</td></tr>`).join('');
+    box.innerHTML=`<table><thead><tr><th>ID</th><th>Kullanici</th><th>Islem</th><th>Aciklama</th><th>IP Adresi</th><th>Tarih</th><th>Durum</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  async function loadLogs(kind='all'){
+    const cfg={
+      'log-all':['/api/logs','Log kaydi bulunmuyor.'],
+      'log-login':['/api/logs','Giris kaydi bulunmuyor.'],
+      'log-error':['/api/logs','Hata logu bulunmuyor.'],
+      'log-history':['/api/logs','Islem kaydi bulunmuyor.'],
+      'log-unauth':['/api/logs','Yetkisiz erisim denemesi bulunmuyor.']
+    }[kind]||['/api/logs','Log kaydi bulunmuyor.'];
+    const logs=await api(cfg[0]).catch(()=>[]);
+    if(kind==='log-all')state.logs=logs||[];
+    renderLogTable(kind,logs||[],cfg[1]);
+  }
+
+  async function refresh(){
+    await loadBase();
+    renderDashboard();renderUsers();renderRoles();renderProperties();renderTaxonomies();renderLogs();fillSelects();
+  }
+
+  async function loadAdminPage(id){
+    try{
+      if(!state.properties.length&&!state.categories.length)await refresh();
+      if(id==='dashboard')renderDashboard();
+      if(id.startsWith('user'))renderUsers();
+      if(id.startsWith('role'))renderRoles();
+      if(id.startsWith('listing'))renderProperties();
+      if(id.startsWith('cat')||id.startsWith('city')||id.startsWith('district')||id.startsWith('listtype'))renderTaxonomies();
+      if(id.startsWith('log'))await loadLogs(id);
+    }catch(e){showToast(e.message||'Veriler yuklenemedi.');}
+  }
+
+  async function saveResource(kind,id,payload){
+    const cfg={
+      cat:['/api/categories','categories'],
+      city:['/api/cities','cities'],
+      district:['/api/districts','districts'],
+      type:['/api/property-types','types'],
+      role:['/api/roles','roles'],
+      user:['/api/users','users'],
+      property:['/api/properties','properties']
+    }[kind];
+    const saved=await api(cfg[0]+(id?'/'+id:''),{method:id?'PUT':'POST',body:JSON.stringify(payload)});
+    showToast(id?'Guncellendi.':'Kaydedildi.');
+    await refresh();
+    return saved;
+  }
+
+  async function uploadPropertyImages(propertyId,fileInput){
+    const files=Array.from(fileInput?.files||[]);
+    if(!propertyId||!files.length)return [];
+    const fd=new FormData();
+    files.forEach(file=>fd.append('images',file));
+    const saved=await api('/api/properties/'+propertyId+'/images',{method:'POST',body:fd});
+    fileInput.value='';
+    return saved;
+  }
+
+  async function createPropertyFromAdmin(){
+    const f=inputs('listing-add');
+    const saved=await saveResource('property',null,{
+      title:f[0].value,
+      propertyType:{id:Number(f[1].value)},
+      category:{id:Number(f[2].value)},
+      city:{id:Number(f[3].value)},
+      district:{id:Number(f[4].value)},
+      price:Number(f[5].value||0),
+      description:f[8].value,
+      user:currentUserId()?{id:currentUserId()}:null
+    });
+    if(f[9]?.files?.length){
+      await uploadPropertyImages(saved.id,f[9]);
+      showToast('Ilan ve fotograflar kaydedildi.');
+      await refresh();
+    }
+    showPage('listing-all',null);
+  }
+
+  function renderListingImages(){
+    const f=inputs('listing-images');
+    const property=state.properties.find(p=>String(p.id)===String(f[0]?.value));
+    const rows=(property?.images||[]).map(img=>`<tr><td><a href="${esc(img.imageUrl)}" target="_blank">${esc(img.imageUrl)}</a></td><td>-</td><td>-</td><td>${badge('Kayitli')}</td></tr>`).join('');
+    setRows(tbody('listing-images'),rows,4,property?'Bu ilana ait gorsel yok.':'Ilan secin.');
+  }
+
+  async function uploadImagesFromAdminPage(){
+    const f=inputs('listing-images');
+    const selectedPropertyId=f[0].value;
+    if(!selectedPropertyId){showToast('Once ilan secin.');return;}
+    if(!f[1].files.length){showToast('Yuklenecek fotograf secin.');return;}
+    await uploadPropertyImages(selectedPropertyId,f[1]);
+    showToast('Fotograflar yuklendi.');
+    await refresh();
+    inputs('listing-images')[0].value=String(selectedPropertyId);
+    renderListingImages();
+  }
+  function deleteLabel(kind,id){
+    const collections={cat:'categories',city:'cities',district:'districts',type:'types',role:'roles',user:'users',property:'properties'};
+    const item=(state[collections[kind]]||[]).find(x=>String(x.id)===String(id));
+    if(!item)return 'Bu kayit';
+    return item.fullName||item.username||item.title||item.name||('Kayit #'+id);
+  }
+
+  function deleteResource(kind,id){
+    if(kind==='user'&&String(id)===String(currentUserId())){
+      showToast('Kendi kullanici hesabinizi silemezsiniz.');
+      return Promise.resolve();
+    }
+    const url={cat:'/api/categories',city:'/api/cities',district:'/api/districts',type:'/api/property-types',role:'/api/roles',user:'/api/users',property:'/api/properties'}[kind];
+    return new Promise(resolve=>{
+      confirmAction('Silme Onayi',`${deleteLabel(kind,id)} silinsin mi? Bu islem geri alinamaz.`,'Sil',async()=>{
+        try{
+          showToast('Siliniyor...');
+          await api(url+'/'+id,{method:'DELETE'});
+          showToast('Silindi.');
+          await refresh();
+          resolve();
+        }catch(err){
+          showToast(err.message||'Silme islemi basarisiz oldu.');
+          resolve();
+        }
+      });
+    });
+  }
+
+  function splitName(first,last){return [first,last].filter(Boolean).join(' ').trim();}
+  function rolePayload(roleId){return roleId?[{id:Number(roleId)}]:[];}
+  function statusPayload(value){return String(value).toLocaleLowerCase('tr-TR')!=='pasif';}
+  function goUserList(updateUrl=true){
+    if(updateUrl){
+      const url=new URL(window.location.href);
+      url.searchParams.delete('userId');
+      url.searchParams.set('page','user-list');
+      history.pushState({page:'user-list'},'',url);
+    }
+    showPage('user-list',null);
+  }
+
+  function applyRoute(){
+    const params=new URLSearchParams(window.location.search);
+    const routePage=params.get('page');
+    const userId=params.get('userId')||params.get('id');
+    if(routePage==='user-detail'&&userId){
+      openUserDetail(userId,false);
+      return true;
+    }
+    if(routePage&&page(routePage)){
+      showPage(routePage,null);
+      return true;
+    }
+    return false;
+  }
+
+  function wireForms(){
+    page('user-list')?.querySelectorAll('input,select').forEach(el=>{
+      el.addEventListener('input',renderUsers);
+      el.addEventListener('change',renderUsers);
+    });
+    page('user-delete')?.querySelectorAll('input').forEach(el=>el.addEventListener('input',renderUsers));
+    page('user-delete')?.querySelector('.search-bar .btn-sm')?.addEventListener('click',renderUsers);
+    page('listing-all')?.querySelectorAll('input,select').forEach(el=>{
+      el.addEventListener('input',renderProperties);
+      el.addEventListener('change',renderProperties);
+    });
+    page('listing-delete')?.querySelectorAll('input').forEach(el=>el.addEventListener('input',renderProperties));
+    page('listing-delete')?.querySelector('.search-bar .btn-sm')?.addEventListener('click',renderProperties);
+    page('cat-add')?.querySelector('.btn-primary')?.addEventListener('click',()=>saveResource('cat',null,{name:inputs('cat-add')[0].value.trim()}).then(()=>showPage('cat-list',null)));
+    page('cat-update')?.querySelector('.btn-primary')?.addEventListener('click',()=>saveResource('cat',page('cat-update').dataset.id,{name:inputs('cat-update')[0].value.trim()}).then(()=>showPage('cat-list',null)));
+    page('city-add')?.querySelector('.btn-primary')?.addEventListener('click',()=>saveResource('city',null,{name:inputs('city-add')[0].value.trim()}).then(()=>showPage('city-list',null)));
+    page('city-update')?.querySelector('.btn-primary')?.addEventListener('click',()=>saveResource('city',page('city-update').dataset.id,{name:inputs('city-update')[0].value.trim()}).then(()=>showPage('city-list',null)));
+    page('district-add')?.querySelector('.btn-primary')?.addEventListener('click',()=>saveResource('district',null,{name:inputs('district-add')[0].value.trim(),city:{id:Number(inputs('district-add')[1].value)}}).then(()=>showPage('district-list',null)));
+    page('district-update')?.querySelector('.btn-primary')?.addEventListener('click',()=>saveResource('district',page('district-update').dataset.id,{name:inputs('district-update')[0].value.trim(),city:{id:Number(inputs('district-update')[1].value)}}).then(()=>showPage('district-list',null)));
+    page('listtype-add')?.querySelector('.btn-primary')?.addEventListener('click',()=>saveResource('type',null,{name:inputs('listtype-add')[0].value.trim()}).then(()=>showPage('listtype-list',null)));
+    page('listtype-update')?.querySelector('.btn-primary')?.addEventListener('click',()=>saveResource('type',page('listtype-update').dataset.id,{name:inputs('listtype-update')[0].value.trim()}).then(()=>showPage('listtype-list',null)));
+    page('role-add')?.querySelector('.btn-primary')?.addEventListener('click',()=>saveResource('role',null,{name:inputs('role-add')[0].value.trim().toUpperCase()}).then(()=>showPage('role-list',null)));
+    page('role-update')?.querySelector('.btn-primary')?.addEventListener('click',()=>saveResource('role',page('role-update').dataset.id,{name:inputs('role-update')[0].value.trim().toUpperCase()}).then(()=>showPage('role-list',null)));
+    page('user-add')?.querySelector('.btn-primary')?.addEventListener('click',()=>{const f=inputs('user-add');return saveResource('user',null,{fullName:splitName(f[0].value,f[1].value),username:(f[2].value.split('@')[0]||f[2].value),email:f[2].value,password:f[3].value,active:statusPayload(f[5].value)}).then(()=>showPage('user-list',null));});
+    page('user-update')?.querySelector('.btn-primary')?.addEventListener('click',()=>{const f=inputs('user-update');return saveResource('user',page('user-update').dataset.id,{fullName:splitName(f[0].value,f[1].value),email:f[2].value,active:statusPayload(f[3].value)}).then(()=>showPage('user-list',null));});
+    document.getElementById('userDetailBackBtn')?.addEventListener('click',()=>goUserList());
+    page('listing-add')?.querySelector('.btn-primary')?.addEventListener('click',()=>createPropertyFromAdmin().catch(err=>showToast(err.message)));
+    page('listing-update')?.querySelector('.btn-primary')?.addEventListener('click',()=>{
+      const f=inputs('listing-update');
+      const pid=page('listing-update').dataset.id;
+      return saveResource('property',pid,{
+        title:f[0].value,
+        propertyType:{id:Number(f[1].value)},
+        category:{id:Number(f[2].value)},
+        city:{id:Number(f[3].value)},
+        district:{id:Number(f[4].value)},
+        price:Number(f[5].value||0),
+        description:f[6].value
+      }).then(()=>{showToast('İlan güncellendi.');showPage('listing-all',null);});
+    });
+    document.getElementById('updateImgUploadBtn')?.addEventListener('click',()=>{
+      const pid=page('listing-update').dataset.id;
+      const input=document.getElementById('updateImgInput');
+      if(!pid){showToast('İlan seçilmedi.');return;}
+      if(!input.files.length){showToast('Yüklenecek görsel seçin.');return;}
+      uploadPropertyImages(pid,input).then(async()=>{
+        showToast('Görseller yüklendi.');
+        await refresh();
+        const p=state.properties.find(x=>String(x.id)===String(pid));
+        renderUpdateImages(p);
+        input.value='';
+        document.getElementById('updateImgPreview').innerHTML='';
+      }).catch(err=>showToast(err.message));
+    });
+    document.getElementById('updateImgInput')?.addEventListener('change',function(){
+      const preview=document.getElementById('updateImgPreview');
+      preview.innerHTML='';
+      Array.from(this.files).forEach(file=>{
+        const url=URL.createObjectURL(file);
+        preview.innerHTML+=`<div class="upload-preview-thumb"><img src="${url}" alt="önizleme"></div>`;
+      });
+    });
+    inputs('listing-images')[0]?.addEventListener('change',renderListingImages);
+    page('listing-images')?.querySelector('.btn-primary')?.addEventListener('click',()=>uploadImagesFromAdminPage().catch(err=>showToast(err.message)));
+  }
+
+  document.addEventListener('click',async e=>{
+    const b=e.target.closest('button');if(!b)return;
+    const map=[['deleteUser','user'],['deleteRole','role'],['deleteProperty','property'],['deleteCat','cat'],['deleteCity','city'],['deleteDistrict','district'],['deleteType','type']];
+    for(const [attr,kind] of map)if(b.dataset[attr])return deleteResource(kind,b.dataset[attr]).catch(err=>showToast(err.message));
+    if(b.dataset.detailUser){return openUserDetail(b.dataset.detailUser);}
+    if(b.dataset.detailProperty){const p=state.properties.find(x=>String(x.id)===b.dataset.detailProperty);renderPropertyDetail(p);showPage('listing-detail',null);}
+    if(b.dataset.editUser){const u=state.users.find(x=>String(x.id)===b.dataset.editUser),f=inputs('user-update');page('user-update').dataset.id=u.id;const n=(u.fullName||'').split(' ');f[0].value=n.shift()||'';f[1].value=n.join(' ');f[2].value=u.email||'';f[3].value=isActiveUser(u)?'Aktif':'Pasif';showPage('user-update',null);}
+    if(b.dataset.editRole){const r=state.roles.find(x=>String(x.id)===b.dataset.editRole),f=inputs('role-update');page('role-update').dataset.id=r.id;f[0].value=r.name;showPage('role-update',null);}
+    if(b.dataset.editProperty){
+      const p=state.properties.find(x=>String(x.id)===b.dataset.editProperty);
+      const f=inputs('listing-update');
+      page('listing-update').dataset.id=p.id;
+      f[0].value=p.title||'';
+      f[1].value=p.propertyType?.id||'';
+      f[2].value=p.category?.id||'';
+      f[3].value=p.city?.id||'';
+      f[4].value=p.district?.id||'';
+      f[5].value=p.price||'';
+      f[6].value=p.description||'';
+      renderUpdateImages(p);
+      document.getElementById('updateImgPreview').innerHTML='';
+      document.getElementById('updateImgInput').value='';
+      showPage('listing-update',null);
+    }
+    if(b.dataset.editCat){const x=state.categories.find(v=>String(v.id)===b.dataset.editCat),f=inputs('cat-update');page('cat-update').dataset.id=x.id;f[0].value=x.name;showPage('cat-update',null);}
+    if(b.dataset.editCity){const x=state.cities.find(v=>String(v.id)===b.dataset.editCity),f=inputs('city-update');page('city-update').dataset.id=x.id;f[0].value=x.name;showPage('city-update',null);}
+    if(b.dataset.editDistrict){const x=state.districts.find(v=>String(v.id)===b.dataset.editDistrict),f=inputs('district-update');page('district-update').dataset.id=x.id;f[0].value=x.name;f[1].value=x.city?.id||'';showPage('district-update',null);}
+    if(b.dataset.editType){const x=state.types.find(v=>String(v.id)===b.dataset.editType),f=inputs('listtype-update');page('listtype-update').dataset.id=x.id;f[0].value=x.name;showPage('listtype-update',null);}
+    if(b.dataset.delImg&&b.dataset.delProp){
+      const imgId=b.dataset.delImg,propId=b.dataset.delProp;
+      try{
+        await deletePropertyImage(propId,imgId);
+        document.getElementById('imgthumb-'+imgId)?.remove();
+        const grid=document.getElementById('updateImgGrid');
+        if(grid&&!grid.querySelector('.img-thumb'))grid.innerHTML='<div class="img-empty">Bu ilana ait görsel yok.</div>';
+        await refresh();
+        showToast('Görsel silindi.');
+      }catch(err){showToast(err.message);}
+    }
+  });
+
+  async function openUserDetail(userId,updateUrl=true){
+    if(updateUrl){
+      const url=new URL(window.location.href);
+      url.searchParams.set('page','user-detail');
+      url.searchParams.set('userId',userId);
+      history.pushState({page:'user-detail',userId:String(userId)},'',url);
+    }
+    showPage('user-detail',null);
+    await renderUserDetail(userId);
+  }
+
+  async function renderUserDetail(userOrId){
+    const userId=typeof userOrId==='object'?userOrId?.id:userOrId;
+    if(!userId)return;
+    const detailPage=page('user-detail');
+    const fields=detailPage.querySelectorAll('[data-user-field]');
+    fields.forEach(el=>el.textContent='...');
+    setRows(tbody('user-detail'),'',
+      9,'Kullanici bilgileri yukleniyor.');
+    try{
+      const u=await api('/api/users/'+encodeURIComponent(userId));
+      const listings=hasRoleName(u,'AGENT')
+        ? await api('/api/properties/user/'+encodeURIComponent(userId)).catch(()=>[])
+        : [];
+      const displayName=u.fullName||u.username||'Kullanici';
+      detailPage.querySelector('.user-ava').textContent=displayName.slice(0,2).toUpperCase();
+      detailPage.querySelector('.detail-info h3').textContent=displayName;
+      detailPage.querySelector('.detail-info p').textContent=roleNames(u);
+      detailPage.querySelector('[data-user-field="id"]').textContent=u.id??'-';
+      detailPage.querySelector('[data-user-field="fullName"]').textContent=u.fullName||'-';
+      detailPage.querySelector('[data-user-field="username"]').textContent=u.username||'-';
+      detailPage.querySelector('[data-user-field="email"]').textContent=u.email||'-';
+      detailPage.querySelector('[data-user-field="roles"]').textContent=roleNames(u);
+      detailPage.querySelector('[data-user-field="createdAt"]').textContent=fmtDate(u.createdAt);
+      detailPage.querySelector('[data-user-field="status"]').innerHTML=userStatusBadge(u);
+      detailPage.querySelector('[data-user-field="listingCount"]').textContent=hasRoleName(u,'AGENT')?listings.length:'-';
+      document.getElementById('agentListingCountRow').style.display=hasRoleName(u,'AGENT')?'flex':'none';
+      document.getElementById('agentListingsCard').style.display='block';
+      if(!hasRoleName(u,'AGENT')){
+        setRows(tbody('user-detail'),'',
+          9,'Bu kullanici agent olmadigi icin ilan bilgisi yok.');
+        return;
+      }
+      const rows=listings.map(item=>`
+        <tr>
+          <td>${esc(item.id)}</td>
+          <td>${esc(item.title||'-')}</td>
+          <td>${fmtMoney(item.price)}</td>
+          <td>${esc(item.category?.name||'-')}</td>
+          <td>${esc(item.propertyType?.name||'-')}</td>
+          <td>${esc(item.city?.name||'-')}</td>
+          <td>${esc(item.district?.name||'-')}</td>
+          <td>${esc(item.status||'Yayinda')}</td>
+          <td>${fmtDate(item.createdAt)}</td>
+        </tr>`).join('');
+      setRows(tbody('user-detail'),rows,9,'Bu kullanicinin ilani yok.');
+    }catch(err){
+      showToast(err.message||'Kullanici detayi yuklenemedi.');
+      setRows(tbody('user-detail'),'',9,'Kullanici detayi yuklenemedi.');
+    }
+  }
+
+  function renderUpdateImages(p){
+    const grid=document.getElementById('updateImgGrid');
+    if(!grid)return;
+    const imgs=p?.images||[];
+    if(!imgs.length){grid.innerHTML='<div class="img-empty">Bu ilana ait görsel yok.</div>';return;}
+    grid.innerHTML=imgs.map(img=>`
+      <div class="img-thumb" id="imgthumb-${img.id}">
+        <img src="${esc(img.imageUrl)}" alt="görsel" loading="lazy">
+        <button class="img-del" data-del-img="${img.id}" data-del-prop="${p.id}">✕ Sil</button>
+      </div>`).join('');
+  }
+
+  async function deletePropertyImage(propertyId,imageId){
+    const t=token();
+    const res=await fetch(`/api/properties/${propertyId}/images/${imageId}`,{
+      method:'DELETE',
+      headers:{Authorization:'Bearer '+t}
+    });
+    if(!res.ok)throw new Error('Görsel silinemedi.');
+  }
+
+  async function renderPropertyDetail(p){
+    if(!p)return;
+    const box=page('listing-detail');
+    box.querySelector('.user-ava').textContent='#'+p.id;
+    box.querySelector('.detail-info h3').textContent=p.title||'Ilan';
+    box.querySelector('.detail-info p').textContent=[p.city?.name,p.district?.name].filter(Boolean).join(' / ')||'Konum yok';
+    const vals=box.querySelectorAll('.detail-val');
+    vals[0].textContent=p.propertyType?.name||'-';
+    vals[1].textContent=p.category?.name||'-';
+    vals[2].textContent=p.city?.name||'-';
+    vals[3].textContent=p.district?.name||'-';
+    vals[4].textContent=fmtMoney(p.price);
+    vals[5].textContent=fmtDate(p.createdAt);
+    document.getElementById('listingDetailDesc').textContent=p.description||'Aciklama girilmemis.';
+    document.getElementById('listingPublicDetailBtn').onclick=function(){window.location.href='ilan-detay.html?id='+encodeURIComponent(p.id);};
+    const favEl=document.getElementById('listingFavCount');
+    favEl.textContent='...';
+    try{
+      const res=await fetch('/api/favorites/property/'+p.id+'/count',{headers:{Authorization:'Bearer '+token()}});
+      const data=await res.json();
+      favEl.textContent=(data.count??0)+' kullanıcı';
+    }catch(e){
+      favEl.textContent='0 kullanıcı';
+    }
+  }
+
+  window.addEventListener('popstate',()=>applyRoute());
+  document.addEventListener('DOMContentLoaded',()=>{
+    if(!requireAdmin())return;
+    wireForms();
+    refresh()
+      .then(()=>applyRoute())
+      .catch(e=>showToast(e.message||'Admin verileri yuklenemedi.'));
+  });
+  return {refresh,state};
+})();
+</script>
+</body>
+</html>

@@ -24,22 +24,30 @@ public class JwtUtil {
     @Value("${app.jwt.expiration:86400000}")
     private long expiration;
 
+    @Value("${app.jwt.remember-expiration:2592000000}")
+    private long rememberExpiration;
+
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateToken(UserDetails userDetails) {
+        return generateToken(userDetails, false);
+    }
+
+    public String generateToken(UserDetails userDetails, boolean rememberMe) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", userDetails.getAuthorities()
                 .stream()
                 .map(auth -> auth.getAuthority())
                 .collect(Collectors.toList()));
-        return createToken(claims, userDetails.getUsername());
+        claims.put("rememberMe", rememberMe);
+        return createToken(claims, userDetails.getUsername(), rememberMe);
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
+    private String createToken(Map<String, Object> claims, String subject, boolean rememberMe) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expiration);
+        Date expiryDate = new Date(now.getTime() + getExpirationMillis(rememberMe));
 
         return Jwts.builder()
                 .claims(claims)
@@ -48,6 +56,10 @@ public class JwtUtil {
                 .expiration(expiryDate)
                 .signWith(getSigningKey())
                 .compact();
+    }
+
+    public long getExpirationMillis(boolean rememberMe) {
+        return rememberMe ? rememberExpiration : expiration;
     }
 
     public String extractUsername(String token) {

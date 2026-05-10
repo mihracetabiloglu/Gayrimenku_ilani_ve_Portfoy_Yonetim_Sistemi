@@ -52,6 +52,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints
+                .requestMatchers("/", "/*.html", "/favicon.ico").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
                 
@@ -103,7 +104,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/users/**").hasRole("ADMIN")
                 
                 // SystemLog - sadece admin
-                .requestMatchers("/api/system-logs/**").hasRole("ADMIN")
+                .requestMatchers("/api/logs/**").hasRole("ADMIN")
                 
                 .anyRequest().authenticated()
             )
