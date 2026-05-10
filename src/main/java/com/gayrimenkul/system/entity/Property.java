@@ -44,6 +44,14 @@ public class Property {
     private District district;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "neighborhood_id")
+    private Neighborhood neighborhood;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "floor_id")
+    private Floor floor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

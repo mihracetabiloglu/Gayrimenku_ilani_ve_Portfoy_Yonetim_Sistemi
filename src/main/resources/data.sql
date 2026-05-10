@@ -36,4 +36,24 @@ INSERT INTO cities (name, created_at, updated_at) VALUES
 ('Ankara', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('İzmir', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
+-- Sample Districts (Varsayım: İstanbul için 1, Ankara için 2, İzmir için 3)
+INSERT INTO districts (name, city_id, created_at, updated_at) VALUES
+('Kadıköy', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Çankaya', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Konak', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- Sample Neighborhoods (Varsayım: Kadıköy için 1, Çankaya için 2, Konak için 3)
+INSERT INTO neighborhood (name, district_id) VALUES
+('Moda', 1),
+('Bahçelievler', 2),
+('Alsancak', 3);
+
+-- Sample Floors
+INSERT INTO floor (name) VALUES
+('Zemin Kat'),
+('1. Kat'),
+('2. Kat'),
+('3. Kat'),
+('Çatı Katı');
+
 -- Note: Run after tables created. Adjust IDs as needed.
