@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EmlakPrime | Hesabım</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B1F3A;--navy-mid:#163258;--navy-light:#1E4480;
+  --accent:#C9A84C;--accent-light:#E8C97A;--white:#FFFFFF;
+  --gray-50:#F8F9FB;--gray-100:#EFF1F5;--gray-200:#DDE1EA;
+  --gray-400:#9AA3B2;--gray-600:#5A6478;--gray-800:#2C3447;
+  --shadow-sm:0 1px 3px rgba(11,31,58,.08);--shadow-md:0 4px 16px rgba(11,31,58,.12);
+  --shadow-lg:0 12px 40px rgba(11,31,58,.18);
+  --radius-sm:6px;--radius-md:12px;--radius-lg:20px;--radius-xl:28px;
+  --font-display:'Playfair Display',serif;--font-body:'DM Sans',sans-serif;
+  --transition:all .3s cubic-bezier(.4,0,.2,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--gray-50);color:var(--gray-800);min-height:100vh}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(11,31,58,.96);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,.15)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer}
+.logo-mark{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),var(--accent-light));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--navy);font-family:var(--font-display)}
+.logo-text{font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--white)}
+.logo-text span{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:.25rem}
+.nav-link{padding:.5rem 1rem;border-radius:var(--radius-sm);color:rgba(255,255,255,.75);font-size:.9rem;font-weight:500;cursor:pointer;transition:var(--transition);border:none;background:none;white-space:nowrap;text-decoration:none;font-family:var(--font-body)}
+.nav-link:hover{color:var(--white);background:rgba(255,255,255,.08)}
+.btn-login{padding:.5rem 1.25rem;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--accent),var(--accent-light));color:var(--navy);font-size:.88rem;font-weight:600;cursor:pointer;border:none;transition:var(--transition);white-space:nowrap;text-decoration:none;display:inline-block;font-family:var(--font-body)}
+.btn-login:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(201,168,76,.4)}
+.btn-favs{padding:.5rem 1.1rem;border-radius:var(--radius-sm);background:rgba(201,168,76,.12);color:var(--accent-light);font-size:.88rem;font-weight:600;border:1px solid rgba(201,168,76,.3);transition:var(--transition);white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:.35rem}
+.btn-favs:hover{background:rgba(201,168,76,.22)}
+.fav-count{background:var(--accent);color:var(--navy);font-size:.7rem;font-weight:800;padding:.1rem .45rem;border-radius:50px}
+.hesabim-wrap{position:relative}
+.btn-hesabim{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem 1rem;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--accent),var(--accent-light));color:var(--navy);font-size:.88rem;font-weight:600;cursor:pointer;border:none;transition:var(--transition);white-space:nowrap;font-family:var(--font-body)}
+.btn-hesabim:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(201,168,76,.4)}
+.user-avatar{width:24px;height:24px;border-radius:50%;background:var(--navy);color:var(--accent);font-size:.72rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.hesabim-dropdown{position:absolute;top:calc(100% + .6rem);right:0;background:var(--white);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);border:1px solid var(--gray-100);min-width:230px;z-index:500;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s ease,transform .2s ease}
+.hesabim-dropdown.open{opacity:1;pointer-events:all;transform:translateY(0)}
+.dd-header{padding:1rem;border-bottom:1px solid var(--gray-100)}
+.dd-name{font-size:.95rem;font-weight:700;color:var(--navy)}
+.dd-email{font-size:.78rem;color:var(--gray-400);margin-top:.2rem}
+.dd-item{display:flex;align-items:center;gap:.5rem;padding:.7rem 1rem;font-size:.88rem;font-weight:500;color:var(--gray-800);text-decoration:none;cursor:pointer;background:none;border:none;width:100%;text-align:left;transition:background .15s;font-family:var(--font-body)}
+.dd-item:hover{background:var(--gray-50)}
+.dd-item.active-page{color:var(--navy);font-weight:700;background:rgba(11,31,58,.04)}
+.dd-divider{height:1px;background:var(--gray-100);margin:.25rem 0}
+.dd-logout{color:#E24B4A}
+
+/* Hero */
+.page-hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 60%,#0D2847 100%);padding:7rem 2rem 3.5rem;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C9A84C' fill-opacity='0.04'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10z'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-inner{max-width:1280px;margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;gap:2rem}
+.hero-avatar-big{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:var(--navy);font-family:var(--font-display);font-size:2rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 8px 24px rgba(201,168,76,.35)}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;padding:.3rem .9rem;border-radius:50px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.08);color:var(--accent-light);font-size:.78rem;font-weight:500;margin-bottom:.75rem}
+.hero-title{font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.5rem);font-weight:700;color:var(--white);line-height:1.15;margin-bottom:.4rem}
+.hero-sub{font-size:.95rem;color:rgba(255,255,255,.6)}
+
+/* Layout */
+.main{max-width:1280px;margin:0 auto;padding:3rem 2rem;display:grid;grid-template-columns:260px 1fr;gap:2.5rem;align-items:start}
+
+/* Sidebar */
+.sidebar-card{background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);overflow:hidden;position:sticky;top:5.5rem}
+.sidebar-item{display:flex;align-items:center;gap:.75rem;padding:.85rem 1.25rem;font-size:.9rem;font-weight:500;color:var(--gray-600);cursor:pointer;transition:background .15s,color .15s;border:none;background:none;width:100%;text-align:left;text-decoration:none;font-family:var(--font-body);border-left:3px solid transparent}
+.sidebar-item:hover{background:var(--gray-50);color:var(--navy)}
+.sidebar-item.active{color:var(--navy);font-weight:700;background:rgba(11,31,58,.04);border-left-color:var(--accent)}
+.sidebar-item .icon{font-size:1.1rem;width:22px;text-align:center}
+.sidebar-divider{height:1px;background:var(--gray-100)}
+
+/* Panels */
+.panel{display:none}
+.panel.active{display:block}
+
+/* Info panel */
+.info-card{background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);padding:2rem;margin-bottom:1.5rem}
+.info-card-title{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--navy);margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between}
+.btn-edit{padding:.4rem 1rem;border-radius:var(--radius-sm);background:var(--gray-100);border:none;color:var(--gray-600);font-size:.82rem;font-weight:600;cursor:pointer;transition:var(--transition);font-family:var(--font-body)}
+.btn-edit:hover{background:var(--gray-200);color:var(--navy)}
+.btn-save{padding:.4rem 1rem;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--navy),var(--navy-light));border:none;color:var(--white);font-size:.82rem;font-weight:600;cursor:pointer;transition:var(--transition);font-family:var(--font-body);display:none}
+.btn-save:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(11,31,58,.25)}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.info-field{}
+.info-label{font-size:.75rem;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem}
+.info-value{font-size:.95rem;color:var(--gray-800);font-weight:500}
+.info-input{width:100%;padding:.6rem .9rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);font-family:var(--font-body);font-size:.95rem;color:var(--gray-800);background:var(--gray-50);outline:none;transition:var(--transition);display:none}
+.info-input:focus{border-color:var(--navy);background:var(--white);box-shadow:0 0 0 3px rgba(11,31,58,.08)}
+
+/* Stat cards */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--white);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);padding:1.25rem;text-align:center}
+.stat-num{font-family:var(--font-display);font-size:1.75rem;font-weight:700;color:var(--navy)}
+.stat-lbl{font-size:.78rem;color:var(--gray-400);margin-top:.25rem}
+
+/* Password panel */
+.pw-form{display:flex;flex-direction:column;gap:1rem}
+.form-group{}
+.form-group label{display:block;font-size:.78rem;font-weight:600;color:var(--gray-600);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem}
+.form-group input{width:100%;height:46px;padding:0 1rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);font-family:var(--font-body);font-size:.95rem;color:var(--gray-800);background:var(--gray-50);outline:none;transition:var(--transition)}
+.form-group input:focus{border-color:var(--navy);background:var(--white);box-shadow:0 0 0 3px rgba(11,31,58,.08)}
+.btn-primary{height:46px;padding:0 1.5rem;background:linear-gradient(135deg,var(--navy),var(--navy-light));color:var(--white);border:none;border-radius:var(--radius-md);font-family:var(--font-body);font-size:.95rem;font-weight:600;cursor:pointer;transition:var(--transition);align-self:flex-start}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(11,31,58,.25)}
+
+/* Danger zone */
+.danger-card{background:#fff5f5;border:1.5px solid #fecaca;border-radius:var(--radius-lg);padding:1.5rem}
+.danger-title{font-size:1rem;font-weight:700;color:#991b1b;margin-bottom:.5rem}
+.danger-desc{font-size:.88rem;color:#7f1d1d;line-height:1.6;margin-bottom:1.25rem}
+.btn-danger{padding:.6rem 1.5rem;background:#E24B4A;color:var(--white);border:none;border-radius:var(--radius-md);font-family:var(--font-body);font-size:.88rem;font-weight:600;cursor:pointer;transition:var(--transition)}
+.btn-danger:hover{background:#c0392b;transform:translateY(-1px)}
+
+/* Toast */
+.toast{position:fixed;bottom:2rem;right:2rem;z-index:9999;background:var(--navy);color:var(--white);padding:.85rem 1.5rem;border-radius:var(--radius-md);font-size:.9rem;font-weight:500;box-shadow:var(--shadow-lg);transform:translateY(100px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);pointer-events:none;border-left:4px solid var(--accent);max-width:300px}
+.toast.show{transform:translateY(0);opacity:1}
+
+footer{background:var(--navy);color:rgba(255,255,255,.55);padding:2.5rem 2rem;margin-top:4rem}
+.footer-bottom{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;font-size:.82rem;flex-wrap:wrap;gap:.5rem}
+
+@media(max-width:900px){
+  .main{grid-template-columns:1fr}
+  .sidebar-card{position:static;display:flex;overflow-x:auto}
+  .sidebar-item{white-space:nowrap;border-left:none;border-bottom:3px solid transparent}
+  .sidebar-item.active{border-left-color:transparent;border-bottom-color:var(--accent)}
+  .sidebar-divider{width:1px;height:auto;margin:0}
+  .info-grid{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .main{padding:1.5rem 1.25rem}
+  .hero-avatar-big{width:60px;height:60px;font-size:1.5rem}
+  .stats-row{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+/* İlanlarım */
+.ilan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-top:1rem}
+.ilan-card{border-radius:var(--radius-md);border:1px solid var(--gray-200);overflow:hidden;background:#fff;transition:var(--transition);cursor:pointer}
+.ilan-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.ilan-img{height:140px;background:var(--gray-100);object-fit:cover;width:100%;display:block}
+.ilan-img-placeholder{height:140px;background:linear-gradient(135deg,var(--gray-100),var(--gray-200));display:flex;align-items:center;justify-content:center;color:var(--gray-400);font-size:2rem}
+.ilan-body{padding:.9rem}
+.ilan-title{font-size:.92rem;font-weight:700;color:var(--navy);margin-bottom:.3rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ilan-price{font-size:1rem;font-weight:700;color:var(--accent);margin-bottom:.3rem}
+.ilan-location{font-size:.8rem;color:var(--gray-500);margin-bottom:.4rem}
+.ilan-actions{display:flex;gap:.5rem;margin-top:.75rem}
+.btn-ilan-del{flex:1;padding:.5rem;border-radius:var(--radius-sm);background:#fee2e2;color:#E24B4A;border:none;font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--transition)}
+.btn-ilan-del:hover{background:#fecaca}
+.btn-ilan-ver{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.2rem;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--accent),var(--accent-light));color:var(--navy);font-size:.85rem;font-weight:700;border:none;cursor:pointer;text-decoration:none;transition:var(--transition)}
+.btn-ilan-ver:hover{filter:brightness(1.08)}
+.ilan-empty{text-align:center;padding:3rem 1rem;color:var(--gray-400)}
+.ilan-empty-icon{font-size:2.5rem;margin-bottom:.75rem}
+/* Mesajlarım */
+.msg-item{display:flex;align-items:flex-start;gap:.85rem;padding:.85rem 1rem;border-bottom:1px solid var(--gray-100);cursor:pointer;transition:background .15s;border-radius:var(--radius-sm)}
+.msg-item:hover{background:var(--gray-50)}
+.msg-item.unread{background:rgba(201,168,76,.05);border-left:3px solid var(--accent);padding-left:.75rem}
+.msg-avatar-sm{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--navy-light));color:var(--accent-light);font-size:.88rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.msg-item-body{flex:1;min-width:0}
+.msg-item-header{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;margin-bottom:.15rem}
+.msg-sender{font-size:.88rem;font-weight:600;color:var(--gray-800)}
+.msg-item.unread .msg-sender{font-weight:700;color:var(--navy)}
+.msg-date{font-size:.72rem;color:var(--gray-400);white-space:nowrap;flex-shrink:0}
+.msg-property{font-size:.75rem;color:var(--navy);font-weight:600;margin-bottom:.15rem}
+.msg-preview{font-size:.8rem;color:var(--gray-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msg-unread-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:.3rem}
+.msg-empty{text-align:center;padding:2.5rem 1rem;color:var(--gray-400);font-size:.875rem}
+.msg-back{padding:.4rem .85rem;border-radius:var(--radius-sm);background:var(--gray-100);border:none;color:var(--gray-600);font-size:.82rem;font-weight:600;cursor:pointer;transition:var(--transition);font-family:var(--font-body);margin-bottom:1rem}
+.msg-back:hover{background:var(--gray-200);color:var(--navy)}
+.msg-detail-box{background:var(--gray-50);border-radius:var(--radius-md);padding:1.5rem;border:1px solid var(--gray-100)}
+.msg-detail-hd{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--gray-200)}
+.msg-detail-name{font-size:.95rem;font-weight:700;color:var(--navy)}
+.msg-detail-meta{font-size:.78rem;color:var(--gray-400);margin-top:.15rem}
+.msg-detail-prop{font-size:.82rem;font-weight:600;color:var(--navy);margin-bottom:.85rem}
+.msg-detail-content{font-size:.9rem;line-height:1.75;color:var(--gray-800);white-space:pre-wrap}
+.thread-wrap{display:flex;flex-direction:column;gap:.65rem;margin-bottom:1rem;max-height:420px;overflow-y:auto;padding:.25rem 0}
+.thread-msg{max-width:82%;padding:.7rem 1rem;border-radius:var(--radius-md);word-break:break-word}
+.thread-msg.theirs{align-self:flex-start;background:var(--gray-100);border-bottom-left-radius:3px}
+.thread-msg.mine{align-self:flex-end;background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;border-bottom-right-radius:3px}
+.thread-msg-meta{font-size:.7rem;opacity:.65;margin-bottom:.3rem;display:flex;justify-content:space-between;gap:.5rem}
+.thread-msg.mine .thread-msg-meta{flex-direction:row-reverse}
+.thread-msg-content{font-size:.875rem;line-height:1.65;white-space:pre-wrap}
+.detail-info-grid{display:grid;grid-template-columns:auto 1fr;gap:.35rem .75rem;font-size:.82rem;margin-bottom:1rem;padding:.85rem 1rem;background:var(--gray-50);border-radius:var(--radius-md);border:1px solid var(--gray-100)}
+.detail-info-key{font-weight:600;color:var(--gray-500)}
+.detail-info-val{color:var(--gray-800)}
+.reply-box{border-top:1px solid var(--gray-100);padding-top:1rem;margin-top:.5rem}
+.reply-label{font-size:.82rem;font-weight:700;color:var(--navy);margin-bottom:.5rem}
+.reply-textarea{width:100%;padding:.7rem 1rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);font-family:var(--font-body);font-size:.9rem;color:var(--gray-800);background:var(--gray-50);outline:none;resize:vertical;min-height:80px;transition:var(--transition)}
+.reply-textarea:focus{border-color:var(--navy);background:#fff;box-shadow:0 0 0 3px rgba(11,31,58,.06)}
+.btn-reply-send{margin-top:.5rem;padding:.55rem 1.25rem;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;font-size:.875rem;font-weight:600;border:none;cursor:pointer;font-family:var(--font-body)}
+.btn-reply-send:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(11,31,58,.25)}
+.btn-reply-send:disabled{opacity:.6;transform:none;box-shadow:none}
+.btn-ilan-edit{flex:1;padding:.5rem;border-radius:var(--radius-sm);background:#dbeafe;color:#1d4ed8;border:none;font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--transition)}
+.btn-ilan-edit:hover{background:#bfdbfe}
+.edit-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.edit-field{display:flex;flex-direction:column}
+.edit-field label{font-size:.75rem;font-weight:600;color:var(--gray-600);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem}
+.edit-field input,.edit-field select,.edit-field textarea{width:100%;padding:.6rem .9rem;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-family:var(--font-body);font-size:.9rem;color:var(--gray-800);background:var(--gray-50);outline:none;transition:var(--transition)}
+.edit-field input:focus,.edit-field select:focus,.edit-field textarea:focus{border-color:var(--navy);background:#fff;box-shadow:0 0 0 3px rgba(11,31,58,.06)}
+.edit-field textarea{resize:vertical;min-height:90px}
+.edit-img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.75rem;margin-top:.75rem}
+.edit-img-thumb{position:relative;border-radius:var(--radius-sm);overflow:hidden;border:1.5px solid var(--gray-200);aspect-ratio:4/3;background:var(--gray-100)}
+.edit-img-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.edit-img-del{position:absolute;top:.3rem;right:.3rem;background:rgba(226,75,74,.9);color:#fff;border:none;border-radius:4px;font-size:.72rem;font-weight:700;padding:.25rem .5rem;cursor:pointer}
+.edit-img-del:hover{background:#E24B4A}
+.edit-img-empty{color:var(--gray-400);font-size:.875rem;font-style:italic;padding:.75rem 0}
+.edit-upload-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:.5rem;margin-top:.5rem}
+.edit-upload-thumb{position:relative;border-radius:var(--radius-sm);overflow:hidden;border:1.5px dashed var(--accent);aspect-ratio:4/3;background:var(--gray-100)}
+.edit-upload-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.edit-upload-remove{position:absolute;top:.3rem;right:.3rem;background:rgba(226,75,74,.92);color:#fff;border:none;border-radius:4px;font-size:.72rem;font-weight:700;padding:.25rem .5rem;cursor:pointer;font-family:var(--font-body)}
+.edit-upload-remove:hover{background:#E24B4A}
+.edit-actions{display:flex;gap:.75rem;justify-content:flex-end;padding-top:1rem;border-top:1px solid var(--gray-100);margin-top:1.25rem}
+.btn-edit-save{padding:.6rem 1.5rem;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;font-size:.875rem;font-weight:600;border:none;cursor:pointer;font-family:var(--font-body)}
+.btn-edit-save:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(11,31,58,.25)}
+.btn-edit-cancel{padding:.6rem 1.25rem;border-radius:var(--radius-sm);background:none;color:var(--gray-600);font-size:.875rem;font-weight:600;border:1.5px solid var(--gray-200);cursor:pointer;font-family:var(--font-body)}
+.btn-edit-cancel:hover{border-color:var(--gray-400);color:var(--gray-800)}
+.btn-img-upload{padding:.5rem 1rem;border-radius:var(--radius-sm);background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-size:.82rem;font-weight:600;border:none;cursor:pointer;font-family:var(--font-body)}
+@media(max-width:600px){.edit-form-grid{grid-template-columns:1fr}}
+</style>
+<script src="auth-session.js"></script>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="index.html">
+      <div class="logo-mark">E</div>
+      <span class="logo-text">Emlak<span>Prime</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Ana Sayfa</a>
+      <a href="favoriler.html" class="nav-link">Favorilerim</a>
+    </div>
+    <div id="navAuthArea"></div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="hero-inner">
+    <div class="hero-avatar-big" id="heroAvatar"></div>
+    <div>
+      <div class="hero-tag">👤 Hesabım</div>
+      <h1 class="hero-title" id="heroName"></h1>
+      <p class="hero-sub" id="heroEmail"></p>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <!-- Sidebar -->
+  <div class="sidebar-card">
+    <button class="sidebar-item active" onclick="showPanel('info',this)"><span class="icon">👤</span>Kişisel Bilgiler</button>
+    <a href="favoriler.html" class="sidebar-item"><span class="icon">❤</span>Favorilerim</a>
+    <div class="sidebar-divider"></div>
+    <button class="sidebar-item" onclick="showPanel('password',this)"><span class="icon">🔒</span>Şifre Değiştir</button>
+    <div class="sidebar-divider" id="agentDivider" style="display:none"></div>
+    <button class="sidebar-item" id="agentSidebarBtn" style="display:none" onclick="showPanel('ilanlar',this);loadIlanlar()"><span class="icon">🏠</span>İlanlarım</button>
+    <button class="sidebar-item" id="mesajSidebarBtn" style="display:none" onclick="showPanel('mesajlar',this);loadMesajlar()"><span class="icon">✉️</span>Mesajlarım <span id="mesajUnreadBadge" style="display:none;background:var(--accent);color:var(--navy);font-size:.65rem;font-weight:800;padding:.1rem .45rem;border-radius:50px;margin-left:.25rem"></span></button>
+    <div class="sidebar-divider"></div>
+    <button class="sidebar-item" onclick="logout()" style="color:#E24B4A"><span class="icon">🚪</span>Çıkış Yap</button>
+  </div>
+
+  <!-- Content -->
+  <div>
+    <!-- İstatistikler -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="statFavs">0</div>
+        <div class="stat-lbl">Favori İlan</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statIlanlar">0</div>
+        <div class="stat-lbl">Aktif İlan</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">0</div>
+        <div class="stat-lbl">Mesaj</div>
+      </div>
+    </div>
+
+    <!-- Kişisel Bilgiler Paneli -->
+    <div class="panel active" id="panel-info">
+      <div class="info-card">
+        <div class="info-card-title">
+          Kişisel Bilgiler
+          <div>
+            <button class="btn-edit" id="editBtn" onclick="toggleEdit()">Düzenle</button>
+            <button class="btn-save" id="saveBtn" onclick="saveInfo()">Kaydet</button>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-field">
+            <div class="info-label">Ad Soyad</div>
+            <div class="info-value" id="val-name"></div>
+            <input class="info-input" id="inp-name" type="text" placeholder="Ad Soyad">
+          </div>
+          <div class="info-field">
+            <div class="info-label">E-posta</div>
+            <div class="info-value" id="val-email"></div>
+            <input class="info-input" id="inp-email" type="email" placeholder="E-posta">
+          </div>
+          <div class="info-field">
+            <div class="info-label">Üyelik Tarihi</div>
+            <div class="info-value" id="val-date"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="danger-card">
+        <div class="danger-title">Hesabı Sil</div>
+        <div class="danger-desc">Hesabınızı silerseniz tüm verileriniz (favoriler, mesajlar) kalıcı olarak silinir. Bu işlem geri alınamaz.</div>
+        <button class="btn-danger" onclick="deleteAccount()">Hesabımı Sil</button>
+      </div>
+    </div>
+
+    <!-- Şifre Değiştir Paneli -->
+    <div class="panel" id="panel-ilanlar">
+      <div class="info-card">
+        <div class="info-card-title">
+          İlanlarım
+          <a href="ilan-ekle.html" class="btn-ilan-ver">+ Yeni İlan Ver</a>
+        </div>
+        <div class="ilan-grid" id="ilanGrid">
+          <div class="ilan-empty"><div class="ilan-empty-icon">🏠</div><div>İlanlar yükleniyor...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mesajlarım Paneli -->
+    <div class="panel" id="panel-mesajlar">
+      <div class="info-card">
+        <div class="info-card-title">
+          Mesajlarım
+          <span id="mesajUnreadLabel" style="display:none;font-size:.78rem;font-weight:500;color:var(--accent)"></span>
+        </div>
+        <!-- Liste görünümü -->
+        <div id="mesajListView">
+          <div id="mesajList"><div class="msg-empty">Mesajlar yükleniyor...</div></div>
+        </div>
+        <!-- Detay görünümü -->
+        <div id="mesajDetailView" style="display:none">
+          <button class="msg-back" onclick="showMesajList()">← Geri Dön</button>
+          <div class="detail-info-grid" id="detailInfoGrid">
+            <span class="detail-info-key">Gönderen</span><span class="detail-info-val" id="detailSender">—</span>
+            <span class="detail-info-key">E-posta</span><span class="detail-info-val" id="detailEmail">—</span>
+            <span class="detail-info-key">İlan</span><span class="detail-info-val" id="detailProperty">—</span>
+            <span class="detail-info-key">Tarih</span><span class="detail-info-val" id="detailDate">—</span>
+          </div>
+          <div class="thread-wrap" id="threadWrap"></div>
+          <div class="reply-box">
+            <div class="reply-label">✏️ Cevap Yaz</div>
+            <textarea class="reply-textarea" id="replyText" placeholder="Cevabınızı buraya yazın..."></textarea>
+            <div style="display:flex;justify-content:flex-end">
+              <button class="btn-reply-send" id="replyBtn" onclick="sendReply()">Cevap Gönder</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- İlan Düzenleme Paneli -->
+    <div class="panel" id="panel-ilan-edit">
+      <div class="info-card">
+        <div class="info-card-title">
+          İlanı Düzenle
+          <button class="btn-edit" onclick="goBackToIlanlar()">← İlanlarıma Dön</button>
+        </div>
+        <div class="edit-form-grid">
+          <div class="edit-field"><label>İlan Başlığı</label><input type="text" id="editTitle" placeholder="İlan başlığı..."></div>
+          <div class="edit-field"><label>Fiyat (₺)</label><input type="number" id="editPrice" placeholder="0"></div>
+          <div class="edit-field"><label>İlan Tipi</label><select id="editType"><option value="">Seçin...</option></select></div>
+          <div class="edit-field"><label>Kategori</label><select id="editCategory"><option value="">Seçin...</option></select></div>
+          <div class="edit-field"><label>Şehir</label><select id="editCity"><option value="">Seçin...</option></select></div>
+          <div class="edit-field"><label>İlçe</label><select id="editDistrict"><option value="">Seçin...</option></select></div>
+          <div class="edit-field"><label>Mahalle</label><select id="editNeighborhood"><option value="">Mahalle seçin...</option></select></div>
+          <div class="edit-field"><label>Kat</label><select id="editFloor"><option value="">Kat seçin...</option></select></div>
+        </div>
+        <div class="edit-field" style="margin-bottom:1.25rem">
+          <label>İlan Açıklaması</label>
+          <textarea id="editDesc" placeholder="İlan açıklamasını buraya yazın..."></textarea>
+        </div>
+        <div>
+          <div style="font-size:.88rem;font-weight:700;color:var(--navy);margin-bottom:.4rem">Mevcut Görseller</div>
+          <div id="editImgGrid" class="edit-img-grid"></div>
+        </div>
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--gray-100)">
+          <div class="edit-field" style="margin-bottom:.5rem">
+            <label>Yeni Görsel Ekle</label>
+            <input type="file" id="editImgInput" multiple accept="image/*">
+          </div>
+          <div id="editImgPreview" class="edit-upload-preview"></div>
+          <div style="margin-top:.75rem">
+            <button class="btn-img-upload" id="updateImgUploadBtn" onclick="uploadEditImages()">Görselleri Yükle</button>
+          </div>
+        </div>
+        <div class="edit-actions">
+          <button class="btn-edit-cancel" onclick="goBackToIlanlar()">İptal</button>
+          <button class="btn-edit-save" onclick="saveIlan()">Güncelle</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-password">
+      <div class="info-card">
+        <div class="info-card-title">Şifre Değiştir</div>
+        <div class="pw-form">
+          <div class="form-group">
+            <label>Mevcut Şifre</label>
+            <input type="password" id="pwCurrent" placeholder="Mevcut şifrenizi girin">
+          </div>
+          <div class="form-group">
+            <label>Yeni Şifre</label>
+            <input type="password" id="pwNew" placeholder="En az 8 karakter">
+          </div>
+          <div class="form-group">
+            <label>Yeni Şifre Tekrar</label>
+            <input type="password" id="pwNew2" placeholder="Yeni şifrenizi tekrar girin">
+          </div>
+          <button class="btn-primary" onclick="changePassword()">Şifreyi Güncelle</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 EmlakPrime. Tüm hakları saklıdır.</span>
+    <a href="index.html" style="color:var(--accent);text-decoration:none;font-size:.82rem">← Ana Sayfaya Dön</a>
+  </div>
+</footer>
+
+<script>
+function getUser() { return window.EmlakAuth?.getUser?.() || (() => { try { return JSON.parse(localStorage.getItem('emlakprime_user') || sessionStorage.getItem('emlakprime_user')); } catch(e) { return null; } })(); }
+function saveUserData(u) { (localStorage.getItem('token') || localStorage.getItem('emlakprime_token') ? localStorage : sessionStorage).setItem('emlakprime_user', JSON.stringify(u)); }
+function getFavIds() { try { return JSON.parse(localStorage.getItem('emlakprime_favorites')) || []; } catch(e) { return []; } }
+
+function logout() { if (window.EmlakAuth) { window.EmlakAuth.logout('index.html'); return; } [localStorage, sessionStorage].forEach(storage => { ['emlakprime_user','emlakprime_token','token','roles','username','userId','loginTime','expiresAt','emlakprime_favorites'].forEach(k => storage.removeItem(k)); }); window.location.href = 'index.html'; }
+
+function toggleDropdown(e) {
+  e.stopPropagation();
+  document.getElementById('hesabimDropdown').classList.toggle('open');
+}
+document.addEventListener('click', () => { const dd = document.getElementById('hesabimDropdown'); if (dd) dd.classList.remove('open'); });
+
+function renderNav(user) {
+  const favCount = getFavIds().length;
+  const badge = favCount > 0 ? `<span class="fav-count">${favCount}</span>` : '';
+  const initial = user.name ? user.name.charAt(0).toUpperCase() : '?';
+  const firstName = user.name ? user.name.split(' ')[0] : 'Hesabım';
+  const isAgent = (user.roles||[]).some(r => r.includes('AGENT') || r.includes('ADMIN'));
+  const isAdmin = (user.roles||[]).some(r => r.includes('ADMIN'));
+  const agentItems = isAgent ? `
+    <a href="ilan-ekle.html" class="dd-item">🏠 İlan Ver</a>
+    <button class="dd-item" onclick="showPanel('ilanlar',document.getElementById('agentSidebarBtn'));loadIlanlar()">📋 İlanlarım</button>` : '';
+  const adminItem = isAdmin ? `<a href="admin.html" class="dd-item" style="color:#C9A84C;font-weight:600">⚙ Admin Paneli</a>` : '';
+  document.getElementById('navAuthArea').innerHTML = `
+    <div class="hesabim-wrap">
+      <button class="btn-hesabim" onclick="toggleDropdown(event)">
+        <span class="user-avatar">${initial}</span>${firstName} <span style="font-size:.7rem">▾</span>
+      </button>
+      <div class="hesabim-dropdown" id="hesabimDropdown">
+        <div class="dd-header">
+          <div class="dd-name">${user.name || user.username || '—'}</div>
+          <div class="dd-email">${user.email || ''}</div>
+        </div>
+        <a href="hesabim.html" class="dd-item active-page">👤 Hesabım</a>
+        <a href="favoriler.html" class="dd-item">❤ Favorilerim${badge}</a>
+        <button class="dd-item" onclick="showPanel('mesajlar',document.getElementById('mesajSidebarBtn'));loadMesajlar()">✉️ Mesajlarım</button>
+        ${agentItems}
+        ${adminItem}
+        <div class="dd-divider"></div>
+        <button class="dd-item dd-logout" onclick="logout()">Çıkış Yap</button>
+      </div>
+    </div>`;
+}
+
+function showPanel(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+let editMode = false;
+function toggleEdit() {
+  editMode = !editMode;
+  document.querySelectorAll('.info-value').forEach(el => el.style.display = editMode ? 'none' : 'block');
+  document.querySelectorAll('.info-input').forEach(el => el.style.display = editMode ? 'block' : 'none');
+  document.getElementById('editBtn').style.display = editMode ? 'none' : 'inline-block';
+  document.getElementById('saveBtn').style.display = editMode ? 'inline-block' : 'none';
+  if (editMode) {
+    const u = getUser();
+    document.getElementById('inp-name').value = u.name || '';
+    document.getElementById('inp-email').value = u.email || '';
+  }
+}
+
+function saveInfo() {
+  const name = document.getElementById('inp-name').value.trim();
+  const email = document.getElementById('inp-email').value.trim();
+  if (!name) { showToast('Ad Soyad boş bırakılamaz.'); return; }
+  if (!email || !/\S+@\S+\.\S+/.test(email)) { showToast('Geçerli bir e-posta girin.'); return; }
+  const u = getUser();
+  u.name = name; u.email = email;
+  saveUserData(u);
+  fillPage(u);
+  toggleEdit();
+  showToast('Bilgileriniz güncellendi.');
+}
+
+function changePassword() {
+  const cur = document.getElementById('pwCurrent').value;
+  const nw = document.getElementById('pwNew').value;
+  const nw2 = document.getElementById('pwNew2').value;
+  if (!cur) { showToast('Mevcut şifrenizi girin.'); return; }
+  if (!nw || nw.length < 8) { showToast('Yeni şifre en az 8 karakter olmalıdır.'); return; }
+  if (nw !== nw2) { showToast('Yeni şifreler eşleşmiyor.'); return; }
+  document.getElementById('pwCurrent').value = '';
+  document.getElementById('pwNew').value = '';
+  document.getElementById('pwNew2').value = '';
+  showToast('Şifreniz güncellendi.');
+}
+
+function deleteAccount() {
+  if (!confirm('Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')) return;
+  localStorage.removeItem('emlakprime_user');
+  localStorage.removeItem('emlakprime_favorites');
+  showToast('Hesabınız silindi.');
+  setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+}
+
+function fillPage(user) {
+  const initial = user.name ? user.name.charAt(0).toUpperCase() : '?';
+  document.getElementById('heroAvatar').textContent = initial;
+  document.getElementById('heroName').textContent = user.name || user.username || '—';
+  document.getElementById('heroEmail').textContent = user.email || '';
+  document.getElementById('val-name').textContent = user.name || user.username || '—';
+  document.getElementById('val-email').textContent = user.email || '—';
+  document.getElementById('val-date').textContent = user.joinDate || new Date().toLocaleDateString('tr-TR');
+  document.getElementById('statFavs').textContent = getFavIds().length;
+}
+
+async function fetchUserProfile() {
+  const token = getImageAuthToken();
+  if (!token) return;
+  try {
+    const res = await fetch('/api/users/me', { headers: { 'Authorization': 'Bearer ' + token } });
+    if (!res.ok) return;
+    const profile = await res.json();
+    const u = getUser();
+    if (!u) return;
+    u.email    = profile.email    || u.email    || '';
+    u.name     = profile.fullName || u.name     || u.username || '';
+    u.joinDate = profile.createdAt
+      ? new Date(profile.createdAt).toLocaleDateString('tr-TR')
+      : u.joinDate;
+    saveUserData(u);
+    fillPage(u);
+    renderNav(u);
+  } catch(e) {
+    console.warn('[fetchUserProfile]', e);
+  }
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// İlanlarım
+let ilanlarData = {};
+let currentEditId = null;
+let selectedEditImageFiles = [];
+let selectedEditImagePreviews = [];
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[ch]));
+}
+
+function getImageAuthToken() {
+  return localStorage.getItem('token')
+    || sessionStorage.getItem('token')
+    || localStorage.getItem('emlakprime_token')
+    || sessionStorage.getItem('emlakprime_token')
+    || '';
+}
+
+function clearEditImageSelection() {
+  selectedEditImagePreviews.forEach(item => URL.revokeObjectURL(item.url));
+  selectedEditImageFiles = [];
+  selectedEditImagePreviews = [];
+  const input = document.getElementById('editImgInput');
+  const preview = document.getElementById('editImgPreview');
+  if (input) input.value = '';
+  if (preview) preview.innerHTML = '';
+}
+
+function syncEditImageInput() {
+  const input = document.getElementById('editImgInput');
+  if (!input || typeof DataTransfer === 'undefined') return;
+  const transfer = new DataTransfer();
+  selectedEditImageFiles.forEach(file => transfer.items.add(file));
+  input.files = transfer.files;
+}
+
+function renderEditImagePreview() {
+  const preview = document.getElementById('editImgPreview');
+  if (!preview) return;
+  preview.innerHTML = selectedEditImagePreviews.map((item, index) => `
+    <div class="edit-upload-thumb">
+      <img src="${escapeHtml(item.url)}" alt="önizleme">
+      <button type="button" class="edit-upload-remove" onclick="removeSelectedEditImage(${index})">Kaldır</button>
+    </div>
+  `).join('');
+}
+
+function addSelectedEditImages(files) {
+  Array.from(files || []).forEach(file => {
+    if (!file.type || !file.type.startsWith('image/')) return;
+    const url = URL.createObjectURL(file);
+    selectedEditImageFiles.push(file);
+    selectedEditImagePreviews.push({ file, url });
+  });
+  syncEditImageInput();
+  renderEditImagePreview();
+}
+
+function removeSelectedEditImage(index) {
+  const removed = selectedEditImagePreviews.splice(index, 1)[0];
+  if (removed) URL.revokeObjectURL(removed.url);
+  selectedEditImageFiles.splice(index, 1);
+  syncEditImageInput();
+  renderEditImagePreview();
+}
+
+function getIlanImageUrl(ilan) {
+  const firstImage = Array.isArray(ilan.images) && ilan.images.length ? ilan.images[0] : null;
+  return firstImage && firstImage.imageUrl ? firstImage.imageUrl : '';
+}
+
+function renderIlanImage(ilan) {
+  const imageUrl = getIlanImageUrl(ilan);
+  if (!imageUrl) {
+    return '<div class="ilan-img-placeholder">&#127968;</div>';
+  }
+  return '<img class="ilan-img" src="' + escapeHtml(imageUrl) + '" alt="' + escapeHtml(ilan.title || 'Ilan fotografi') + '" loading="lazy" onerror="this.onerror=null;this.src=&quot;https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&amp;q=80&quot;">';
+}
+
+async function loadIlanlar() {
+  const token = getImageAuthToken();
+  const u = getUser();
+  const grid = document.getElementById('ilanGrid');
+  if (!u || !u.id) {
+    grid.innerHTML = '<div class="ilan-empty"><div class="ilan-empty-icon">⚠️</div><div>Kullanıcı bilgisi bulunamadı. Lütfen tekrar giriş yapın.</div></div>';
+    return;
+  }
+  try {
+    const res = await fetch('/api/properties/user/' + u.id, { headers: { 'Authorization': 'Bearer ' + token } });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const ilanlar = await res.json();
+    document.getElementById('statIlanlar').textContent = ilanlar.length;
+    ilanlarData = {};
+    ilanlar.forEach(i => { ilanlarData[i.id] = i; });
+    if (!ilanlar.length) {
+      grid.innerHTML = '<div class="ilan-empty"><div class="ilan-empty-icon">🏠</div><div>Henüz ilan yayınlamadınız.</div></div>';
+      return;
+    }
+    grid.innerHTML = ilanlar.map(i => `
+      <div class="ilan-card" id="ilan-${i.id}" onclick="window.location.href='ilan-detay.html?id=${i.id}'" title="İlan detayını aç">
+        ${renderIlanImage(i)}
+        <div class="ilan-body">
+          <div class="ilan-title">${escapeHtml(i.title)}</div>
+          <div class="ilan-price">${i.price ? Number(i.price).toLocaleString('tr-TR') + ' ₺' : '—'}</div>
+          ${i.city ? `<div class="ilan-location">&#128205; ${escapeHtml(i.city.name)}${i.district ? ', ' + escapeHtml(i.district.name) : ''}</div>` : ''}
+          <div class="ilan-actions">
+            <button class="btn-ilan-edit" onclick="event.stopPropagation();openEditPanel(${i.id})">Güncelle</button>
+            <button class="btn-ilan-del" onclick="event.stopPropagation();deleteIlan(${i.id})">Sil</button>
+          </div>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    grid.innerHTML = '<div class="ilan-empty"><div class="ilan-empty-icon">⚠️</div><div>İlanlar yüklenemedi.</div></div>';
+  }
+}
+
+async function deleteIlan(id) {
+  if (!confirm('Bu ilanı silmek istediğinize emin misiniz?')) return;
+  const token = getImageAuthToken();
+  const res = await fetch('/api/properties/' + id, {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  if (res.ok) {
+    document.getElementById('ilan-' + id)?.remove();
+    delete ilanlarData[id];
+    showToast('İlan silindi.');
+    const grid = document.getElementById('ilanGrid');
+    if (grid && !grid.querySelector('.ilan-card')) {
+      grid.innerHTML = '<div class="ilan-empty"><div class="ilan-empty-icon">🏠</div><div>Henüz ilan yayınlamadınız.</div></div>';
+    }
+  } else if (res.status === 403) {
+    showToast('Bu ilanı silme yetkiniz yok.');
+  } else {
+    showToast('İlan silinemedi.');
+  }
+}
+
+// ── Mesajlarım ────────────────────────────────────────────────────────────────
+let _currentOtherUserId = null;
+let _currentPropertyId  = null;
+
+async function loadMesajlar() {
+  const token = getImageAuthToken();
+  const u = getUser();
+  const list = document.getElementById('mesajList');
+  if (!u || !token) { if(list) list.innerHTML = '<div class="msg-empty">Giriş yapmanız gerekiyor.</div>'; return; }
+  try {
+    const res = await fetch('/api/messages/inbox', { headers: { 'Authorization': 'Bearer ' + token } });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const msgs = await res.json();
+
+    const unread = msgs.filter(m => !m.read).length;
+    const badge = document.getElementById('mesajUnreadBadge');
+    const label = document.getElementById('mesajUnreadLabel');
+    if (unread > 0) { badge.style.display=''; badge.textContent=unread; label.style.display=''; label.textContent=unread+' okunmamış'; }
+    else { badge.style.display='none'; label.style.display='none'; }
+
+    if (!msgs.length) { list.innerHTML = '<div class="msg-empty">Henüz mesaj almadınız.</div>'; return; }
+
+    list.innerHTML = msgs.map(m => {
+      const senderName = m.sender?.name || 'Bilinmeyen';
+      const preview = (m.content || '').replace(/\n/g,' ').substring(0,75) + ((m.content||'').length>75?'…':'');
+      const date = m.createdAt ? new Date(m.createdAt).toLocaleDateString('tr-TR') : '';
+      const isUnread = !m.read;
+      return `<div class="msg-item${isUnread?' unread':''}" data-msg-id="${m.id}" onclick="openMesaj(${m.id})">
+        <div class="msg-avatar-sm">${escapeHtml(senderName.charAt(0).toUpperCase())}</div>
+        <div class="msg-item-body">
+          <div class="msg-item-header">
+            <span class="msg-sender">${escapeHtml(senderName)}</span>
+            <span class="msg-date">${date}</span>
+          </div>
+          ${m.property ? `<div class="msg-property">📌 ${escapeHtml(m.property.title||'')}</div>` : ''}
+          <div class="msg-preview">${escapeHtml(preview)}</div>
+        </div>
+        ${isUnread ? '<div class="msg-unread-dot"></div>' : ''}
+      </div>`;
+    }).join('');
+  } catch(e) {
+    console.error('[loadMesajlar]', e);
+    list.innerHTML = '<div class="msg-empty">Mesajlar yüklenemedi.</div>';
+  }
+}
+
+async function openMesaj(id) {
+  const token = getImageAuthToken();
+  const u = getUser();
+  if (!u || !token) { showToast('Giriş yapmanız gerekiyor.'); return; }
+
+  try {
+    const res = await fetch('/api/messages/' + id, { headers: { 'Authorization': 'Bearer ' + token } });
+    if (!res.ok) {
+      const txt = await res.text().catch(()=>'');
+      console.error('[openMesaj] API hata:', res.status, txt);
+      showToast('Mesaj açılamadı. Hata: ' + res.status);
+      return;
+    }
+    const m = await res.json();
+    console.log('[openMesaj] Mesaj:', m);
+
+    // Okundu işaretle
+    if (!m.read) {
+      fetch('/api/messages/' + id + '/read', { method:'PATCH', headers:{ 'Authorization':'Bearer '+token } }).catch(()=>{});
+      const item = document.querySelector(`[data-msg-id="${id}"]`);
+      if (item) { item.classList.remove('unread'); item.querySelector('.msg-unread-dot')?.remove(); }
+      const badge = document.getElementById('mesajUnreadBadge');
+      const cur = parseInt(badge?.textContent || '0');
+      if (cur <= 1) { if(badge) badge.style.display='none'; const lbl=document.getElementById('mesajUnreadLabel'); if(lbl) lbl.style.display='none'; }
+      else if(badge) badge.textContent = cur - 1;
+    }
+
+    // Context kaydet (reply için)
+    const otherId = String(m.sender?.id) === String(u.id) ? m.receiver?.id : m.sender?.id;
+    _currentOtherUserId = otherId;
+    _currentPropertyId  = m.property?.id || null;
+
+    // Info grid doldur
+    const senderName  = m.sender?.name  || 'Bilinmeyen';
+    const senderEmail = m.sender?.email || '—';
+    document.getElementById('detailSender').textContent   = senderName;
+    document.getElementById('detailEmail').textContent    = senderEmail;
+    document.getElementById('detailProperty').textContent = m.property ? '📌 ' + m.property.title : '—';
+    document.getElementById('detailDate').textContent     = m.createdAt ? new Date(m.createdAt).toLocaleString('tr-TR') : '—';
+
+    // Thread yükle
+    await loadThread(u.id, otherId, _currentPropertyId, token);
+
+    // Detay görünümüne geç
+    document.getElementById('mesajListView').style.display   = 'none';
+    document.getElementById('mesajDetailView').style.display = 'block';
+    document.getElementById('replyText').value = '';
+
+    // Thread'i en alta kaydır
+    const tw = document.getElementById('threadWrap');
+    if (tw) tw.scrollTop = tw.scrollHeight;
+
+  } catch(e) {
+    console.error('[openMesaj] Exception:', e);
+    showToast('Mesaj açılamadı: ' + (e.message || 'Bilinmeyen hata'));
+  }
+}
+
+async function loadThread(myId, otherId, propertyId, token) {
+  if (!otherId) {
+    document.getElementById('threadWrap').innerHTML = '<div class="msg-empty">Konuşma bulunamadı.</div>';
+    return;
+  }
+  try {
+    let url = '/api/messages/thread?user1Id=' + myId + '&user2Id=' + otherId;
+    if (propertyId) url += '&propertyId=' + propertyId;
+    const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + token } });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const msgs = await res.json();
+    renderThread(msgs, myId);
+  } catch(e) {
+    console.error('[loadThread]', e);
+    document.getElementById('threadWrap').innerHTML = '<div class="msg-empty">Konuşma yüklenemedi.</div>';
+  }
+}
+
+function renderThread(msgs, myId) {
+  const wrap = document.getElementById('threadWrap');
+  if (!msgs.length) { wrap.innerHTML = '<div class="msg-empty">Henüz mesaj yok.</div>'; return; }
+  wrap.innerHTML = '<div class="thread-wrap">' + msgs.map(m => {
+    const isMine = String(m.sender?.id) === String(myId);
+    const name   = m.sender?.name || 'Bilinmeyen';
+    const date   = m.createdAt ? new Date(m.createdAt).toLocaleString('tr-TR') : '';
+    return `<div class="thread-msg ${isMine?'mine':'theirs'}">
+      <div class="thread-msg-meta"><span>${escapeHtml(name)}</span><span>${date}</span></div>
+      <div class="thread-msg-content">${escapeHtml(m.content||'')}</div>
+    </div>`;
+  }).join('') + '</div>';
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+async function sendReply() {
+  const token = getImageAuthToken();
+  const u = getUser();
+  if (!u || !token) { showToast('Giriş yapmanız gerekiyor.'); return; }
+  const text = (document.getElementById('replyText')?.value || '').trim();
+  if (!text) { showToast('Cevap boş bırakılamaz.'); return; }
+  if (!_currentOtherUserId) { showToast('Alıcı bulunamadı.'); return; }
+
+  const btn = document.getElementById('replyBtn');
+  if (btn) { btn.disabled=true; btn.textContent='Gönderiliyor...'; }
+
+  try {
+    const body = {
+      receiverId: Number(_currentOtherUserId),
+      content: text,
+      ...(_currentPropertyId && { listingId: Number(_currentPropertyId) })
+    };
+    const res = await fetch('/api/messages', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) {
+      const txt = await res.text().catch(()=>'');
+      console.error('[sendReply] Hata:', res.status, txt);
+      showToast('Cevap gönderilemedi. Hata: ' + res.status);
+      return;
+    }
+    document.getElementById('replyText').value = '';
+    showToast('Cevap gönderildi.');
+    await loadThread(u.id, _currentOtherUserId, _currentPropertyId, token);
+    const tw = document.getElementById('threadWrap');
+    if (tw) tw.scrollTop = tw.scrollHeight;
+  } catch(e) {
+    console.error('[sendReply]', e);
+    showToast('Cevap gönderilemedi: ' + (e.message||'Bilinmeyen hata'));
+  } finally {
+    if (btn) { btn.disabled=false; btn.textContent='Cevap Gönder'; }
+  }
+}
+
+function showMesajList() {
+  document.getElementById('mesajListView').style.display   = 'block';
+  document.getElementById('mesajDetailView').style.display = 'none';
+  _currentOtherUserId = null;
+  _currentPropertyId  = null;
+}
+
+// İlan Düzenleme
+function goBackToIlanlar() {
+  showPanel('ilanlar', document.getElementById('agentSidebarBtn'));
+  loadIlanlar();
+}
+
+async function openEditPanel(id) {
+  currentEditId = id;
+  const ilan = ilanlarData[id];
+  if (!ilan) { showToast('İlan bilgisi bulunamadı.'); return; }
+  document.getElementById('editTitle').value = ilan.title || '';
+  document.getElementById('editPrice').value = ilan.price || '';
+  document.getElementById('editDesc').value = ilan.description || '';
+  clearEditImageSelection();
+  await loadEditDropdowns(ilan);
+  renderEditImages(ilan.images || [], id);
+  showPanel('ilan-edit', null);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+let editDropdownData = { districts: [], neighborhoods: [], floors: [] };
+
+async function loadEditDropdowns(ilan) {
+  const [types, cats, cities, districts, neighborhoods, floors] = await Promise.all([
+    fetch('/api/property-types').then(r => r.json()).catch(() => []),
+    fetch('/api/categories').then(r => r.json()).catch(() => []),
+    fetch('/api/cities').then(r => r.json()).catch(() => []),
+    fetch('/api/districts').then(r => r.json()).catch(() => []),
+    fetch('/api/neighborhoods').then(r => r.json()).catch(() => []),
+    fetch('/api/floors').then(r => r.json()).catch(() => []),
+  ]);
+  editDropdownData = { districts, neighborhoods, floors };
+  const fill = (elId, items, selectedId) => {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    el.innerHTML = '<option value="">Seçin...</option>' +
+      items.map(x => `<option value="${x.id}"${String(x.id) === String(selectedId) ? ' selected' : ''}>${escapeHtml(x.name)}</option>`).join('');
+  };
+  fill('editType', types, ilan.propertyType?.id);
+  fill('editCategory', cats, ilan.category?.id);
+  fill('editCity', cities, ilan.city?.id);
+  fillEditDistricts(ilan.city?.id, ilan.district?.id);
+  fillEditNeighborhoods(ilan.district?.id, ilan.neighborhood?.id);
+  fill('editFloor', floors, ilan.floor?.id);
+}
+
+function fillEditSelect(elId, items, selectedId, emptyText) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = `<option value="">${emptyText}</option>` +
+    items.map(x => `<option value="${x.id}"${String(x.id) === String(selectedId) ? ' selected' : ''}>${escapeHtml(x.name)}</option>`).join('');
+}
+
+function fillEditDistricts(cityId, selectedId = '') {
+  const districts = cityId
+    ? editDropdownData.districts.filter(d => String(d.city?.id) === String(cityId))
+    : editDropdownData.districts;
+  fillEditSelect('editDistrict', districts, selectedId, cityId ? 'İlçe seçin...' : 'Önce şehir seçin');
+}
+
+function fillEditNeighborhoods(districtId, selectedId = '') {
+  const neighborhoods = districtId
+    ? editDropdownData.neighborhoods.filter(n => String(n.district?.id) === String(districtId))
+    : [];
+  fillEditSelect('editNeighborhood', neighborhoods, selectedId, districtId ? 'Mahalle seçin...' : 'Önce ilçe seçin');
+}
+
+function renderEditImages(images, propertyId) {
+  const grid = document.getElementById('editImgGrid');
+  if (!grid) return;
+  if (!images.length) {
+    grid.innerHTML = '<div class="edit-img-empty">Bu ilana ait görsel yok.</div>';
+    return;
+  }
+  grid.innerHTML = images.map(img => `
+    <div class="edit-img-thumb" id="editimg-${img.id}">
+      <img src="${escapeHtml(img.imageUrl)}" alt="görsel" loading="lazy">
+      <button class="edit-img-del" onclick="deleteEditImage(${propertyId},${img.id})">Sil</button>
+    </div>`).join('');
+}
+
+async function deleteEditImage(propertyId, imageId) {
+  const token = getImageAuthToken();
+  if (!token) { showToast('Oturum bulunamadı. Lütfen tekrar giriş yapın.'); return; }
+  const res = await fetch('/api/properties/' + propertyId + '/images/' + imageId, {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  if (res.ok) {
+    document.getElementById('editimg-' + imageId)?.remove();
+    const grid = document.getElementById('editImgGrid');
+    if (grid && !grid.querySelector('.edit-img-thumb')) {
+      grid.innerHTML = '<div class="edit-img-empty">Bu ilana ait görsel yok.</div>';
+    }
+    showToast('Görsel silindi.');
+  } else {
+    if (res.status === 401 || res.status === 403) { showToast('Yetkisiz erişim.'); return; }
+    showToast('Görsel silinemedi. Hata: ' + res.status);
+  }
+}
+
+async function uploadEditImages() {
+  const token = getImageAuthToken();
+  const id = currentEditId;
+  const btn = document.getElementById('updateImgUploadBtn');
+
+  if (!id) { showToast('İlan seçilmedi.'); return; }
+  if (!token) { showToast('Oturum bulunamadı. Lütfen tekrar giriş yapın.'); return; }
+  if (!selectedEditImageFiles.length) { showToast('Yüklenecek görsel seçin.'); return; }
+
+  const formData = new FormData();
+  selectedEditImageFiles.forEach(f => {
+    console.log('[Upload] Dosya ekleniyor:', f.name, f.size, 'bytes', f.type);
+    formData.append('images', f, f.name);
+  });
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Yükleniyor...'; }
+
+  try {
+    console.log('[Upload] POST /api/properties/' + id + '/images');
+    const res = await fetch('/api/properties/' + id + '/images', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+      // Content-Type header'ı EKLEME — tarayıcı boundary ile otomatik ayarlar
+      body: formData
+    });
+
+    if (!res.ok) {
+      const errText = await res.text().catch(() => '');
+      console.error('[Upload] Hata:', res.status, errText);
+      if (res.status === 401 || res.status === 403) { showToast('Yetkisiz erişim.'); return; }
+      if (res.status === 413) { showToast('Dosya boyutu çok büyük (max 20MB).'); return; }
+      showToast('Görsel yüklenemedi. Hata: ' + res.status);
+      return;
+    }
+
+    const updatedRes = await fetch('/api/properties/' + id, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (!updatedRes.ok) {
+      showToast('Görseller yüklendi, liste yenilenemedi.');
+      return;
+    }
+    const updated = await updatedRes.json();
+    ilanlarData[id] = updated;
+    renderEditImages(updated.images || [], id);
+    clearEditImageSelection();
+    showToast('Görseller başarıyla yüklendi.');
+  } catch(e) {
+    console.error('[Upload] Beklenmeyen hata:', e);
+    showToast('Görsel yüklenemedi: ' + (e.message || 'Bağlantı hatası'));
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Görselleri Yükle'; }
+  }
+}
+
+async function uploadSelectedEditImages(id, token) {
+  const formData = new FormData();
+  selectedEditImageFiles.forEach(f => formData.append('images', f, f.name));
+
+  const res = await fetch('/api/properties/' + id + '/images', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token },
+    body: formData
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => '');
+    throw new Error('Görsel yüklenemedi. Hata: ' + res.status + (errText ? ' - ' + errText : ''));
+  }
+
+  return res.json();
+}
+
+async function saveIlan() {
+  const token = getImageAuthToken();
+  const id = currentEditId;
+  if (!id) return;
+  if (!token) { showToast('Oturum bulunamadı. Lütfen tekrar giriş yapın.'); return; }
+  const title = document.getElementById('editTitle').value.trim();
+  if (!title) { showToast('İlan başlığı boş bırakılamaz.'); return; }
+  const typeId = Number(document.getElementById('editType').value);
+  const catId = Number(document.getElementById('editCategory').value);
+  const cityId = Number(document.getElementById('editCity').value);
+  const distId = Number(document.getElementById('editDistrict').value);
+  const neighborhoodId = Number(document.getElementById('editNeighborhood').value);
+  const floorId = Number(document.getElementById('editFloor').value);
+  const body = {
+    title,
+    description: document.getElementById('editDesc').value.trim(),
+    price: Number(document.getElementById('editPrice').value) || null,
+    ...(typeId && { propertyType: { id: typeId } }),
+    ...(catId && { category: { id: catId } }),
+    ...(cityId && { city: { id: cityId } }),
+    ...(distId && { district: { id: distId } }),
+    neighborhood: neighborhoodId ? { id: neighborhoodId } : null,
+    floor: floorId ? { id: floorId } : null,
+  };
+  try {
+    const res = await fetch('/api/properties/' + id, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify(body)
+    });
+    if (res.status === 403) { showToast('Bu ilanı güncelleme yetkiniz yok.'); return; }
+    if (!res.ok) { showToast('Güncelleme başarısız.'); return; }
+    if (selectedEditImageFiles.length) {
+      const updatedImages = await uploadSelectedEditImages(id, token);
+      if (ilanlarData[id]) {
+        ilanlarData[id].images = updatedImages;
+      }
+      clearEditImageSelection();
+      showToast('İlan ve görseller başarıyla güncellendi.');
+    } else {
+      showToast('İlan başarıyla güncellendi.');
+    }
+    goBackToIlanlar();
+  } catch(e) {
+    console.error('[saveIlan]', e);
+    showToast(e.message || 'Bağlantı hatası.');
+  }
+}
+
+// Init
+const user = getUser();
+if (!user) {
+  window.location.href = 'login.html?redirect=hesabim.html';
+} else {
+  if (!user.joinDate) { user.joinDate = new Date().toLocaleDateString('tr-TR'); saveUserData(user); }
+  fillPage(user);
+  renderNav(user);
+  fetchUserProfile();
+  // Mesajlarım — tüm giriş yapmış kullanıcılar için
+  document.getElementById('mesajSidebarBtn').style.display = '';
+  loadMesajlar();
+
+  const isAgent = (user.roles||[]).some(r => r.includes('AGENT') || r.includes('ADMIN'));
+  if (isAgent) {
+    document.getElementById('agentSidebarBtn').style.display = '';
+    document.getElementById('agentDivider').style.display = '';
+    loadIlanlar();
+  }
+}
+
+document.getElementById('editImgInput')?.addEventListener('change', function() {
+  addSelectedEditImages(this.files);
+});
+document.getElementById('editCity')?.addEventListener('change', function() {
+  fillEditDistricts(this.value);
+  fillEditNeighborhoods('');
+});
+document.getElementById('editDistrict')?.addEventListener('change', function() {
+  fillEditNeighborhoods(this.value);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EmlakPrime | Tüm İlanlar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0B1F3A;--navy-light:#1E4480;--accent:#C9A84C;--white:#fff;--gray-50:#F8F9FB;--gray-100:#EFF1F5;--gray-200:#DDE1EA;--gray-400:#9AA3B2;--gray-600:#5A6478;--gray-800:#2C3447;--font-display:'Playfair Display',serif;--font-body:'DM Sans',sans-serif;--shadow:0 8px 28px rgba(11,31,58,.1);--radius:14px}
+body{font-family:var(--font-body);background:var(--gray-50);color:var(--gray-800);min-height:100vh}
+nav{position:sticky;top:0;z-index:10;background:rgba(11,31,58,.96);border-bottom:1px solid rgba(201,168,76,.15)}
+.nav-inner{max-width:1280px;margin:0 auto;height:68px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--white);text-decoration:none}.logo span{color:var(--accent)}
+.nav-link{color:rgba(255,255,255,.78);text-decoration:none;font-weight:600;font-size:.92rem}.nav-link:hover{color:var(--white)}
+main{max-width:1280px;margin:0 auto;padding:3rem 2rem 4rem}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.4rem}
+.tag{display:inline-block;background:var(--gray-100);color:var(--navy-light);padding:.35rem .85rem;border-radius:999px;font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:.75rem}
+h1{font-family:var(--font-display);font-size:clamp(2rem,4vw,3.2rem);color:var(--navy);line-height:1.1}
+.sub{color:var(--gray-600);margin-top:.5rem}
+.filters{background:var(--white);border:1px solid var(--gray-100);border-radius:18px;padding:1rem;box-shadow:var(--shadow);display:grid;grid-template-columns:1.4fr repeat(5,1fr) auto;gap:.75rem;margin-bottom:1.5rem}
+.filters input,.filters select{width:100%;height:46px;border:1.5px solid var(--gray-200);border-radius:var(--radius);padding:0 .9rem;font-family:var(--font-body);font-size:.9rem;background:var(--gray-50);outline:none;color:var(--gray-800)}
+.filters input:focus,.filters select:focus{border-color:var(--navy)}
+.btn{height:46px;border:none;border-radius:var(--radius);background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;font-weight:800;font-family:var(--font-body);padding:0 1.35rem;cursor:pointer;white-space:nowrap}
+.summary{color:var(--gray-600);font-size:.94rem;margin:0 0 1.25rem}.summary strong{color:var(--navy)}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+.property-card{background:var(--white);border-radius:18px;overflow:hidden;border:1px solid var(--gray-100);box-shadow:0 2px 8px rgba(11,31,58,.06);cursor:pointer;transition:.25s}
+.property-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.card-img{position:relative;height:220px;background:linear-gradient(135deg,#EFF1F5,#DDE1EA);display:flex;align-items:center;justify-content:center;color:#9AA3B2;font-size:3rem;overflow:hidden}
+.card-img img{width:100%;height:100%;object-fit:cover;display:block}
+.badge{position:absolute;top:1rem;left:1rem;background:var(--navy);color:#fff;border-radius:7px;padding:.35rem .7rem;font-size:.76rem;font-weight:800;text-transform:uppercase}
+.badge.rent{background:var(--accent);color:var(--navy)}
+.card-body{padding:1.25rem}
+.price{font-family:var(--font-display);font-size:1.35rem;font-weight:800;color:var(--navy);margin-bottom:.35rem}.price span{font-family:var(--font-body);font-size:.85rem;font-weight:500;color:var(--gray-400)}
+.loc{font-size:.9rem;color:var(--gray-600);margin-bottom:1rem}.features{display:flex;gap:1rem;border-top:1px solid var(--gray-100);padding-top:1rem;font-size:.82rem;color:var(--gray-600)}
+.empty{grid-column:1/-1;text-align:center;padding:4rem 1rem;color:var(--gray-400);font-weight:600}
+@media(max-width:980px){.filters{grid-template-columns:1fr 1fr}.btn{grid-column:1/-1}}
+@media(max-width:560px){.nav-inner,main{padding-left:1rem;padding-right:1rem}.filters{grid-template-columns:1fr}.page-head{align-items:flex-start}}
+</style>
+<script src="auth-session.js"></script>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="index.html">Emlak<span>Prime</span></a>
+    <a class="nav-link" href="index.html">Ana Sayfa</a>
+  </div>
+</nav>
+
+<main>
+  <div class="page-head">
+    <div>
+      <span class="tag">Tüm İlanlar</span>
+      <h1>İlanlar</h1>
+      <p class="sub">Arama sonuçları ve tüm satılık/kiralık ilanlar burada listelenir.</p>
+    </div>
+  </div>
+
+  <form class="filters" id="filters">
+    <input type="search" id="q" placeholder="İlanlarda ara">
+    <select id="saleType">
+      <option value="">Tümü</option>
+      <option>Satılık</option>
+      <option>Kiralık</option>
+    </select>
+    <select id="city"><option value="">Şehir</option></select>
+    <select id="category"><option value="">Kategori</option></select>
+    <input type="number" id="min" placeholder="Min fiyat">
+    <input type="number" id="max" placeholder="Max fiyat">
+    <button class="btn" type="submit">Ara</button>
+  </form>
+
+  <div class="summary" id="summary"></div>
+  <div class="cards-grid" id="grid"></div>
+</main>
+
+<script>
+const listings = [];
+const params = new URLSearchParams(window.location.search);
+const els = {
+  q: document.getElementById('q'),
+  saleType: document.getElementById('saleType'),
+  city: document.getElementById('city'),
+  category: document.getElementById('category'),
+  min: document.getElementById('min'),
+  max: document.getElementById('max'),
+  grid: document.getElementById('grid'),
+  summary: document.getElementById('summary')
+};
+
+function esc(value){
+  return String(value || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
+}
+function norm(value){ return String(value || '').toLocaleLowerCase('tr-TR').trim(); }
+function priceToNumber(value){ return Number(String(value || '').replace(/[^\d]/g,'')) || 0; }
+function money(value){ return value ? '₺' + Number(value).toLocaleString('tr-TR') : '—'; }
+function saleTypeOf(property){
+  const name = property.propertyType?.name || '';
+  return name.toLocaleLowerCase('tr-TR').includes('kira') ? 'Kiralık' : 'Satılık';
+}
+function fallbackImage(){
+  return '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;color:#9AA3B2;background:linear-gradient(135deg,#EFF1F5,#DDE1EA)">🏠</div>';
+}
+
+function readFilters(){
+  return {
+    q: els.q.value.trim(),
+    saleType: els.saleType.value,
+    city: els.city.value,
+    category: els.category.value,
+    min: els.min.value,
+    max: els.max.value
+  };
+}
+
+function matches(item, filters){
+  const haystack = norm([item.title,item.category,item.city,item.district,item.neighborhood,item.floor,item.type,item.price].join(' '));
+  const words = norm(filters.q).split(/\s+/).filter(Boolean);
+  if(words.length && !words.every(word => haystack.includes(word))) return false;
+  if(filters.saleType && item.type !== filters.saleType) return false;
+  if(filters.city && norm(item.city) !== norm(filters.city)) return false;
+  if(filters.category && !norm(item.category).includes(norm(filters.category))) return false;
+  if(filters.min && item.priceNumber < Number(filters.min)) return false;
+  if(filters.max && item.priceNumber > Number(filters.max)) return false;
+  return true;
+}
+
+function syncUrl(filters){
+  const next = new URLSearchParams();
+  Object.entries(filters).forEach(([key,value]) => { if(value) next.set(key === 'q' ? 'q' : key, value); });
+  history.replaceState(null, '', 'tum-ilanlar.html' + (next.toString() ? '?' + next.toString() : ''));
+}
+
+function render(){
+  const filters = readFilters();
+  syncUrl(filters);
+  const items = listings.filter(item => matches(item, filters));
+  const parts = [];
+  if(filters.q) parts.push(`Arama: <strong>${esc(filters.q)}</strong>`);
+  if(filters.saleType) parts.push(`Tür: <strong>${esc(filters.saleType)}</strong>`);
+  if(filters.city) parts.push(`Şehir: <strong>${esc(filters.city)}</strong>`);
+  if(filters.category) parts.push(`Kategori: <strong>${esc(filters.category)}</strong>`);
+  els.summary.innerHTML = `${items.length} ilan bulundu` + (parts.length ? ' | ' + parts.join(' | ') : '');
+
+  if(!items.length){
+    els.grid.innerHTML = '<div class="empty">Bu arama için ilan bulunamadı.</div>';
+    return;
+  }
+
+  els.grid.innerHTML = items.map(item => `
+    <div class="property-card" onclick="window.location.href='ilan-detay.html?id=${item.id}'">
+      <div class="card-img">
+        ${item.img ? `<img src="${esc(item.img)}" alt="${esc(item.title)}" loading="lazy" onerror="this.replaceWith(document.createRange().createContextualFragment(fallbackImage()))">` : fallbackImage()}
+        <span class="badge ${item.type === 'Kiralık' ? 'rent' : ''}">${item.type}</span>
+      </div>
+      <div class="card-body">
+        <div class="price">${item.price} <span>${esc(item.category)}</span></div>
+        <div class="loc">📍 ${esc(item.neighborhood || '-')} · ${esc(item.district || '-')}, ${esc(item.city || '-')}</div>
+        <div class="features">
+          <div>Kat ${esc(item.floor || '-')}</div>
+          <div>📐 ${esc(item.sqm || '—')} m²</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function fillSelect(select, values, placeholder){
+  const current = select.value;
+  select.innerHTML = `<option value="">${placeholder}</option>` + [...new Set(values.filter(Boolean))].sort((a,b)=>a.localeCompare(b,'tr')).map(value => `<option>${esc(value)}</option>`).join('');
+  select.value = current;
+}
+
+async function load(){
+  els.q.value = params.get('q') || '';
+  els.saleType.value = params.get('saleType') || '';
+  els.min.value = params.get('min') || '';
+  els.max.value = params.get('max') || '';
+
+  const [properties, categories] = await Promise.all([
+    fetch('/api/properties?active=true').then(r => r.json()).catch(() => []),
+    fetch('/api/categories').then(r => r.json()).catch(() => [])
+  ]);
+
+  (Array.isArray(properties) ? properties : []).forEach(p => {
+    listings.push({
+      id: p.id,
+      type: saleTypeOf(p),
+      category: p.category?.name || '',
+      title: p.title || '—',
+      city: p.city?.name || '',
+      district: p.district?.name || '',
+      neighborhood: p.neighborhood?.name || '',
+      floor: p.floor?.name || '-',
+      price: money(p.price),
+      priceNumber: Number(p.price) || 0,
+      sqm: '—',
+      img: p.images?.[0]?.imageUrl || null
+    });
+  });
+
+  fillSelect(els.city, listings.map(item => item.city), 'Şehir');
+  els.city.value = params.get('city') || '';
+  els.category.innerHTML = '<option value="">Kategori</option>' + (Array.isArray(categories) ? categories : []).map(cat => `<option>${esc(cat.name)}</option>`).join('');
+  els.category.value = params.get('category') || '';
+  render();
+}
+
+document.getElementById('filters').addEventListener('submit', event => {
+  event.preventDefault();
+  render();
+});
+['q','saleType','city','category','min','max'].forEach(id => {
+  document.getElementById(id).addEventListener('change', render);
+});
+
+load();
+</script>
+</body>
+</html>

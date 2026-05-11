@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EmlakPrime | Giriş Yap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --navy:#0B1F3A;
+  --navy-mid:#163258;
+  --navy-light:#1E4480;
+  --accent:#C9A84C;
+  --accent-light:#E8C97A;
+  --white:#ffffff;
+  --gray-50:#F8F9FB;
+  --gray-100:#EFF1F5;
+  --gray-200:#DDE1EA;
+  --gray-400:#9AA3B2;
+  --gray-600:#5A6478;
+  --gray-800:#2C3447;
+  --muted:#aeb7c6;
+  --input:#f5f7fb;
+  --text:#111827;
+}
+
+/* ── Arka plan iframe ── */
+.bg-iframe{
+  position:fixed;top:0;left:0;
+  width:100%;height:100%;
+  border:none;z-index:0;
+  pointer-events:none;
+  filter:blur(3px) brightness(0.55);
+  transform:scale(1.06);
+}
+.bg-overlay{
+  position:fixed;inset:0;
+  background:rgba(11,31,58,0.55);
+  backdrop-filter:blur(2px);
+  z-index:1;
+}
+
+/* ── Kapat butonu ── */
+.close-btn{
+  position:fixed;top:1.5rem;right:1.5rem;
+  z-index:300;
+  width:46px;height:46px;border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(12px);
+  border:1.5px solid rgba(255,255,255,0.25);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--white);font-size:1.25rem;
+  text-decoration:none;
+  transition:all .25s ease;
+  box-shadow:0 4px 16px rgba(0,0,0,0.2);
+}
+.close-btn:hover{
+  background:rgba(255,255,255,0.28);
+  transform:scale(1.08) rotate(90deg);
+  border-color:rgba(201,168,76,0.6);
+  color:var(--accent-light);
+}
+
+body{
+  background:transparent;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  font-family:'DM Sans',sans-serif;
+  min-height:100vh;
+  margin:0;
+  padding:30px 16px;
+  color:var(--text);
+  position:relative;
+  overflow-x:hidden;
+}
+
+.page-title{
+  font-family:'Playfair Display',serif;
+  text-align:center;
+  margin:0 0 24px;
+  color:var(--white);
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:0.2px;
+  position:relative;
+  z-index:10;
+  z-index:1;
+}
+
+.page-title span{color:var(--accent)}
+
+button{
+  border-radius:999px;
+  border:1px solid var(--accent);
+  background:linear-gradient(135deg,var(--accent-light),var(--accent));
+  color:#07101f;
+  font-size:12px;
+  font-family:'DM Sans',sans-serif;
+  font-weight:800;
+  padding:13px 44px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  transition:transform 80ms ease-in,box-shadow 0.25s ease,filter 0.25s ease;
+  cursor:pointer;
+  box-shadow:0 12px 24px rgba(201,168,76,0.28);
+}
+
+button:hover{filter:brightness(1.06);box-shadow:0 16px 34px rgba(201,168,76,0.38)}
+button:active{transform:scale(0.95)}
+button:focus{outline:none}
+
+button.ghost{
+  background:rgba(255,255,255,0.08);
+  border-color:rgba(232,201,122,0.9);
+  color:var(--white);
+  box-shadow:none;
+  backdrop-filter:blur(10px);
+}
+
+button.ghost:hover{background:rgba(201,168,76,0.18);box-shadow:0 12px 28px rgba(0,0,0,0.2)}
+
+form{
+  background:rgba(255,255,255,0.94);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  padding:0 48px;
+  height:100%;
+  text-align:center;
+  backdrop-filter:blur(18px);
+}
+
+.sign-up-container form{
+  justify-content:flex-start;
+  padding-top:20px;
+  padding-bottom:20px;
+  overflow-y:auto;
+}
+
+.sign-up-container form h1{
+  font-size:25px;
+}
+
+.sign-up-container form p{
+  margin:4px 0 10px;
+}
+
+form h1{
+  color:var(--navy);
+  font-family:'Playfair Display',serif;
+  font-size:28px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+form p{
+  font-size:13px;
+  color:var(--gray-600);
+  margin:6px 0 18px;
+  line-height:1.6;
+}
+
+.input-group{
+  position:relative;
+  width:100%;
+  margin:7px 0;
+}
+
+.input-group i{
+  position:absolute;
+  left:16px;top:50%;
+  transform:translateY(-50%);
+  color:var(--accent);
+  font-size:14px;
+  z-index:1;
+}
+
+input,select{
+  background:var(--input);
+  border:1.5px solid rgba(11,31,58,0.08);
+  padding:13px 15px 13px 44px;
+  width:100%;
+  border-radius:14px;
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;
+  font-weight:500;
+  color:var(--text);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.9);
+  transition:border-color 0.25s ease,box-shadow 0.25s ease,background 0.25s ease;
+}
+
+input:focus,select:focus{
+  outline:none;
+  background:#ffffff;
+  border-color:rgba(201,168,76,0.8);
+  box-shadow:0 0 0 4px rgba(201,168,76,0.16);
+}
+
+input::placeholder{color:#8993a5}
+
+select{
+  appearance:none;
+  cursor:pointer;
+}
+
+.listing-checkbox{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  margin:7px 0 3px;
+  padding:12px 14px;
+  background:var(--input);
+  border:1.5px solid rgba(11,31,58,0.08);
+  border-radius:14px;
+  color:var(--text);
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  text-align:left;
+}
+
+.listing-checkbox input{
+  width:16px;
+  height:16px;
+  margin:0;
+  padding:0;
+  border-radius:4px;
+  accent-color:var(--accent);
+  box-shadow:none;
+  cursor:pointer;
+}
+
+.remember-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  width:100%;
+  margin:8px 0 14px;
+}
+
+.remember-check{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--gray-600);
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.remember-check input{
+  width:15px;
+  height:15px;
+  margin:0;
+  padding:0;
+  accent-color:var(--accent);
+  box-shadow:none;
+  cursor:pointer;
+}
+
+.forgot-link{
+  color:var(--navy-light);
+  font-size:13px;
+  font-weight:600;
+  text-decoration:none;
+  margin:0;
+  cursor:pointer;
+  transition:color 0.2s;
+  background:none;
+  border:none;
+  box-shadow:none;
+  padding:0;
+  letter-spacing:0;
+  text-transform:none;
+  font-family:'DM Sans',sans-serif;
+}
+
+.forgot-link:hover{color:var(--accent);filter:none;box-shadow:none}
+.forgot-link:active{transform:none}
+
+.container{
+  background:rgba(255,255,255,0.88);
+  border-radius:28px;
+  box-shadow:0 30px 80px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.18);
+  position:relative;
+  overflow:hidden;
+  width:860px;
+  max-width:100%;
+  min-height:540px;
+  z-index:10;
+  backdrop-filter:blur(20px);
+}
+
+.form-container{
+  position:absolute;
+  top:0;
+  height:100%;
+  transition:all 0.6s ease-in-out;
+}
+
+.sign-in-container{left:0;width:50%;z-index:2}
+.container.right-panel-active .sign-in-container{transform:translateX(100%)}
+
+.sign-up-container{left:0;width:50%;opacity:0;z-index:1}
+.container.right-panel-active .sign-up-container{
+  transform:translateX(100%);
+  opacity:1;z-index:5;
+  animation:show 0.6s;
+}
+
+@keyframes show{
+  0%,49.99%{opacity:0;z-index:1}
+  50%,100%{opacity:1;z-index:5}
+}
+
+.overlay-container{
+  position:absolute;top:0;left:50%;
+  width:50%;height:100%;
+  overflow:hidden;
+  transition:transform 0.6s ease-in-out;
+  z-index:100;
+}
+
+.container.right-panel-active .overlay-container{transform:translateX(-100%)}
+
+.overlay{
+  background:
+    linear-gradient(rgba(5,7,13,0.65),rgba(5,7,13,0.82)),
+    linear-gradient(135deg,rgba(201,168,76,0.82),rgba(11,31,58,0.92)),
+    url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80");
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-position:center;
+  color:var(--white);
+  position:relative;
+  left:-100%;height:100%;width:200%;
+  transform:translateX(0);
+  transition:transform 0.6s ease-in-out;
+}
+
+.overlay::before{
+  content:"";
+  position:absolute;
+  inset:24px;
+  border:1px solid rgba(232,201,122,0.35);
+  border-radius:22px;
+  pointer-events:none;
+}
+
+.container.right-panel-active .overlay{transform:translateX(50%)}
+
+.overlay-panel{
+  position:absolute;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  padding:0 42px;text-align:center;
+  top:0;height:100%;width:50%;
+  transform:translateX(0);
+  transition:transform 0.6s ease-in-out;
+  z-index:1;
+}
+
+.overlay-panel h1{
+  font-family:'Playfair Display',serif;
+  font-size:28px;line-height:1.2;
+  text-shadow:0 8px 28px rgba(0,0,0,0.35);
+  margin-bottom:12px;
+}
+
+.overlay-panel p{
+  color:rgba(255,255,255,0.82);
+  font-size:13px;line-height:1.65;
+  max-width:280px;margin:0 0 24px;
+}
+
+.overlay-left{transform:translateX(-20%)}
+.container.right-panel-active .overlay-left{transform:translateX(0)}
+.overlay-right{right:0;transform:translateX(0)}
+.container.right-panel-active .overlay-right{transform:translateX(20%)}
+
+.social-container{margin:14px 0 12px}
+
+.sign-up-container .social-container{margin:8px 0 8px}
+
+.social-container a{
+  border:1px solid rgba(11,31,58,0.12);
+  background:rgba(255,255,255,0.78);
+  border-radius:50%;
+  display:inline-flex;justify-content:center;align-items:center;
+  margin:0 5px;height:40px;width:40px;
+  color:var(--navy);
+  transition:transform 0.25s ease,border-color 0.25s ease,color 0.25s ease,box-shadow 0.25s ease;
+  text-decoration:none;font-size:14px;
+}
+
+.social-container a:hover{
+  transform:translateY(-3px);
+  border-color:rgba(201,168,76,0.75);
+  color:var(--accent);
+  box-shadow:0 12px 24px rgba(11,31,58,0.12);
+}
+
+.social-label{
+  font-size:12px;color:#697386;margin:0 0 6px;display:block;
+}
+
+.sign-up-container .input-group{margin:4px 0}
+.sign-up-container input{
+  padding-top:11px;
+  padding-bottom:11px;
+}
+.sign-up-container .listing-checkbox{
+  margin:5px 0 2px;
+  padding:10px 14px;
+}
+.sign-up-container button{
+  padding:12px 36px;
+}
+
+.brand-note{
+  position:absolute;left:24px;bottom:22px;
+  font-size:11px;font-weight:700;letter-spacing:1.8px;
+  color:rgba(232,201,122,0.8);text-transform:uppercase;z-index:2;
+  font-family:'Playfair Display',serif;
+}
+
+/* ── Şifremi Unuttum Modal ── */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(11,31,58,0.55);
+  backdrop-filter:blur(6px);
+  z-index:2000;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.3s ease;
+}
+
+.modal-overlay.open{opacity:1;pointer-events:all}
+
+.modal{
+  background:#fff;
+  border-radius:24px;
+  padding:2.5rem;
+  width:100%;max-width:400px;
+  box-shadow:0 24px 64px rgba(11,31,58,0.3);
+  transform:translateY(24px) scale(0.97);
+  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1);
+  position:relative;
+}
+
+.modal-overlay.open .modal{transform:translateY(0) scale(1)}
+
+.modal-close{
+  position:absolute;top:1.25rem;right:1.25rem;
+  background:var(--gray-100);border:none;box-shadow:none;
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;color:var(--gray-600);cursor:pointer;
+  padding:0;letter-spacing:0;text-transform:none;
+  transition:background 0.2s,color 0.2s;
+}
+
+.modal-close:hover{background:var(--gray-200);color:var(--navy);filter:none;box-shadow:none}
+.modal-close:active{transform:none}
+
+.modal-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:.4rem;
+}
+
+.modal-sub{font-size:.88rem;color:var(--gray-600);line-height:1.55;margin-bottom:1.5rem}
+
+.modal .input-group{margin:0 0 1rem}
+
+.modal .input-group i{color:var(--accent)}
+
+.btn-modal{
+  width:100%;padding:13px;border-radius:14px;
+  background:linear-gradient(135deg,var(--navy),var(--navy-light));
+  color:#fff;border:none;box-shadow:none;
+  font-family:'DM Sans',sans-serif;
+  font-size:.95rem;font-weight:700;
+  letter-spacing:.5px;text-transform:none;
+  cursor:pointer;transition:all 0.25s ease;
+}
+
+.btn-modal:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(11,31,58,0.3);filter:none}
+.btn-modal:active{transform:translateY(0)}
+
+.success-state{display:none;text-align:center;padding:.5rem 0}
+.success-icon{font-size:3rem;margin-bottom:.75rem}
+.success-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:.5rem}
+.success-desc{font-size:.88rem;color:var(--gray-600);line-height:1.6}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:2rem;right:2rem;z-index:2000;
+  background:var(--navy);color:#fff;
+  padding:.8rem 1.4rem;border-radius:14px;
+  font-size:.88rem;font-weight:500;
+  box-shadow:0 12px 40px rgba(11,31,58,0.25);
+  transform:translateY(80px);opacity:0;
+  transition:all .4s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:none;border-left:4px solid var(--accent);
+  max-width:300px;
+}
+
+.toast.show{transform:translateY(0);opacity:1}
+
+@media(max-width:768px){
+  body{padding:16px;justify-content:flex-start}
+  .page-title{font-size:17px;margin:8px 0 16px}
+  .container{width:100%;min-height:620px;border-radius:22px}
+  form{padding:0 22px}
+  .sign-up-container form{padding:18px 22px}
+  form h1{font-size:22px}
+  button{padding:12px 24px;font-size:11px}
+  .input-group{margin:5px 0}
+  input{padding:12px 12px 12px 40px;font-size:12px}
+  .overlay-panel{padding:0 20px}
+  .overlay::before{inset:14px;border-radius:18px}
+  .social-container a{height:36px;width:36px}
+}
+
+@media(max-width:480px){
+  body{padding:0}
+  .page-title{display:none}
+  .container{min-height:100vh;border-radius:0}
+  form{padding:0 14px}
+  .sign-up-container form{padding:16px 14px}
+  .overlay-panel{padding:0 12px}
+  .overlay-panel h1,form h1{font-size:19px}
+  .overlay-panel p{font-size:11px}
+  button{padding:11px 18px;letter-spacing:0.7px}
+  .brand-note{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Arka plan: ana sayfa -->
+<iframe src="index.html" class="bg-iframe" tabindex="-1" aria-hidden="true"></iframe>
+<div class="bg-overlay"></div>
+
+<!-- Kapat butonu -->
+<a href="index.html" class="close-btn" title="Ana Sayfaya Dön">✕</a>
+
+<div class="toast" id="toast"></div>
+
+<!-- Şifremi Unuttum Modal -->
+<div class="modal-overlay" id="forgotModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeForgot()">✕</button>
+
+    <div id="forgotForm">
+      <div class="modal-title">Şifremi Unuttum</div>
+      <div class="modal-sub">E-posta adresinizi girin, size sıfırlama bağlantısı gönderelim.</div>
+      <div class="input-group">
+        <i class="fa-regular fa-envelope"></i>
+        <input type="email" id="forgotEmail" placeholder="E-posta Adresiniz">
+      </div>
+      <button class="btn-modal" onclick="submitForgot()">Sıfırlama Bağlantısı Gönder</button>
+    </div>
+
+    <div class="success-state" id="forgotSuccess">
+      <div class="success-icon">📧</div>
+      <div class="success-title">Gönderildi!</div>
+      <div class="success-desc">Şifre sıfırlama bağlantısı e-posta adresinize iletildi.<br>Gelen kutunuzu kontrol edin.</div>
+    </div>
+  </div>
+</div>
+
+<div class="page-title">Emlak<span>Prime</span> &nbsp;|&nbsp; Gayrimenkul Platformu</div>
+
+<div class="container" id="container">
+
+  <!-- Kayıt Formu -->
+  <div class="form-container sign-up-container">
+    <form onsubmit="return false">
+      <h1>Hesap Oluştur</h1>
+      <p>Ücretsiz kayıt olun ve tüm özelliklere erişin.</p>
+
+      <div class="social-container">
+        <a href="#" aria-label="Google ile kayıt ol" onclick="showToast('Google ile kayıt yakında aktif olacak.');return false"><i class="fab fa-google"></i></a>
+        <a href="#" aria-label="Facebook ile kayıt ol" onclick="showToast('Facebook ile kayıt yakında aktif olacak.');return false"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="Apple ile kayıt ol" onclick="showToast('Apple ile kayıt yakında aktif olacak.');return false"><i class="fab fa-apple"></i></a>
+      </div>
+
+      <span class="social-label">veya e-posta ile ücretsiz kayıt olun</span>
+
+      <div class="input-group">
+        <i class="fa-regular fa-user"></i>
+        <input type="text" id="regName" placeholder="Ad Soyad">
+      </div>
+
+      <div class="input-group">
+        <i class="fa-solid fa-at"></i>
+        <input type="text" id="regUsername" placeholder="Kullanıcı Adı">
+      </div>
+
+      <div class="input-group">
+        <i class="fa-regular fa-envelope"></i>
+        <input type="email" id="regEmail" placeholder="E-posta Adresi">
+      </div>
+
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="regPw" placeholder="Şifre (en az 8 karakter)">
+      </div>
+
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="regPwConfirm" placeholder="Şifre Tekrar">
+      </div>
+
+      <label class="listing-checkbox">
+        <input type="checkbox" id="regWantsListingUpload">
+        <span>İlan yüklemek istiyorum</span>
+      </label>
+
+      <div id="regMsg" style="font-size:12px;min-height:18px;margin:4px 0;"></div>
+
+      <button onclick="submitRegister()">Hesap Oluştur</button>
+    </form>
+  </div>
+
+  <!-- Giriş Formu -->
+  <div class="form-container sign-in-container">
+    <form onsubmit="return false">
+      <h1>Giriş Yap</h1>
+      <p>Hesabınıza giriş yaparak devam edin.</p>
+
+      <div class="social-container">
+        <a href="#" aria-label="Google ile giriş yap" onclick="showToast('Google ile giriş yakında aktif olacak.');return false"><i class="fab fa-google"></i></a>
+        <a href="#" aria-label="Facebook ile giriş yap" onclick="showToast('Facebook ile giriş yakında aktif olacak.');return false"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="Apple ile giriş yap" onclick="showToast('Apple ile giriş yakında aktif olacak.');return false"><i class="fab fa-apple"></i></a>
+      </div>
+
+      <span class="social-label">veya e-posta adresinizle giriş yapın</span>
+
+      <div class="input-group">
+        <i class="fa-regular fa-envelope"></i>
+        <input type="text" id="loginEmail" placeholder="Kullanıcı adı veya e-posta">
+      </div>
+
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="loginPw" placeholder="Şifre">
+      </div>
+
+      <div class="remember-row">
+        <label class="remember-check">
+          <input type="checkbox" id="rememberMe">
+          <span>Beni hatırla</span>
+        </label>
+        <button class="forgot-link" type="button" onclick="openForgot()">Şifremi Unuttum</button>
+      </div>
+
+      <div id="loginMsg" style="font-size:12px;min-height:18px;margin:4px 0;"></div>
+
+      <button onclick="submitLogin()">Giriş Yap</button>
+    </form>
+  </div>
+
+  <!-- Kayan Panel -->
+  <div class="overlay-container">
+    <div class="overlay">
+
+      <div class="overlay-panel overlay-left">
+        <h1>Tekrar Hoş Geldiniz</h1>
+        <p>Favori ilanlarınızı ve portföyünüzü yönetmek için giriş yapın.</p>
+        <button class="ghost" id="signIn">Giriş Yap</button>
+      </div>
+
+      <div class="overlay-panel overlay-right">
+        <h1>Yeni Bir Yaşam Alanı Keşfedin</h1>
+        <p>Binlerce satılık ve kiralık ilan arasından hayalinizdekini bulun.</p>
+        <button class="ghost" id="signUp">Hesap Oluştur</button>
+      </div>
+
+      <div class="brand-note">EmlakPrime</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="auth-session.js"></script>
+<script>
+function isAdminUser(user) {
+  function roleKey(role) {
+    return String(role?.name || role?.authority || role)
+      .toUpperCase()
+      .replace(/^(ROLE_)+/, '');
+  }
+  return (user?.roles || []).some(role => {
+    return roleKey(role) === 'ADMIN';
+  });
+}
+
+function wantsAdminPage(url) {
+  return String(url || '').toLowerCase().includes('admin.html');
+}
+
+function targetAfterLogin(user) {
+  const redirect = getRedirect();
+  if (wantsAdminPage(redirect)) {
+    return isAdminUser(user) ? 'admin.html' : 'index.html';
+  }
+  return redirect;
+}
+
+// Zaten giriş yapılmışsa uygun sayfaya yönlendir
+try {
+  const hasValidSession = window.EmlakAuth?.validateSession({ redirect: false });
+  const _u = hasValidSession ? window.EmlakAuth.getUser() : null;
+  const redirect = getRedirect();
+  if (_u && wantsAdminPage(redirect) && !isAdminUser(_u)) {
+        window.EmlakAuth?.clearSession();
+      } else if (_u) {
+    window.location.replace(targetAfterLogin(_u));
+  }
+} catch(e) {}
+
+const container = document.getElementById('container');
+document.getElementById('signUp').addEventListener('click', () => container.classList.add('right-panel-active'));
+document.getElementById('signIn').addEventListener('click', () => container.classList.remove('right-panel-active'));
+
+function getRedirect() {
+  const p = new URLSearchParams(window.location.search);
+  return p.get('redirect') || 'index.html';
+}
+
+async function submitLogin() {
+  const loginId = document.getElementById('loginEmail').value.trim();
+  const pw    = document.getElementById('loginPw').value;
+  const rememberMe = document.getElementById('rememberMe').checked;
+  const msg   = document.getElementById('loginMsg');
+
+  if (!loginId) { showToast('Kullanıcı adı veya e-posta girin.'); return; }
+  if (!pw) { showToast('Şifre gereklidir.'); return; }
+
+  msg.style.color = '#555';
+  msg.textContent = 'Giriş yapılıyor...';
+  window.EmlakAuth?.clearSession();
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: loginId, password: pw, rememberMe })
+    });
+
+    if (res.ok) {
+      const auth = await res.json();
+      auth.rememberMe = rememberMe;
+      const userSession = {
+        id: auth.userId,
+        username: auth.username,
+        name: auth.fullName || auth.username,
+        email: auth.email || '',
+        roles: auth.roles || [],
+        token: auth.token
+      };
+      if (window.EmlakAuth) {
+        window.EmlakAuth.storeSession(auth, userSession);
+      } else {
+        const storage = rememberMe ? localStorage : sessionStorage;
+        [localStorage, sessionStorage].forEach(s => ['emlakprime_token','token','roles','username','userId','emlakprime_user','loginTime','expiresAt'].forEach(k => s.removeItem(k)));
+        storage.setItem('emlakprime_token', auth.token);
+        storage.setItem('token', auth.token);
+        storage.setItem('roles', JSON.stringify(auth.roles || []));
+        storage.setItem('username', auth.username || '');
+        storage.setItem('userId', auth.userId || '');
+        storage.setItem('loginTime', String(Date.now()));
+        storage.setItem('expiresAt', String(auth.expiresAt || (Date.now() + (rememberMe ? 7 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000))));
+        storage.setItem('emlakprime_user', JSON.stringify(userSession));
+      }
+      msg.style.color = '#27ae60';
+      msg.textContent = 'Giriş başarılı! Yönlendiriliyorsunuz...';
+      setTimeout(() => {
+        const target = targetAfterLogin(userSession);
+        if (wantsAdminPage(getRedirect()) && !isAdminUser(userSession)) {
+          showToast('Admin paneli icin admin yetkisi gerekiyor.');
+        }
+        window.location.href = target;
+      }, 1000);
+    } else {
+      const text = await res.text();
+      msg.style.color = '#c0392b';
+      msg.textContent = text || 'E-posta veya şifre hatalı.';
+    }
+  } catch (err) {
+    msg.style.color = '#c0392b';
+    msg.textContent = 'Sunucuya bağlanılamadı.';
+  }
+}
+
+async function submitRegister() {
+  const name     = document.getElementById('regName').value.trim();
+  const username = document.getElementById('regUsername').value.trim();
+  const email    = document.getElementById('regEmail').value.trim();
+  const pw       = document.getElementById('regPw').value;
+  const confirmPassword = document.getElementById('regPwConfirm').value;
+  const wantsToPostListing = document.getElementById('regWantsListingUpload').checked;
+  const msg      = document.getElementById('regMsg');
+
+  if (!username) { showToast('Kullanıcı adı gereklidir.'); return; }
+  if (!email || !/\S+@\S+\.\S+/.test(email)) { showToast('Geçerli bir e-posta adresi girin.'); return; }
+  if (!pw || pw.length < 8) { showToast('Şifre en az 8 karakter olmalıdır.'); return; }
+  if (pw !== confirmPassword) { showToast('Şifre ve şifre tekrar eşleşmiyor.'); return; }
+
+  msg.style.color = '#555';
+  msg.textContent = 'Hesap oluşturuluyor...';
+
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fullName: name, username, email, password: pw, confirmPassword, wantsToPostListing })
+    });
+
+    if (res.ok) {
+      const loginRes = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password: pw, rememberMe: false })
+      });
+      const auth = loginRes.ok ? await loginRes.json() : null;
+      if (auth) auth.rememberMe = false;
+      const userSession = {
+        id: auth?.userId || null, username, name: name || username, email, roles: auth?.roles || [], token: auth?.token || ''
+      };
+      if (auth?.token && window.EmlakAuth) {
+        window.EmlakAuth.storeSession(auth, userSession);
+      } else {
+        if (auth?.token) localStorage.setItem('emlakprime_token', auth.token);
+        if (auth?.token) localStorage.setItem('token', auth.token);
+        localStorage.setItem('roles', JSON.stringify(auth?.roles || []));
+        localStorage.setItem('username', auth?.username || username);
+        localStorage.setItem('userId', auth?.userId || '');
+        localStorage.setItem('emlakprime_user', JSON.stringify(userSession));
+      }
+      msg.style.color = '#27ae60';
+      msg.textContent = 'Kayıt başarılı! Yönlendiriliyorsunuz...';
+      setTimeout(() => { window.location.href = getRedirect(); }, 1200);
+    } else {
+      const text = await res.text();
+      msg.style.color = '#c0392b';
+      msg.textContent = text || 'Kayıt başarısız. Bilgilerinizi kontrol edin.';
+    }
+  } catch (err) {
+    msg.style.color = '#c0392b';
+    msg.textContent = 'Sunucuya bağlanılamadı.';
+  }
+}
+
+function openForgot() {
+  document.getElementById('forgotModal').classList.add('open');
+  document.getElementById('forgotForm').style.display = 'block';
+  document.getElementById('forgotSuccess').style.display = 'none';
+  document.getElementById('forgotEmail').value = '';
+}
+
+function closeForgot() {
+  document.getElementById('forgotModal').classList.remove('open');
+}
+
+function submitForgot() {
+  const email = document.getElementById('forgotEmail').value;
+  if (!email || !/\S+@\S+\.\S+/.test(email)) { showToast('Geçerli bir e-posta adresi girin.'); return; }
+  document.getElementById('forgotForm').style.display = 'none';
+  document.getElementById('forgotSuccess').style.display = 'block';
+}
+
+document.getElementById('forgotModal').addEventListener('click', function(e) {
+  if (e.target === this) closeForgot();
+});
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

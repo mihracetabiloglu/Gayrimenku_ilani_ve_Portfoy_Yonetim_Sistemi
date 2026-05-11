@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EmlakPrime | Ana Sayfa</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+  --navy:#0B1F3A;
+  --navy-mid:#163258;
+  --navy-light:#1E4480;
+  --accent:#C9A84C;
+  --accent-light:#E8C97A;
+  --white:#FFFFFF;
+  --gray-50:#F8F9FB;
+  --gray-100:#EFF1F5;
+  --gray-200:#DDE1EA;
+  --gray-400:#9AA3B2;
+  --gray-600:#5A6478;
+  --gray-800:#2C3447;
+  --shadow-sm:0 1px 3px rgba(11,31,58,.08);
+  --shadow-md:0 4px 16px rgba(11,31,58,.12);
+  --shadow-lg:0 12px 40px rgba(11,31,58,.18);
+  --shadow-xl:0 24px 64px rgba(11,31,58,.24);
+  --radius-sm:6px;
+  --radius-md:12px;
+  --radius-lg:20px;
+  --radius-xl:28px;
+  --font-display:'Playfair Display',serif;
+  --font-body:'DM Sans',sans-serif;
+  --transition:all .3s cubic-bezier(.4,0,.2,1);
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:var(--font-body);
+  background:var(--gray-50);
+  color:var(--gray-800);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+nav{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:1000;
+  background:rgba(11,31,58,.96);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(201,168,76,.15);
+}
+
+.nav-inner{
+  max-width:1280px;
+  margin:0 auto;
+  padding:0 2rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:68px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  cursor:pointer;
+  text-decoration:none;
+}
+
+.logo-mark{
+  width:38px;
+  height:38px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-light));
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  font-weight:700;
+  color:var(--navy);
+  font-family:var(--font-display);
+}
+
+.logo-text{
+  font-family:var(--font-display);
+  font-size:1.3rem;
+  font-weight:700;
+  color:var(--white);
+  letter-spacing:-.3px;
+}
+
+.logo-text span{
+  color:var(--accent);
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:.25rem;
+}
+
+.nav-link{
+  padding:.5rem 1rem;
+  border-radius:var(--radius-sm);
+  color:rgba(255,255,255,.75);
+  font-size:.9rem;
+  font-weight:500;
+  cursor:pointer;
+  transition:var(--transition);
+  border:none;
+  background:none;
+  white-space:nowrap;
+  text-decoration:none;
+}
+
+.nav-link:hover{
+  color:var(--white);
+  background:rgba(255,255,255,.08);
+}
+
+.nav-link.active{
+  color:var(--accent);
+}
+
+.btn-login{
+  padding:.5rem 1.25rem;
+  border-radius:var(--radius-sm);
+  background:linear-gradient(135deg,var(--accent),var(--accent-light));
+  color:var(--navy);
+  font-size:.88rem;
+  font-weight:600;
+  cursor:pointer;
+  border:none;
+  transition:var(--transition);
+  white-space:nowrap;
+  text-decoration:none;
+  display:inline-block;
+}
+
+.btn-login:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 16px rgba(201,168,76,.4);
+}
+
+.btn-favs{
+  padding:.5rem 1.1rem;
+  border-radius:var(--radius-sm);
+  background:rgba(201,168,76,.12);
+  color:var(--accent-light);
+  font-size:.88rem;font-weight:600;
+  border:1px solid rgba(201,168,76,.3);
+  transition:var(--transition);white-space:nowrap;
+  text-decoration:none;display:inline-flex;align-items:center;gap:.35rem;
+  cursor:pointer;
+}
+.btn-favs:hover{background:rgba(201,168,76,.22)}
+.fav-count{
+  background:var(--accent);color:var(--navy);
+  font-size:.7rem;font-weight:800;
+  padding:.1rem .45rem;border-radius:50px;
+}
+.hesabim-wrap{position:relative}
+.btn-hesabim{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.45rem 1rem;border-radius:var(--radius-sm);
+  background:linear-gradient(135deg,var(--accent),var(--accent-light));
+  color:var(--navy);font-size:.88rem;font-weight:600;
+  cursor:pointer;border:none;transition:var(--transition);white-space:nowrap;
+  font-family:var(--font-body);
+}
+.btn-hesabim:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(201,168,76,.4)}
+.user-avatar{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--navy);color:var(--accent);
+  font-size:.72rem;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.hesabim-dropdown{
+  position:absolute;top:calc(100% + .6rem);right:0;
+  background:var(--white);border-radius:var(--radius-md);
+  box-shadow:var(--shadow-lg);border:1px solid var(--gray-100);
+  min-width:230px;z-index:500;
+  opacity:0;pointer-events:none;transform:translateY(-8px);
+  transition:opacity .2s ease,transform .2s ease;
+}
+.hesabim-dropdown.open{opacity:1;pointer-events:all;transform:translateY(0)}
+.dd-header{padding:1rem;border-bottom:1px solid var(--gray-100)}
+.dd-name{font-size:.95rem;font-weight:700;color:var(--navy)}
+.dd-email{font-size:.78rem;color:var(--gray-400);margin-top:.2rem}
+.dd-item{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.7rem 1rem;font-size:.88rem;font-weight:500;
+  color:var(--gray-800);text-decoration:none;cursor:pointer;
+  background:none;border:none;width:100%;text-align:left;
+  transition:background .15s;font-family:var(--font-body);
+}
+.dd-item:hover{background:var(--gray-50)}
+.dd-divider{height:1px;background:var(--gray-100);margin:.25rem 0}
+.dd-logout{color:#E24B4A}
+
+.hamburger{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  cursor:pointer;
+  padding:8px;
+}
+
+.hamburger span{
+  width:22px;
+  height:2px;
+  background:var(--white);
+  border-radius:2px;
+}
+
+.hero{
+  min-height:100vh;
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 50%,#0D2847 100%);
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+}
+
+.hero::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C9A84C' fill-opacity='0.04'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.hero-blob{
+  position:absolute;
+  width:600px;
+  height:600px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,.12) 0%,transparent 70%);
+  right:-100px;
+  top:-100px;
+  animation:pulse 8s ease-in-out infinite;
+}
+
+.hero-blob2{
+  position:absolute;
+  width:400px;
+  height:400px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(30,68,128,.3) 0%,transparent 70%);
+  left:-50px;
+  bottom:-50px;
+  animation:pulse 10s ease-in-out infinite reverse;
+}
+
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.1)}
+}
+
+.hero-content{
+  max-width:1280px;
+  margin:0 auto;
+  padding:7rem 2rem 4rem;
+  position:relative;
+  z-index:1;
+  width:100%;
+}
+
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:.45rem;
+  border-radius:999px;
+  border:1px solid rgba(201,168,76,.3);
+  background:rgba(255,255,255,.12);
+  backdrop-filter:blur(16px);
+  color:var(--accent-light);
+  font-size:.82rem;
+  font-weight:500;
+  margin-bottom:1.75rem;
+  max-width:min(100%,520px);
+}
+
+.hero-badge input{
+  width:min(58vw,390px);
+  height:40px;
+  border:none;
+  outline:none;
+  background:transparent;
+  color:var(--white);
+  font-family:var(--font-body);
+  font-size:.95rem;
+  padding:0 .5rem;
+}
+
+.hero-badge input::placeholder{
+  color:rgba(255,255,255,.72);
+}
+
+.hero-badge button{
+  width:40px;
+  height:40px;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent-light));
+  color:var(--navy);
+  cursor:pointer;
+  font-size:1rem;
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.badge-dot{
+  width:6px;
+  height:6px;
+  background:var(--accent);
+  border-radius:50%;
+}
+
+.hero-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.5rem,5vw,4.5rem);
+  font-weight:700;
+  color:var(--white);
+  line-height:1.1;
+  margin-bottom:1.25rem;
+}
+
+.hero-title span{
+  background:linear-gradient(135deg,var(--accent),var(--accent-light));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.hero-sub{
+  font-size:1.1rem;
+  color:rgba(255,255,255,.6);
+  max-width:540px;
+  line-height:1.7;
+  margin-bottom:2.5rem;
+}
+
+.search-card{
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(20px);
+  border-radius:var(--radius-xl);
+  padding:2rem;
+  box-shadow:var(--shadow-xl);
+  border:1px solid rgba(255,255,255,.2);
+  max-width:860px;
+}
+
+.search-tabs{
+  display:flex;
+  gap:.5rem;
+  margin-bottom:1.5rem;
+}
+
+.search-tab{
+  padding:.5rem 1.25rem;
+  border-radius:var(--radius-sm);
+  font-size:.88rem;
+  font-weight:600;
+  cursor:pointer;
+  border:2px solid var(--gray-200);
+  color:var(--gray-600);
+  background:none;
+  transition:var(--transition);
+}
+
+.search-tab.active{
+  background:var(--navy);
+  color:var(--white);
+  border-color:var(--navy);
+}
+
+.search-grid{
+  display:grid;
+  grid-template-columns:1.5fr 1fr 1fr 1fr auto;
+  gap:1rem;
+  align-items:end;
+}
+
+.field label{
+  font-size:.78rem;
+  font-weight:600;
+  color:var(--gray-600);
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  display:block;
+  margin-bottom:.4rem;
+}
+
+.field input,
+.field select{
+  width:100%;
+  height:48px;
+  padding:0 1rem;
+  border:1.5px solid var(--gray-200);
+  border-radius:var(--radius-md);
+  font-size:.95rem;
+  font-family:var(--font-body);
+  color:var(--gray-800);
+  background:var(--gray-50);
+  transition:var(--transition);
+  outline:none;
+}
+
+.field input:focus,
+.field select:focus{
+  border-color:var(--navy);
+  background:var(--white);
+  box-shadow:0 0 0 3px rgba(11,31,58,.08);
+}
+
+.btn-search{
+  height:48px;
+  padding:0 1.75rem;
+  background:linear-gradient(135deg,var(--navy),var(--navy-light));
+  color:var(--white);
+  border:none;
+  border-radius:var(--radius-md);
+  font-size:.95rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:var(--transition);
+  white-space:nowrap;
+}
+
+.btn-search:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(11,31,58,.35);
+}
+
+.search-stats{
+  display:flex;
+  gap:2.5rem;
+  margin-top:1.25rem;
+  padding-top:1.25rem;
+  border-top:1px solid var(--gray-100);
+}
+
+.stat-num{
+  font-size:1.2rem;
+  font-weight:700;
+  color:var(--navy);
+  font-family:var(--font-display);
+}
+
+.stat-lbl{
+  font-size:.78rem;
+  color:var(--gray-400);
+}
+
+.search-result-summary{
+  display:none;
+  max-width:1280px;
+  margin:0 auto;
+  padding:1rem 2rem 0;
+  color:var(--gray-600);
+  font-size:.95rem;
+}
+
+.search-result-summary strong{
+  color:var(--navy);
+}
+
+section{
+  padding:5rem 2rem;
+}
+
+.container{
+  max-width:1280px;
+  margin:0 auto;
+}
+
+.section-header{
+  margin-bottom:3rem;
+}
+
+.section-header-row{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:1rem;
+}
+
+.section-tag{
+  display:inline-block;
+  padding:.3rem .9rem;
+  background:rgba(11,31,58,.06);
+  border-radius:50px;
+  font-size:.78rem;
+  font-weight:600;
+  color:var(--navy-light);
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  margin-bottom:.75rem;
+}
+
+.section-title{
+  font-family:var(--font-display);
+  font-size:clamp(1.75rem,3vw,2.5rem);
+  font-weight:700;
+  color:var(--navy);
+  margin-bottom:.5rem;
+}
+
+.section-sub{
+  font-size:1rem;
+  color:var(--gray-600);
+  max-width:500px;
+}
+
+.categories-section{
+  background:var(--white);
+  padding:3rem 2rem;
+  border-bottom:1px solid var(--gray-100);
+}
+
+.cat-chips{
+  display:flex;
+  gap:.75rem;
+  flex-wrap:wrap;
+  margin-top:1.5rem;
+}
+
+.cat-chip{
+  padding:.6rem 1.25rem;
+  border-radius:50px;
+  border:1.5px solid var(--gray-200);
+  background:none;
+  font-size:.88rem;
+  font-weight:500;
+  color:var(--gray-600);
+  cursor:pointer;
+  transition:var(--transition);
+}
+
+.cat-chip:hover,
+.cat-chip.active{
+  background:var(--navy);
+  border-color:var(--navy);
+  color:var(--white);
+}
+
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1.75rem;
+}
+
+.property-card{
+  background:var(--white);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  box-shadow:var(--shadow-sm);
+  border:1px solid var(--gray-100);
+  transition:var(--transition);
+  cursor:pointer;
+}
+
+.property-card:hover{
+  transform:translateY(-6px);
+  box-shadow:var(--shadow-lg);
+  border-color:var(--gray-200);
+}
+
+.card-img{
+  position:relative;
+  height:220px;
+  overflow:hidden;
+}
+
+.card-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform .5s ease;
+}
+
+.property-card:hover .card-img img{
+  transform:scale(1.06);
+}
+
+.card-badge{
+  position:absolute;
+  top:1rem;
+  left:1rem;
+  padding:.3rem .75rem;
+  border-radius:var(--radius-sm);
+  font-size:.75rem;
+  font-weight:700;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+}
+
+.badge-satilik{
+  background:var(--navy);
+  color:var(--white);
+}
+
+.badge-kiralik{
+  background:var(--accent);
+  color:var(--navy);
+}
+
+.card-fav{
+  position:absolute;
+  top:1rem;
+  right:1rem;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:rgba(255,255,255,.9);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1rem;
+  cursor:pointer;
+  border:none;
+}
+
+.card-fav.liked{
+  color:#E24B4A;
+}
+
+.card-body{
+  padding:1.25rem;
+}
+
+.card-title{
+  color:var(--navy);
+  font-size:1rem;
+  font-weight:700;
+  line-height:1.35;
+  margin-bottom:.45rem;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.card-price{
+  font-family:var(--font-display);
+  font-size:1.4rem;
+  font-weight:700;
+  color:var(--navy);
+  margin-bottom:.35rem;
+}
+
+.card-price span{
+  font-size:.85rem;
+  font-weight:400;
+  color:var(--gray-400);
+}
+
+.card-loc{
+  font-size:.88rem;
+  color:var(--gray-600);
+  margin-bottom:1rem;
+}
+
+.card-features{
+  display:flex;
+  gap:1rem;
+  padding-top:1rem;
+  border-top:1px solid var(--gray-100);
+  margin-bottom:1rem;
+}
+
+.feat{
+  font-size:.82rem;
+  color:var(--gray-600);
+}
+
+.btn-detail{
+  width:100%;
+  padding:.7rem;
+  background:var(--gray-50);
+  border:1.5px solid var(--gray-200);
+  border-radius:var(--radius-md);
+  font-size:.88rem;
+  font-weight:600;
+  color:var(--navy);
+  cursor:pointer;
+  transition:var(--transition);
+}
+
+.btn-detail:hover{
+  background:var(--navy);
+  color:var(--white);
+  border-color:var(--navy);
+}
+
+.btn-outline{
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  padding:.65rem 1.5rem;
+  border-radius:var(--radius-md);
+  border:2px solid var(--navy);
+  color:var(--navy);
+  font-size:.9rem;
+  font-weight:600;
+  background:none;
+  cursor:pointer;
+  transition:var(--transition);
+}
+
+.btn-outline:hover{
+  background:var(--navy);
+  color:var(--white);
+}
+
+.features-strip{
+  background:var(--navy);
+  padding:4rem 2rem;
+}
+
+.features-grid{
+  max-width:1280px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:2rem;
+}
+
+.feature-item{
+  text-align:center;
+  padding:1.5rem;
+}
+
+.feature-icon{
+  width:56px;
+  height:56px;
+  margin:0 auto 1rem;
+  background:rgba(201,168,76,.15);
+  border-radius:var(--radius-md);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.5rem;
+}
+
+.feature-title{
+  font-size:1rem;
+  font-weight:600;
+  color:var(--white);
+  margin-bottom:.4rem;
+}
+
+.feature-desc{
+  font-size:.85rem;
+  color:rgba(255,255,255,.5);
+  line-height:1.6;
+}
+
+footer{
+  background:var(--navy);
+  color:rgba(255,255,255,.55);
+  padding:3rem 2rem 2rem;
+}
+
+.footer-inner{
+  max-width:1280px;
+  margin:0 auto;
+}
+
+.footer-top{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:3rem;
+  margin-bottom:3rem;
+}
+
+.footer-brand p{
+  font-size:.88rem;
+  line-height:1.7;
+  margin-top:1rem;
+  color:rgba(255,255,255,.45);
+}
+
+.footer-col h4{
+  font-size:.85rem;
+  font-weight:700;
+  color:var(--white);
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  margin-bottom:1rem;
+}
+
+.footer-col a{
+  display:block;
+  font-size:.88rem;
+  color:rgba(255,255,255,.5);
+  margin-bottom:.5rem;
+  cursor:pointer;
+  transition:var(--transition);
+  text-decoration:none;
+}
+
+.footer-col a:hover{
+  color:var(--accent);
+}
+
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.08);
+  padding-top:1.5rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:.82rem;
+  flex-wrap:wrap;
+  gap:.5rem;
+}
+
+.toast{
+  position:fixed;
+  bottom:2rem;
+  right:2rem;
+  z-index:9999;
+  background:var(--navy);
+  color:var(--white);
+  padding:.85rem 1.5rem;
+  border-radius:var(--radius-md);
+  font-size:.9rem;
+  font-weight:500;
+  box-shadow:var(--shadow-lg);
+  transform:translateY(100px);
+  opacity:0;
+  transition:all .4s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:none;
+  border-left:4px solid var(--accent);
+}
+
+.toast.show{
+  transform:translateY(0);
+  opacity:1;
+}
+
+.back-top{
+  position:fixed;
+  bottom:2rem;
+  left:2rem;
+  z-index:999;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:var(--accent);
+  color:var(--navy);
+  border:none;
+  cursor:pointer;
+  font-size:1.1rem;
+  font-weight:700;
+  box-shadow:var(--shadow-md);
+  transition:var(--transition);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  transform:translateY(20px);
+  pointer-events:none;
+}
+
+.back-top.visible{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:all;
+}
+
+.mobile-menu{
+  position:fixed;
+  inset:0;
+  z-index:999;
+  background:var(--navy);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:1.5rem;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s ease;
+}
+
+.mobile-menu.open{
+  opacity:1;
+  pointer-events:all;
+}
+
+.mobile-menu .nav-link{
+  font-size:1.25rem;
+  color:var(--white);
+}
+
+.mobile-close{
+  position:absolute;
+  top:1.25rem;
+  right:1.25rem;
+  background:none;
+  border:none;
+  color:var(--white);
+  font-size:1.75rem;
+  cursor:pointer;
+}
+
+@media(max-width:1100px){
+  .features-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .footer-top{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .search-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .search-grid .btn-search{
+    grid-column:span 2;
+  }
+}
+
+@media(max-width:768px){
+  .nav-links,
+  .nav-inner > div:last-child .btn-login{
+    display:none;
+  }
+
+  .hamburger{
+    display:flex;
+  }
+
+  .features-grid{
+    grid-template-columns:1fr;
+  }
+
+  .footer-top{
+    grid-template-columns:1fr;
+  }
+
+  .search-grid{
+    grid-template-columns:1fr;
+  }
+
+  .search-grid .btn-search{
+    grid-column:auto;
+  }
+
+  section{
+    padding:3rem 1.25rem;
+  }
+}
+
+@media(max-width:480px){
+  .cards-grid{
+    grid-template-columns:1fr;
+  }
+
+  .search-stats{
+    gap:1.25rem;
+    flex-wrap:wrap;
+  }
+}
+</style>
+<script src="auth-session.js"></script>
+</head>
+
+<body>
+
+<div class="toast" id="toast"></div>
+
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="closeMobileMenu()">✕</button>
+  <button class="nav-link" onclick="scrollToTop();closeMobileMenu()">Ana Sayfa</button>
+  <button class="nav-link" onclick="filterAndScroll('Satılık');closeMobileMenu()">Satılık İlanlar</button>
+  <button class="nav-link" onclick="filterAndScroll('Kiralık');closeMobileMenu()">Kiralık İlanlar</button>
+  <button class="nav-link" onclick="scrollToSection('categories');closeMobileMenu()">Kategoriler</button>
+  <div id="mobileAuthArea"></div>
+</div>
+
+<nav id="navbar">
+  <div class="nav-inner">
+    <a class="logo" href="index.html">
+      <div class="logo-mark">E</div>
+      <span class="logo-text">Emlak<span>Prime</span></span>
+    </a>
+
+    <div class="nav-links">
+      <button class="nav-link active" onclick="scrollToTop()">Ana Sayfa</button>
+      <button class="nav-link" onclick="filterAndScroll('Satılık')">Satılık İlanlar</button>
+      <button class="nav-link" onclick="filterAndScroll('Kiralık')">Kiralık İlanlar</button>
+      <button class="nav-link" onclick="scrollToSection('categories')">Kategoriler</button>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <div id="navAuthArea"></div>
+      <div class="hamburger" onclick="openMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-blob"></div>
+  <div class="hero-blob2"></div>
+
+  <div class="hero-content">
+    <form class="hero-badge" onsubmit="doKeywordSearch(event)">
+      <span class="badge-dot"></span>
+      <input type="search" id="hero-keyword" placeholder="İlanlarda ara..." aria-label="İlanlarda ara">
+      <button type="submit" aria-label="Ara">🔍</button>
+    </form>
+
+    <h1 class="hero-title">
+      Hayalinizdeki<br>
+      <span>Evi Bulun</span>
+    </h1>
+
+    <p class="hero-sub">
+      Satılık ve kiralık ilanlar arasından size en uygun gayrimenkulü kolayca keşfedin.
+    </p>
+
+    <div class="search-card">
+      <div class="search-tabs">
+        <button class="search-tab active" onclick="setSearchTab(this,'Satılık')">🏠 Satılık</button>
+        <button class="search-tab" onclick="setSearchTab(this,'Kiralık')">🔑 Kiralık</button>
+      </div>
+
+      <div class="search-grid">
+        <div class="field">
+          <label>Şehir</label>
+          <select id="s-city">
+            <option value="">Şehir Seçin</option>
+            <option>İstanbul</option>
+            <option>Ankara</option>
+            <option>İzmir</option>
+            <option>Antalya</option>
+            <option>Bursa</option>
+            <option>Trabzon</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>İlan Tipi</label>
+          <select id="s-type">
+            <option value="">Tümü</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Min Fiyat</label>
+          <input type="number" id="s-min" placeholder="₺ Min">
+        </div>
+
+        <div class="field">
+          <label>Max Fiyat</label>
+          <input type="number" id="s-max" placeholder="₺ Max">
+        </div>
+
+        <button class="btn-search" onclick="doSearch()">Ara</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="categories-section" id="categories">
+  <div class="container">
+    <span class="section-tag">Keşfet</span>
+    <h2 class="section-title" style="display:inline-block;margin-left:.75rem">Kategoriler</h2>
+
+    <div class="cat-chips" id="catChips">
+      <button class="cat-chip active" onclick="filterCat(this,'')">🏘 Tümü</button>
+    </div>
+  </div>
+</div>
+
+<div class="search-result-summary" id="searchResultSummary"></div>
+
+<section id="satilik-section" style="background:var(--gray-50)">
+  <div class="container">
+    <div class="section-header-row section-header">
+      <div>
+        <span class="section-tag">🏷 Satılık</span>
+        <h2 class="section-title">Satılık İlanlar</h2>
+        <p class="section-sub">Seçkin bölgelerden premium konut fırsatları</p>
+      </div>
+    </div>
+
+    <div class="cards-grid" id="satilik-grid"></div>
+  </div>
+</section>
+
+<div class="features-strip">
+  <div class="features-grid">
+    <div class="feature-item">
+      <div class="feature-icon">🔍</div>
+      <div class="feature-title">Akıllı Arama</div>
+      <div class="feature-desc">Gelişmiş filtreler ile hızlıca ilan bulun.</div>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-icon">🛡</div>
+      <div class="feature-title">Güvenli İşlem</div>
+      <div class="feature-desc">Doğrulanmış ilanlar ile güvenli kullanım.</div>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">Piyasa Analizi</div>
+      <div class="feature-desc">Bölge ve fiyat karşılaştırması desteği.</div>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-icon">🤝</div>
+      <div class="feature-title">Uzman Destek</div>
+      <div class="feature-desc">Emlak danışmanı desteği ile kolay süreç.</div>
+    </div>
+  </div>
+</div>
+
+<section id="kiralik-section" style="background:var(--white)">
+  <div class="container">
+    <div class="section-header-row section-header">
+      <div>
+        <span class="section-tag">🔑 Kiralık</span>
+        <h2 class="section-title">Popüler Kiralık İlanlar</h2>
+        <p class="section-sub">Uygun fiyatlı ve konforlu kiralık seçenekler</p>
+      </div>
+    </div>
+
+    <div class="cards-grid" id="kiralik-grid"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">
+          <div class="logo-mark">E</div>
+          <span class="logo-text">Emlak<span>Prime</span></span>
+        </div>
+        <p>
+          Türkiye'nin güvenilir gayrimenkul platformu. Satılık ve kiralık ilanları kolayca keşfedin.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Hızlı Erişim</h4>
+        <a onclick="scrollToTop()">Ana Sayfa</a>
+        <a onclick="filterAndScroll('Satılık')">Satılık İlanlar</a>
+        <a onclick="filterAndScroll('Kiralık')">Kiralık İlanlar</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Kurumsal</h4>
+        <a>Hakkımızda</a>
+        <a>Kariyer</a>
+        <a>İletişim</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Destek</h4>
+        <a>Yardım Merkezi</a>
+        <a>Gizlilik Politikası</a>
+        <a>Kullanım Şartları</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 EmlakPrime. Tüm hakları saklıdır.</span>
+      <span>Türkiye'de geliştirildi.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Auth helpers ───────────────────────────────────────────────────────────────
+function getUser() { return window.EmlakAuth?.getUser?.() || (() => { try { return JSON.parse(localStorage.getItem('emlakprime_user') || sessionStorage.getItem('emlakprime_user')); } catch(e) { return null; } })(); }
+function getFavIds() { try { return JSON.parse(localStorage.getItem('emlakprime_favorites')) || []; } catch(e) { return []; } }
+function saveFavIds(ids) { localStorage.setItem('emlakprime_favorites', JSON.stringify(ids)); }
+function getToken() { return window.EmlakAuth?.getToken?.() || localStorage.getItem('token') || sessionStorage.getItem('token') || localStorage.getItem('emlakprime_token') || sessionStorage.getItem('emlakprime_token') || ''; }
+function sameId(a, b) { return String(a) === String(b); }
+function hasFavId(ids, id) { return ids.some(f => sameId(f, id)); }
+function isBackendId(id) { return /^\d+$/.test(String(id)); }
+async function loadFavoriteIds() {
+  const user = getUser();
+  const token = getToken();
+  if (!user || !token) return getFavIds();
+  try {
+    const res = await fetch('/api/favorites/user/' + user.id, { headers: { 'Authorization': 'Bearer ' + token } });
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    const ids = (Array.isArray(data) ? data : [])
+      .map(f => f.propertyId || (f.property && f.property.id))
+      .filter(id => id !== null && id !== undefined);
+    saveFavIds(ids);
+    return ids;
+  } catch(e) {
+    return getFavIds();
+  }
+}
+async function addFavoriteToServer(propertyId) {
+  const user = getUser();
+  const token = getToken();
+  if (!user || !token || !isBackendId(propertyId)) return;
+  await fetch('/api/favorites', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({ user: { id: user.id }, property: { id: Number(propertyId) } })
+  });
+}
+async function removeFavoriteFromServer(propertyId) {
+  const user = getUser();
+  const token = getToken();
+  if (!user || !token || !isBackendId(propertyId)) return;
+  await fetch('/api/favorites/by-user-property?userId=' + user.id + '&propertyId=' + propertyId, {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+}
+
+// ── Listings ───────────────────────────────────────────────────────────────────
+const listings = [];
+
+// ── Kategori ikonları eşlemesi ──────────────────────────────────────────────
+const CAT_ICONS = {
+  'daire':'🏢','villa':'🏡','müstakil':'🏠','rezidans':'🏙',
+  'işyeri':'🏬','arsa':'🌿','konut':'🏘','ofis':'🏢'
+};
+function getCatIcon(name) {
+  if (!name) return '🏠';
+  const lower = name.toLowerCase();
+  const match = Object.keys(CAT_ICONS).find(k => lower.includes(k));
+  return match ? CAT_ICONS[match] : '🏠';
+}
+
+// Kategorileri API'dan çek ve chip'leri dinamik oluştur
+function renderCategoryChips(categories) {
+  const container = document.getElementById('catChips');
+  if (!container) return;
+  let html = `<button class="cat-chip active" onclick="filterCat(this,'')">🏘 Tümü</button>`;
+  if (!Array.isArray(categories) || categories.length === 0) {
+    container.innerHTML = html;
+    return;
+  }
+  categories.forEach(cat => {
+    const safeName = cat.name.replace(/'/g, "\\'");
+    html += `<button class="cat-chip" onclick="filterCat(this,'${safeName}')">${getCatIcon(cat.name)} ${cat.name}</button>`;
+  });
+  container.innerHTML = html;
+}
+
+function renderSearchCategories(categories) {
+  const select = document.getElementById('s-type');
+  if (!select) return;
+  let html = '<option value="">Tümü</option>';
+  if (Array.isArray(categories)) {
+    categories.forEach(cat => {
+      html += `<option>${cat.name}</option>`;
+    });
+  }
+  select.innerHTML = html;
+}
+
+// API'dan ilanları çek; ana sayfa sadece veritabanındaki ilanları gösterir.
+async function fetchAndRender() {
+  try {
+    const favIds = await loadFavoriteIds();
+    const [data, categories] = await Promise.all([
+      fetch('/api/properties?active=true').then(r => r.json()),
+      fetch('/api/categories').then(r => r.json()).catch(() => [])
+    ]);
+
+    // Kategorileri API'dan gelen gerçek isimlerle güncelle
+    renderCategoryChips(categories);
+    renderSearchCategories(categories);
+
+    listings.length = 0;
+    if (Array.isArray(data) && data.length > 0) {
+      data.forEach(p => {
+        const saleTypeName = (p.propertyType && p.propertyType.name) ? p.propertyType.name : '';
+        const categoryName = (p.category && p.category.name) ? p.category.name : '';
+        const isKiralik = saleTypeName.toLocaleLowerCase('tr-TR').includes('kira');
+        listings.push({
+          id: p.id,
+          type: isKiralik ? 'Kiralık' : 'Satılık',
+          category: categoryName || '',
+          title: p.title || '—',
+          city: (p.city && p.city.name) ? p.city.name : '—',
+          district: (p.district && p.district.name) ? p.district.name : '-',
+          neighborhood: (p.neighborhood && p.neighborhood.name) ? p.neighborhood.name : '-',
+          floor: (p.floor && p.floor.name) ? p.floor.name : '-',
+          price: p.price ? '₺' + Number(p.price).toLocaleString('tr-TR') : '—',
+          priceNumber: Number(p.price) || 0,
+          rooms: '—',
+          sqm: '—',
+          img: (p.images && p.images.length > 0) ? p.images[0].imageUrl : null,
+          liked: hasFavId(favIds, p.id)
+        });
+      });
+    }
+  } catch(e) {
+    listings.length = 0;
+    renderCategoryChips([]);
+    renderSearchCategories([]);
+  }
+  renderAll();
+}
+
+let currentCatFilter = '';
+let searchTabType = 'Satılık';
+let currentSearchFilters = {
+  keyword: '',
+  city: '',
+  type: '',
+  min: '',
+  max: ''
+};
+
+// ── Nav rendering ──────────────────────────────────────────────────────────────
+function renderNav() {
+  const user = getUser();
+  const favCount = getFavIds().length;
+  const badge = favCount > 0 ? `<span class="fav-count">${favCount}</span>` : '';
+
+  if (user) {
+    const initial = user.name ? user.name.charAt(0).toUpperCase() : '?';
+    const firstName = user.name ? user.name.split(' ')[0] : 'Hesabım';
+    const isAgent = (user.roles||[]).some(r => r.includes('AGENT') || r.includes('ADMIN'));
+    const isAdmin = (user.roles||[]).some(r => r.includes('ADMIN'));
+    const agentItems = isAgent ? `
+      <a href="ilan-ekle.html" class="dd-item">🏠 İlan Ver</a>
+      <a href="hesabim.html" class="dd-item">📋 İlanlarım</a>` : '';
+    const adminItem = isAdmin ? `<a href="admin.html" class="dd-item" style="color:#C9A84C;font-weight:600">⚙ Admin Paneli</a>` : '';
+    document.getElementById('navAuthArea').innerHTML = `
+      <div class="hesabim-wrap">
+        <button class="btn-hesabim" onclick="toggleDropdown(event)">
+          <span class="user-avatar">${initial}</span>${firstName} <span style="font-size:.7rem">▾</span>
+        </button>
+        <div class="hesabim-dropdown" id="hesabimDropdown">
+          <div class="dd-header">
+            <div class="dd-name">${user.name}</div>
+            <div class="dd-email">${user.email || user.username || ''}</div>
+          </div>
+          <a href="hesabim.html" class="dd-item">👤 Hesabım</a>
+          <a href="favoriler.html" class="dd-item">❤ Favorilerim${badge}</a>
+          <a href="hesabim.html" class="dd-item">✉️ Mesajlarım</a>
+          ${agentItems}
+          ${adminItem}
+          <div class="dd-divider"></div>
+          <button class="dd-item dd-logout" onclick="logout()">Çıkış Yap</button>
+        </div>
+      </div>`;
+    document.getElementById('mobileAuthArea').innerHTML = `
+      <a href="favoriler.html" class="btn-login">❤ Favorilerim</a>
+      ${isAgent ? `<a href="ilan-ekle.html" class="btn-login" style="margin-top:.5rem">🏠 İlan Ver</a>` : ''}
+      <button class="btn-login" style="margin-top:.5rem;background:rgba(255,255,255,.15);color:var(--white);border:1px solid rgba(255,255,255,.3)" onclick="logout()">Çıkış Yap</button>`;
+  } else {
+    document.getElementById('navAuthArea').innerHTML = `<a href="login.html" class="btn-login">Giriş Yap</a>`;
+    document.getElementById('mobileAuthArea').innerHTML = `<a href="login.html" class="btn-login">Giriş Yap</a>`;
+  }
+}
+
+function toggleDropdown(e) {
+  e.stopPropagation();
+  document.getElementById('hesabimDropdown').classList.toggle('open');
+}
+document.addEventListener('click', () => {
+  const dd = document.getElementById('hesabimDropdown');
+  if (dd) dd.classList.remove('open');
+});
+function logout() {
+  if (window.EmlakAuth) {
+    window.EmlakAuth.clearSession();
+  } else {
+    [localStorage, sessionStorage].forEach(storage => {
+      storage.removeItem('emlakprime_user');
+      storage.removeItem('emlakprime_token');
+      storage.removeItem('token');
+      storage.removeItem('roles');
+      storage.removeItem('username');
+      storage.removeItem('userId');
+      storage.removeItem('loginTime');
+      storage.removeItem('expiresAt');
+    });
+  }
+  saveFavIds([]);
+  window.location.reload();
+}
+
+function normalizeSearchText(value){
+  return String(value || '').toLocaleLowerCase('tr-TR').trim();
+}
+
+function priceToNumber(value){
+  return Number(String(value || '').replace(/[^\d]/g, '')) || 0;
+}
+
+function escapeHtml(value){
+  return String(value || '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#039;'
+  }[ch]));
+}
+
+function propertyImageFallback(){
+  return '<div style="width:100%;height:100%;background:linear-gradient(135deg,#EFF1F5,#DDE1EA);display:flex;align-items:center;justify-content:center;color:#9AA3B2;font-size:3rem">🏠</div>';
+}
+
+function itemMatchesSearch(item){
+  const filters = currentSearchFilters;
+  const haystack = normalizeSearchText([
+    item.title,
+    item.category,
+    item.city,
+    item.district,
+    item.neighborhood,
+    item.floor,
+    item.type,
+    item.price,
+    item.rooms,
+    item.sqm
+  ].join(' '));
+  const keywords = normalizeSearchText(filters.keyword).split(/\s+/).filter(Boolean);
+  const price = item.priceNumber || priceToNumber(item.price);
+
+  if(keywords.length && !keywords.every(word => haystack.includes(word))) return false;
+  if(filters.city && normalizeSearchText(item.city) !== normalizeSearchText(filters.city)) return false;
+  if(filters.type && !normalizeSearchText(item.category).includes(normalizeSearchText(filters.type))) return false;
+  if(filters.min && price < Number(filters.min)) return false;
+  if(filters.max && price > Number(filters.max)) return false;
+
+  return true;
+}
+
+function updateSearchResultSummary(){
+  const summary = document.getElementById('searchResultSummary');
+  if(!summary) return;
+
+  const parts = [];
+  if(currentSearchFilters.keyword) parts.push(`Aranan kelime: <strong>${escapeHtml(currentSearchFilters.keyword)}</strong>`);
+  if(currentSearchFilters.city) parts.push(`Şehir: <strong>${escapeHtml(currentSearchFilters.city)}</strong>`);
+  if(currentSearchFilters.type) parts.push(`Kategori: <strong>${escapeHtml(currentSearchFilters.type)}</strong>`);
+  if(currentSearchFilters.min) parts.push(`Min fiyat: <strong>₺${Number(currentSearchFilters.min).toLocaleString('tr-TR')}</strong>`);
+  if(currentSearchFilters.max) parts.push(`Max fiyat: <strong>₺${Number(currentSearchFilters.max).toLocaleString('tr-TR')}</strong>`);
+
+  summary.style.display = parts.length ? 'block' : 'none';
+  summary.innerHTML = parts.length ? parts.join(' &nbsp;|&nbsp; ') : '';
+}
+
+function renderCards(gridId,type,catFilter){
+  const grid = document.getElementById(gridId);
+  if(!grid) return;
+
+  let items = listings.filter(item => item.type === type);
+
+  if(catFilter){
+    const lowerFilter = catFilter.toLowerCase();
+    items = items.filter(item => item.category && item.category.toLowerCase().includes(lowerFilter));
+  }
+
+  items = items.filter(itemMatchesSearch);
+
+  if(items.length === 0){
+    const emptyText = currentSearchFilters.keyword
+      ? `"${escapeHtml(currentSearchFilters.keyword)}" araması için ilan bulunamadı.`
+      : (catFilter ? '"' + escapeHtml(catFilter) + '" kategorisinde' : 'Bu bölümde') + ' ilan bulunamadı.';
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--gray-400)">
+      <div style="font-size:2.5rem;margin-bottom:.75rem">🏠</div>
+      <div style="font-size:1rem;font-weight:500">${emptyText}</div>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map(item => `
+    <div class="property-card" onclick="window.location.href='ilan-detay.html?id=${item.id}'">
+      <div class="card-img">
+        ${item.img
+          ? `<img src="${escapeHtml(item.img)}" alt="${escapeHtml(item.title)}" loading="lazy" onerror="this.replaceWith(document.createRange().createContextualFragment(propertyImageFallback()))">`
+          : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#EFF1F5,#DDE1EA);display:flex;align-items:center;justify-content:center;color:#9AA3B2;font-size:3rem">🏠</div>`
+        }
+        <span class="card-badge ${item.type === 'Satılık' ? 'badge-satilik' : 'badge-kiralik'}">
+          ${item.type}
+        </span>
+        <button class="card-fav ${item.liked ? 'liked' : ''}" onclick="toggleLike(event,'${item.id}')">
+          ${item.liked ? '♥' : '♡'}
+        </button>
+      </div>
+
+      <div class="card-body">
+        <div class="card-title">${escapeHtml(item.title)}</div>
+        <div class="card-price">
+          ${item.price} <span>${item.category}</span>
+        </div>
+
+        <div class="card-loc">
+          📍 ${item.neighborhood || '-'} · ${item.district || '-'}, ${item.city || '-'}
+        </div>
+
+        <div class="card-features">
+          ${item.rooms !== '—' ? `<div class="feat">🏠 ${item.rooms} Oda</div>` : ''}
+          <div class="feat">Kat ${item.floor || '-'}</div>
+          <div class="feat">📐 ${item.sqm} m²</div>
+        </div>
+
+        <button class="btn-detail" onclick="event.stopPropagation();window.location.href='ilan-detay.html?id=${item.id}'">
+          Detayları Gör
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderAll(){
+  updateSearchResultSummary();
+  renderCards('satilik-grid','Satılık',currentCatFilter);
+  renderCards('kiralik-grid','Kiralık',currentCatFilter);
+}
+
+async function toggleLike(event,id){
+  event.stopPropagation();
+  const user = getUser();
+  if(!user){
+    showToast('Favorilere eklemek için giriş yapmalısınız.');
+    setTimeout(()=>{ window.location.href='login.html'; },1800);
+    return;
+  }
+  const item = listings.find(listing => String(listing.id) === String(id));
+  if(!item) return;
+  item.liked = !item.liked;
+  const favs = getFavIds();
+  const strId = String(id);
+  if(item.liked){ if(!hasFavId(favs, strId)) favs.push(item.id); }
+  else { const i=favs.findIndex(f=>sameId(f, strId)); if(i>-1) favs.splice(i,1); }
+  saveFavIds(favs);
+  renderAll();
+  renderNav();
+  showToast(item.liked ? '❤ Favorilere eklendi.' : 'Favorilerden çıkarıldı.');
+  try {
+    if (item.liked) await addFavoriteToServer(id);
+    else await removeFavoriteFromServer(id);
+  } catch(e) {
+    showToast('Favori sunucuya kaydedilemedi, lÃ¼tfen tekrar deneyin.');
+  }
+}
+
+function filterCat(button,cat){
+  document.querySelectorAll('.cat-chip').forEach(btn => {
+    btn.classList.remove('active');
+  });
+
+  button.classList.add('active');
+
+  currentCatFilter = cat;
+  renderAll();
+
+  if(cat){
+    showToast(cat + ' kategorisi filtrelendi.');
+  }else{
+    showToast('Tüm kategoriler gösteriliyor.');
+  }
+}
+
+function setSearchTab(button,type){
+  document.querySelectorAll('.search-tab').forEach(btn => {
+    btn.classList.remove('active');
+  });
+
+  button.classList.add('active');
+  searchTabType = type;
+}
+
+function applySearchFilters(keyword){
+  currentSearchFilters = {
+    keyword: (keyword ?? document.getElementById('hero-keyword')?.value ?? '').trim(),
+    city: document.getElementById('s-city')?.value || '',
+    type: document.getElementById('s-type')?.value || '',
+    min: document.getElementById('s-min')?.value || '',
+    max: document.getElementById('s-max')?.value || ''
+  };
+  renderAll();
+}
+
+function doKeywordSearch(event){
+  if(event) event.preventDefault();
+  applySearchFilters(document.getElementById('hero-keyword')?.value || '');
+  const searched = currentSearchFilters.keyword || 'Tüm ilanlar';
+  showToast(searched + ' aranıyor.');
+  goToAllListings();
+}
+
+function doSearch(){
+  applySearchFilters();
+
+  let message = searchTabType + ' arama yapılıyor';
+
+  if(currentSearchFilters.keyword) message += ' | ' + currentSearchFilters.keyword;
+  if(currentSearchFilters.city) message += ' | ' + currentSearchFilters.city;
+  if(currentSearchFilters.type) message += ' | ' + currentSearchFilters.type;
+  if(currentSearchFilters.min) message += ' | Min: ₺' + Number(currentSearchFilters.min).toLocaleString('tr-TR');
+  if(currentSearchFilters.max) message += ' | Max: ₺' + Number(currentSearchFilters.max).toLocaleString('tr-TR');
+
+  showToast(message);
+  goToAllListings();
+}
+
+function goToAllListings(){
+  const params = new URLSearchParams();
+  if(currentSearchFilters.keyword) params.set('q', currentSearchFilters.keyword);
+  if(searchTabType) params.set('saleType', searchTabType);
+  if(currentSearchFilters.city) params.set('city', currentSearchFilters.city);
+  if(currentSearchFilters.type) params.set('category', currentSearchFilters.type);
+  if(currentSearchFilters.min) params.set('min', currentSearchFilters.min);
+  if(currentSearchFilters.max) params.set('max', currentSearchFilters.max);
+  window.location.href = 'tum-ilanlar.html' + (params.toString() ? '?' + params.toString() : '');
+}
+
+function filterAndScroll(type){
+  if(type === 'Satılık'){
+    scrollToSection('satilik-section');
+  }else if(type === 'Kiralık'){
+    scrollToSection('kiralik-section');
+  }
+}
+
+function scrollToSection(id){
+  const section = document.getElementById(id);
+  if(section){
+    section.scrollIntoView({behavior:'smooth'});
+  }
+}
+
+function scrollToTop(){
+  window.scrollTo({
+    top:0,
+    behavior:'smooth'
+  });
+}
+
+let toastTimer;
+
+function showToast(message){
+  const toast = document.getElementById('toast');
+
+  toast.textContent = message;
+  toast.classList.add('show');
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+  },3000);
+}
+
+function openMobileMenu(){
+  document.getElementById('mobileMenu').classList.add('open');
+}
+
+function closeMobileMenu(){
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+window.addEventListener('scroll',() => {
+  const backTop = document.getElementById('backTop');
+
+  if(window.scrollY > 400){
+    backTop.classList.add('visible');
+  }else{
+    backTop.classList.remove('visible');
+  }
+});
+
+fetchAndRender();
+renderNav();
+</script>
+
+</body>
+</html>

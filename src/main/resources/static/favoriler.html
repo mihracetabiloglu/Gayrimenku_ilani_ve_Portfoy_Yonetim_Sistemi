@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EmlakPrime | Favorilerim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B1F3A;--navy-mid:#163258;--navy-light:#1E4480;
+  --accent:#C9A84C;--accent-light:#E8C97A;--white:#FFFFFF;
+  --gray-50:#F8F9FB;--gray-100:#EFF1F5;--gray-200:#DDE1EA;
+  --gray-400:#9AA3B2;--gray-600:#5A6478;--gray-800:#2C3447;
+  --shadow-sm:0 1px 3px rgba(11,31,58,.08);--shadow-md:0 4px 16px rgba(11,31,58,.12);
+  --shadow-lg:0 12px 40px rgba(11,31,58,.18);
+  --radius-sm:6px;--radius-md:12px;--radius-lg:20px;
+  --font-display:'Playfair Display',serif;--font-body:'DM Sans',sans-serif;
+  --transition:all .3s cubic-bezier(.4,0,.2,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--gray-50);color:var(--gray-800);min-height:100vh}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(11,31,58,.96);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,.15)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+.logo-mark{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),var(--accent-light));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--navy);font-family:var(--font-display)}
+.logo-text{font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--white);letter-spacing:-.3px}
+.logo-text span{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:.25rem}
+.nav-link{padding:.5rem 1rem;border-radius:var(--radius-sm);color:rgba(255,255,255,.75);font-size:.9rem;font-weight:500;cursor:pointer;transition:var(--transition);border:none;background:none;white-space:nowrap;text-decoration:none;font-family:var(--font-body)}
+.nav-link:hover{color:var(--white);background:rgba(255,255,255,.08)}
+.btn-login{padding:.5rem 1.25rem;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--accent),var(--accent-light));color:var(--navy);font-size:.88rem;font-weight:600;cursor:pointer;border:none;transition:var(--transition);white-space:nowrap;text-decoration:none;display:inline-block}
+.btn-login:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(201,168,76,.4)}
+.btn-favs{padding:.5rem 1.1rem;border-radius:var(--radius-sm);background:rgba(201,168,76,.12);color:var(--accent-light);font-size:.88rem;font-weight:600;border:1px solid rgba(201,168,76,.3);transition:var(--transition);white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:.35rem;cursor:pointer}
+.btn-favs:hover{background:rgba(201,168,76,.22)}
+.fav-count{background:var(--accent);color:var(--navy);font-size:.7rem;font-weight:800;padding:.1rem .45rem;border-radius:50px}
+.hesabim-wrap{position:relative}
+.btn-hesabim{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem 1rem;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--accent),var(--accent-light));color:var(--navy);font-size:.88rem;font-weight:600;cursor:pointer;border:none;transition:var(--transition);white-space:nowrap;font-family:var(--font-body)}
+.btn-hesabim:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(201,168,76,.4)}
+.user-avatar{width:24px;height:24px;border-radius:50%;background:var(--navy);color:var(--accent);font-size:.72rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.hesabim-dropdown{position:absolute;top:calc(100% + .6rem);right:0;background:var(--white);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);border:1px solid var(--gray-100);min-width:230px;z-index:500;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s ease,transform .2s ease}
+.hesabim-dropdown.open{opacity:1;pointer-events:all;transform:translateY(0)}
+.dd-header{padding:1rem;border-bottom:1px solid var(--gray-100)}
+.dd-name{font-size:.95rem;font-weight:700;color:var(--navy)}
+.dd-email{font-size:.78rem;color:var(--gray-400);margin-top:.2rem}
+.dd-item{display:flex;align-items:center;gap:.5rem;padding:.7rem 1rem;font-size:.88rem;font-weight:500;color:var(--gray-800);text-decoration:none;cursor:pointer;background:none;border:none;width:100%;text-align:left;transition:background .15s;font-family:var(--font-body)}
+.dd-item:hover{background:var(--gray-50)}
+.dd-divider{height:1px;background:var(--gray-100);margin:.25rem 0}
+.dd-logout{color:#E24B4A}
+
+/* Hero */
+.page-hero{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 60%,#0D2847 100%);
+  padding:7rem 2rem 3.5rem;
+  position:relative;overflow:hidden;
+}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C9A84C' fill-opacity='0.04'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10z'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{max-width:1280px;margin:0 auto;position:relative;z-index:1}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;padding:.35rem 1rem;border-radius:50px;border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.08);color:var(--accent-light);font-size:.82rem;font-weight:500;margin-bottom:1.25rem}
+.badge-dot{width:6px;height:6px;background:var(--accent);border-radius:50%}
+.hero-title{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,3rem);font-weight:700;color:var(--white);line-height:1.15;margin-bottom:.75rem}
+.hero-title span{background:linear-gradient(135deg,var(--accent),var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:1rem;color:rgba(255,255,255,.6);line-height:1.65}
+
+/* Main */
+.main{max-width:1280px;margin:0 auto;padding:3rem 2rem}
+
+/* User info card */
+.user-card{
+  background:var(--white);border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);
+  padding:1.5rem;margin-bottom:2.5rem;
+  display:flex;align-items:center;gap:1.5rem;
+}
+.user-card-avatar{
+  width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(135deg,var(--navy),var(--navy-light));
+  color:var(--accent);font-family:var(--font-display);font-size:1.5rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.user-card-info{flex:1}
+.user-card-name{font-size:1.1rem;font-weight:700;color:var(--navy);font-family:var(--font-display)}
+.user-card-email{font-size:.85rem;color:var(--gray-400);margin-top:.2rem}
+.user-card-meta{font-size:.82rem;color:var(--gray-600);margin-top:.5rem}
+.btn-logout-card{padding:.5rem 1.25rem;border-radius:var(--radius-sm);background:var(--gray-100);border:none;color:var(--gray-600);font-size:.85rem;font-weight:600;cursor:pointer;transition:var(--transition);font-family:var(--font-body)}
+.btn-logout-card:hover{background:#fee2e2;color:#E24B4A}
+
+/* Favorites grid */
+.section-header{margin-bottom:2rem}
+.section-tag{display:inline-block;padding:.3rem .9rem;background:rgba(11,31,58,.06);border-radius:50px;font-size:.78rem;font-weight:600;color:var(--navy-light);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.75rem}
+.section-title{font-family:var(--font-display);font-size:clamp(1.4rem,2.5vw,2rem);font-weight:700;color:var(--navy)}
+.section-sub{font-size:.95rem;color:var(--gray-600);margin-top:.4rem}
+
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.75rem}
+
+.property-card{background:var(--white);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);border:1px solid var(--gray-100);transition:var(--transition);cursor:pointer}
+.property-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:var(--gray-200)}
+.card-img{position:relative;height:220px;overflow:hidden}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.property-card:hover .card-img img{transform:scale(1.06)}
+.card-badge{position:absolute;top:1rem;left:1rem;padding:.3rem .75rem;border-radius:var(--radius-sm);font-size:.75rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.badge-satilik{background:var(--navy);color:var(--white)}
+.badge-kiralik{background:var(--accent);color:var(--navy)}
+.card-remove{position:absolute;top:1rem;right:1rem;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer;border:none;color:#E24B4A;transition:var(--transition)}
+.card-remove:hover{background:#fee2e2;transform:scale(1.1)}
+.card-body{padding:1.25rem}
+.card-price{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--navy);margin-bottom:.35rem}
+.card-price span{font-size:.85rem;font-weight:400;color:var(--gray-400)}
+.card-loc{font-size:.88rem;color:var(--gray-600);margin-bottom:1rem}
+.card-features{display:flex;gap:1rem;padding-top:1rem;border-top:1px solid var(--gray-100);margin-bottom:1rem}
+.feat{font-size:.82rem;color:var(--gray-600)}
+.btn-detail{width:100%;padding:.7rem;background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:var(--radius-md);font-size:.88rem;font-weight:600;color:var(--navy);cursor:pointer;transition:var(--transition);font-family:var(--font-body)}
+.btn-detail:hover{background:var(--navy);color:var(--white);border-color:var(--navy)}
+
+/* Empty state */
+.empty-state{text-align:center;padding:5rem 2rem}
+.empty-icon{font-size:4rem;margin-bottom:1.25rem}
+.empty-title{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:.75rem}
+.empty-desc{font-size:.95rem;color:var(--gray-600);line-height:1.65;margin-bottom:2rem;max-width:400px;margin-left:auto;margin-right:auto}
+.btn-primary{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 2rem;border-radius:var(--radius-md);background:linear-gradient(135deg,var(--navy),var(--navy-light));color:var(--white);font-size:.95rem;font-weight:600;text-decoration:none;transition:var(--transition);border:none;cursor:pointer;font-family:var(--font-body)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(11,31,58,.3)}
+
+/* Toast */
+.toast{position:fixed;bottom:2rem;right:2rem;z-index:9999;background:var(--navy);color:var(--white);padding:.85rem 1.5rem;border-radius:var(--radius-md);font-size:.9rem;font-weight:500;box-shadow:var(--shadow-lg);transform:translateY(100px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);pointer-events:none;border-left:4px solid var(--accent);max-width:300px}
+.toast.show{transform:translateY(0);opacity:1}
+
+footer{background:var(--navy);color:rgba(255,255,255,.55);padding:2.5rem 2rem;margin-top:4rem}
+.footer-bottom{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;font-size:.82rem;flex-wrap:wrap;gap:.5rem}
+
+@media(max-width:768px){
+  .nav-links{display:none}
+  .user-card{flex-wrap:wrap}
+  .cards-grid{grid-template-columns:1fr}
+  .main{padding:2rem 1.25rem}
+}
+@media(max-width:480px){
+  .cards-grid{grid-template-columns:1fr}
+  .page-hero{padding:6rem 1.25rem 2.5rem}
+}
+</style>
+<script src="auth-session.js"></script>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="index.html">
+      <div class="logo-mark">E</div>
+      <span class="logo-text">Emlak<span>Prime</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Ana Sayfa</a>
+      <a href="index.html#satilik-section" class="nav-link">Satılık İlanlar</a>
+      <a href="index.html#kiralik-section" class="nav-link">Kiralık İlanlar</a>
+    </div>
+    <div id="navAuthArea"></div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="hero-content">
+    <div class="hero-tag"><span class="badge-dot"></span>Hesabım</div>
+    <h1 class="hero-title">❤ <span>Favorilerim</span></h1>
+    <p class="hero-sub" id="heroSub">Beğendiğiniz ilanlar burada listelenir.</p>
+  </div>
+</div>
+
+<div class="main">
+  <div class="user-card" id="userCard" style="display:none">
+    <div class="user-card-avatar" id="userAvatar"></div>
+    <div class="user-card-info">
+      <div class="user-card-name" id="userName"></div>
+      <div class="user-card-email" id="userEmail"></div>
+      <div class="user-card-meta" id="userMeta"></div>
+    </div>
+    <button class="btn-logout-card" onclick="logout()">Çıkış Yap</button>
+  </div>
+
+  <div class="section-header">
+    <span class="section-tag">❤ Kaydedilenler</span>
+    <h2 class="section-title">Favori İlanlarım</h2>
+    <p class="section-sub" id="favSubtitle"></p>
+  </div>
+
+  <div id="favGrid"></div>
+</div>
+
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 EmlakPrime. Tüm hakları saklıdır.</span>
+    <a href="index.html" style="color:var(--accent);text-decoration:none;font-size:.82rem">← Ana Sayfaya Dön</a>
+  </div>
+</footer>
+
+<script>
+const allListings = [];
+let backendCategorySet = new Set();
+
+function getUser() { return window.EmlakAuth?.getUser?.() || (() => { try { return JSON.parse(localStorage.getItem('emlakprime_user') || sessionStorage.getItem('emlakprime_user')); } catch(e) { return null; } })(); }
+function getFavIds() { try { return JSON.parse(localStorage.getItem('emlakprime_favorites')) || []; } catch(e) { return []; } }
+function saveFavIds(ids) { localStorage.setItem('emlakprime_favorites', JSON.stringify(ids)); }
+function getToken() { return window.EmlakAuth?.getToken?.() || localStorage.getItem('token') || sessionStorage.getItem('token') || localStorage.getItem('emlakprime_token') || sessionStorage.getItem('emlakprime_token') || ''; }
+function sameId(a, b) { return String(a) === String(b); }
+function hasFavId(ids, id) { return ids.some(f => sameId(f, id)); }
+async function loadFavoriteIds() {
+  const user = getUser();
+  const token = getToken();
+  if (!user || !token) return getFavIds();
+  try {
+    const res = await fetch('/api/favorites/user/' + user.id, { headers: { 'Authorization': 'Bearer ' + token } });
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    const ids = (Array.isArray(data) ? data : [])
+      .map(f => f.propertyId || (f.property && f.property.id))
+      .filter(id => id !== null && id !== undefined);
+    saveFavIds(ids);
+    return ids;
+  } catch(e) {
+    return getFavIds();
+  }
+}
+async function removeFavoriteFromServer(propertyId) {
+  const user = getUser();
+  const token = getToken();
+  if (!user || !token || !/^\d+$/.test(String(propertyId))) return;
+  await fetch('/api/favorites/by-user-property?userId=' + user.id + '&propertyId=' + propertyId, {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+}
+
+function apiToListItem(p) {
+  const saleTypeName = (p.propertyType && p.propertyType.name) ? p.propertyType.name : '';
+  const categoryName = (p.category && p.category.name) ? p.category.name : '';
+  const isKiralik = saleTypeName.toLocaleLowerCase('tr-TR').includes('kira');
+  return {
+    id: p.id,
+    type: isKiralik ? 'Kiralık' : 'Satılık',
+    category: categoryName,
+    title: p.title || 'â€”',
+    city: (p.city && p.city.name) ? p.city.name : 'â€”',
+    district: (p.district && p.district.name) ? p.district.name : '',
+    price: p.price ? 'â‚º' + Number(p.price).toLocaleString('tr-TR') : 'â€”',
+    rooms: 'â€”',
+    sqm: 'â€”',
+    img: (p.images && p.images.length > 0) ? p.images[0].imageUrl : 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&q=80'
+  };
+}
+async function loadBackendListings() {
+  const data = await fetch('/api/properties?active=true').then(r => r.json()).catch(() => []);
+  if (!Array.isArray(data)) return;
+  data.forEach(p => {
+    const item = apiToListItem(p);
+    const idx = allListings.findIndex(existing => sameId(existing.id, item.id));
+    if (idx > -1) allListings[idx] = item;
+    else allListings.push(item);
+  });
+}
+
+function logout() {
+  if (window.EmlakAuth) {
+    window.EmlakAuth.clearSession();
+  } else {
+    [localStorage, sessionStorage].forEach(storage => {
+      storage.removeItem('emlakprime_user');
+      storage.removeItem('emlakprime_token');
+      storage.removeItem('token');
+      storage.removeItem('roles');
+      storage.removeItem('username');
+      storage.removeItem('userId');
+      storage.removeItem('loginTime');
+      storage.removeItem('expiresAt');
+    });
+  }
+  saveFavIds([]);
+  window.location.href = 'index.html';
+}
+
+function toggleDropdown(e) {
+  e.stopPropagation();
+  document.getElementById('hesabimDropdown').classList.toggle('open');
+}
+document.addEventListener('click', () => {
+  const dd = document.getElementById('hesabimDropdown');
+  if (dd) dd.classList.remove('open');
+});
+
+function renderNav(user) {
+  const favCount = getFavIds().length;
+  const badge = favCount > 0 ? `<span class="fav-count">${favCount}</span>` : '';
+  const initial = user.name ? user.name.charAt(0).toUpperCase() : '?';
+  const firstName = user.name ? user.name.split(' ')[0] : 'Hesabım';
+  document.getElementById('navAuthArea').innerHTML = `
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <a href="favoriler.html" class="btn-favs" style="color:var(--accent);border-color:var(--accent)">❤ Favoriler${badge}</a>
+      <div class="hesabim-wrap">
+        <button class="btn-hesabim" onclick="toggleDropdown(event)">
+          <span class="user-avatar">${initial}</span>${firstName} <span style="font-size:.7rem">▾</span>
+        </button>
+        <div class="hesabim-dropdown" id="hesabimDropdown">
+          <div class="dd-header">
+            <div class="dd-name">${user.name}</div>
+            <div class="dd-email">${user.email}</div>
+          </div>
+          <a href="hesabim.html" class="dd-item">👤 Hesabım</a>
+          <a href="favoriler.html" class="dd-item active-page" style="color:var(--navy);font-weight:700">❤ Favorilerim${badge}</a>
+          <div class="dd-divider"></div>
+          <button class="dd-item dd-logout" onclick="logout()">Çıkış Yap</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function removeFromFav(id) {
+  event.stopPropagation();
+  const favs = getFavIds();
+  const idx = favs.findIndex(f => sameId(f, id));
+  if (idx > -1) favs.splice(idx, 1);
+  saveFavIds(favs);
+  renderFavs();
+  renderNav(getUser());
+  showToast('Favorilerden kaldırıldı.');
+  try { await removeFavoriteFromServer(id); } catch(e) {}
+}
+
+function renderFavs() {
+  const favIds = getFavIds();
+  const favItems = allListings.filter(l =>
+    hasFavId(favIds, l.id) && backendCategorySet.has((l.category || '').toLowerCase())
+  );
+  const grid = document.getElementById('favGrid');
+  const subtitle = document.getElementById('favSubtitle');
+  const heroSub = document.getElementById('heroSub');
+
+  if (favItems.length === 0) {
+    subtitle.textContent = '';
+    heroSub.textContent = 'Henüz favori ilanınız bulunmuyor.';
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🏠</div>
+        <div class="empty-title">Favori ilanınız yok</div>
+        <div class="empty-desc">Ana sayfaya giderek beğendiğiniz ilanlara ❤ butonuna tıklayarak favorilerinize ekleyin.</div>
+        <a href="index.html" class="btn-primary">İlanları Keşfet →</a>
+      </div>`;
+    return;
+  }
+
+  subtitle.textContent = `${favItems.length} ilan favorilerinizde kayıtlı`;
+  heroSub.textContent = `${favItems.length} favori ilanınız var.`;
+
+  grid.innerHTML = `<div class="cards-grid">${favItems.map(item => `
+    <div class="property-card" onclick="window.location.href='ilan-detay.html?id=${item.id}'" style="cursor:pointer">
+      <div class="card-img">
+        <img src="${item.img}" alt="${item.title}" loading="lazy">
+        <span class="card-badge ${item.type === 'Satılık' ? 'badge-satilik' : 'badge-kiralik'}">${item.type}</span>
+        <button class="card-remove" onclick="removeFromFav(${item.id})" title="Favoriden kaldır">✕</button>
+      </div>
+      <div class="card-body">
+        <div class="card-price">${item.price} <span>${item.category}</span></div>
+        <div class="card-loc">📍 ${item.district}, ${item.city}</div>
+        <div class="card-features">
+          ${item.rooms !== '—' ? `<div class="feat">🏠 ${item.rooms} Oda</div>` : ''}
+          <div class="feat">📐 ${item.sqm} m²</div>
+        </div>
+        <button class="btn-detail" onclick="event.stopPropagation();window.location.href='ilan-detay.html?id=${item.id}'">Detayları Gör</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+async function loadBackendCategories() {
+  const categories = await fetch('/api/categories').then(r => r.json()).catch(() => []);
+  backendCategorySet = new Set((Array.isArray(categories) ? categories : [])
+    .map(cat => (cat.name || '').toLowerCase())
+    .filter(Boolean));
+}
+
+// Init
+(async function init() {
+const user = getUser();
+if (!user) {
+  window.location.href = 'login.html?redirect=favoriler.html';
+} else {
+  await loadFavoriteIds();
+  await loadBackendListings();
+  await loadBackendCategories();
+  // User card
+  document.getElementById('userCard').style.display = 'flex';
+  document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+  document.getElementById('userName').textContent = user.name;
+  document.getElementById('userEmail').textContent = user.email;
+  document.getElementById('userMeta').textContent = '';
+  renderNav(user);
+  renderFavs();
+}
+})();
+</script>
+</body>
+</html>
