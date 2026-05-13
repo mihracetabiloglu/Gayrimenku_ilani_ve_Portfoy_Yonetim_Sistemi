@@ -3,7 +3,6 @@ package com.gayrimenkul.system.Controller;
 import com.gayrimenkul.system.entity.User;
 import com.gayrimenkul.system.service.UserService;
 import com.gayrimenkul.system.service.PasswordResetService;
-import org.springframework.beans.factory.annotation.Autowired;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,27 +11,27 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
-@RequiredArgsConstructor
+@RequiredArgsConstructor // @Autowired yerine bunu kullanmak daha temizdir
 public class UserController {
 
     private final UserService userService;
-    @Autowired
-    private PasswordResetService passwordResetService;
-    // Şifre sıfırlama isteği (token üretir ve "mail" loglar)
+    private final PasswordResetService passwordResetService;
+
+    // ŞİFRE SIFIRLAMA TALEBİ (Mail Gönderir)
     @PostMapping("/password-reset-request")
     public ResponseEntity<String> requestPasswordReset(@RequestParam String email) {
         String token = passwordResetService.createPasswordResetToken(email);
         if (token == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Kullanıcı bulunamadı");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Kullanıcı bulunamadı.");
         }
-        // Gerçek projede burada mail gönderimi yapılır. Şimdilik log veya response ile gösteriyoruz.
-        return ResponseEntity.ok("Şifre sıfırlama linkiniz: /api/users/password-reset?token=" + token);
+        return ResponseEntity.ok("Şifre sıfırlama linki email adresinize gönderildi.");
     }
 
-    // Şifre sıfırlama (token ve yeni şifre ile)
+    // UNUTULAN ŞİFREYİ SIFIRLAMA (Token ile)
     @PostMapping("/password-reset")
     public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
         boolean result = passwordResetService.resetPassword(token, newPassword);
@@ -42,6 +41,23 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token geçersiz veya süresi dolmuş.");
         }
     }
+
+    // YENİ EKLENEN: GİRİŞ YAPMIŞ KULLANICININ ŞİFRESİNİ DEĞİŞTİRMESİ
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(Authentication authentication, 
+                                                 @RequestBody Map<String, String> passwords) {
+        try {
+            String oldPassword = passwords.get("oldPassword");
+            String newPassword = passwords.get("newPassword");
+            
+            userService.changeUserPassword(authentication.getName(), oldPassword, newPassword);
+            return ResponseEntity.ok("Şifreniz başarıyla değiştirildi.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    // --- Mevcut Diğer Endpointler ---
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")

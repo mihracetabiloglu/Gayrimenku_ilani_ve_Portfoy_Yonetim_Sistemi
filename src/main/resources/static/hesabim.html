@@ -516,17 +516,54 @@ function saveInfo() {
   showToast('Bilgileriniz güncellendi.');
 }
 
-function changePassword() {
+async function changePassword() {
   const cur = document.getElementById('pwCurrent').value;
   const nw = document.getElementById('pwNew').value;
   const nw2 = document.getElementById('pwNew2').value;
+
   if (!cur) { showToast('Mevcut şifrenizi girin.'); return; }
   if (!nw || nw.length < 8) { showToast('Yeni şifre en az 8 karakter olmalıdır.'); return; }
   if (nw !== nw2) { showToast('Yeni şifreler eşleşmiyor.'); return; }
-  document.getElementById('pwCurrent').value = '';
-  document.getElementById('pwNew').value = '';
-  document.getElementById('pwNew2').value = '';
-  showToast('Şifreniz güncellendi.');
+
+  const token = getImageAuthToken(); // Kullanıcının giriş tokenını alıyoruz
+  if (!token) { showToast('Oturum süreniz dolmuş, lütfen tekrar giriş yapın.'); return; }
+
+  const btn = document.querySelector('#panel-password .btn-primary');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Güncelleniyor...';
+
+  try {
+    const res = await fetch('/api/users/change-password', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      // Backend'in beklediği JSON formatı:
+      body: JSON.stringify({
+        oldPassword: cur,
+        newPassword: nw
+      })
+    });
+
+    if (res.ok) {
+      document.getElementById('pwCurrent').value = '';
+      document.getElementById('pwNew').value = '';
+      document.getElementById('pwNew2').value = '';
+      showToast('Şifreniz başarıyla güncellendi.');
+    } else {
+      // Backend'den gelen hata mesajını (Örn: "Eski şifreniz hatalı!") ekrana basıyoruz
+      const errorText = await res.text();
+      showToast(errorText || 'Şifre güncellenemedi, lütfen bilgileri kontrol edin.');
+    }
+  } catch (error) {
+    console.error('[changePassword] Hata:', error);
+    showToast('Sunucu ile bağlantı kurulamadı.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
 }
 
 function deleteAccount() {

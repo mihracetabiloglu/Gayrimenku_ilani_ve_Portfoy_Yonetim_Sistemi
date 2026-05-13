@@ -158,4 +158,18 @@ public class UserService {
         User user = getUserById(id);
         userRepository.delete(user);
     }
+
+@Transactional
+public void changeUserPassword(String username, String oldPassword, String newPassword) {
+    User user = getUserByUsername(username);
+
+    // Eski şifre doğru mu kontrol et
+    if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        throw new RuntimeException("Eski şifreniz hatalı!");
+    }
+
+    // Yeni şifreyi encode edip kaydet
+    user.setPassword(passwordEncoder.encode(newPassword));
+    userRepository.save(user);
+}
 }
