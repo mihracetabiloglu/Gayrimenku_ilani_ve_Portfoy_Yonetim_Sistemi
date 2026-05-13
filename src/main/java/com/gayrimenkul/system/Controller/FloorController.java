@@ -1,4 +1,4 @@
-package com.gayrimenkul.system.controller;
+package com.gayrimenkul.system.Controller;
 
 import com.gayrimenkul.system.entity.Floor;
 import com.gayrimenkul.system.service.FloorService;

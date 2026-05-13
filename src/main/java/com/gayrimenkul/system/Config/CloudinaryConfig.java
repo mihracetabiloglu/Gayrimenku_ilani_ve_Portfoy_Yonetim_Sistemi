@@ -1,4 +1,4 @@
-package com.gayrimenkul.system.config;
+package com.gayrimenkul.system.Config;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;

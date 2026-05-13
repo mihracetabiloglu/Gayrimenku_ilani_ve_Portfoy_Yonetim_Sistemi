@@ -1,4 +1,4 @@
-package com.gayrimenkul.system.controller;
+package com.gayrimenkul.system.Controller;
 
 import com.gayrimenkul.system.entity.PropertyType;
 import com.gayrimenkul.system.service.PropertyTypeService;

@@ -1,4 +1,4 @@
-package com.gayrimenkul.system.config;
+package com.gayrimenkul.system.Config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
