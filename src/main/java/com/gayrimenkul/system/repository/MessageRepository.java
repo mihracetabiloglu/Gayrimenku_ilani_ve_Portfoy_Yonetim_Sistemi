@@ -15,6 +15,13 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     List<Message> findBySenderIdOrderByCreatedAtDesc(Long senderId);
 
+    @Query("""
+            select m from Message m
+            where m.sender.id = :userId or m.receiver.id = :userId
+            order by m.createdAt desc
+            """)
+    List<Message> findVisibleToUserOrderByCreatedAtDesc(@Param("userId") Long userId);
+
     List<Message> findBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByCreatedAtAsc(
             Long senderId1, Long receiverId1, Long senderId2, Long receiverId2);
 

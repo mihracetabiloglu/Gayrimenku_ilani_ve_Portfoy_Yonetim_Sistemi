@@ -37,6 +37,12 @@ public class MessageController {
                 .body(messageService.sendMessage(request, authentication.getName()));
     }
 
+    @GetMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<MessageResponse>> getMessages(Authentication authentication) {
+        return ResponseEntity.ok(messageService.getMessages(authentication.getName()));
+    }
+
     @GetMapping("/inbox")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<MessageResponse>> getInbox(Authentication authentication) {

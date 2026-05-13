@@ -1,6 +1,8 @@
 package com.gayrimenkul.system.service;
 
+import com.gayrimenkul.system.entity.Floor;
 import com.gayrimenkul.system.entity.Property;
+import com.gayrimenkul.system.repository.FloorRepository;
 import com.gayrimenkul.system.repository.PropertyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.List;
 public class PropertyService {
 
     private final PropertyRepository propertyRepository;
+    private final FloorRepository floorRepository;
 
     // Yeni İlan Oluştur
     @Transactional
@@ -22,6 +25,7 @@ public class PropertyService {
         if (property.getImages() != null) {
             property.getImages().forEach(img -> img.setProperty(property));
         }
+        property.setFloor(resolveFloor(property.getFloor()));
         return propertyRepository.save(property);
     }
 
@@ -37,7 +41,7 @@ public class PropertyService {
         existingProperty.setCity(details.getCity());
         existingProperty.setDistrict(details.getDistrict());
         existingProperty.setNeighborhood(details.getNeighborhood());
-        existingProperty.setFloor(details.getFloor());
+        existingProperty.setFloor(resolveFloor(details.getFloor()));
         existingProperty.setPropertyType(details.getPropertyType());
         if (details.getActive() != null) {
             existingProperty.setActive(details.getActive());
@@ -81,5 +85,25 @@ public class PropertyService {
             throw new RuntimeException("Silinmek istenen ilan bulunamadı.");
         }
         propertyRepository.deleteById(id);
+    }
+
+    private Floor resolveFloor(Floor floor) {
+        if (floor == null) {
+            return null;
+        }
+        if (floor.getId() != null) {
+            return floorRepository.getReferenceById(floor.getId());
+        }
+        String name = floor.getName();
+        if (name == null || name.trim().isEmpty()) {
+            return null;
+        }
+        String normalizedName = name.trim();
+        return floorRepository.findByNameIgnoreCase(normalizedName)
+                .orElseGet(() -> {
+                    Floor savedFloor = new Floor();
+                    savedFloor.setName(normalizedName);
+                    return floorRepository.save(savedFloor);
+                });
     }
 }

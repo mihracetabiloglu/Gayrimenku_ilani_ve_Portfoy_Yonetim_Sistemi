@@ -171,8 +171,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--text
     </div>
     <div class="form-grid" style="margin-top:1rem">
       <div class="field">
-        <label>Kat</label>
-        <select id="floor"><option value="">Kat seçiniz...</option></select>
+        <label>Kat *</label>
+        <input type="number" id="floor" min="-2" step="1" required placeholder="Örn: -1, 0, 3">
       </div>
     </div>
   </div>
@@ -214,16 +214,14 @@ const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer '
 
 // Dropdown verileri
 async function loadSelects() {
-  const [types, cats, cities, floors] = await Promise.all([
+  const [types, cats, cities] = await Promise.all([
     fetch('/api/property-types').then(r => r.json()).catch(() => []),
     fetch('/api/categories').then(r => r.json()).catch(() => []),
-    fetch('/api/cities').then(r => r.json()).catch(() => []),
-    fetch('/api/floors').then(r => r.json()).catch(() => [])
+    fetch('/api/cities').then(r => r.json()).catch(() => [])
   ]);
   fillSelect('propertyType', types, 'name');
   fillSelect('category', cats, 'name');
   fillSelect('city', cities, 'name');
-  fillSelect('floor', floors, 'name');
 }
 
 function fillSelect(id, data, labelKey) {
@@ -268,6 +266,16 @@ async function loadNeighborhoods(districtId) {
 }
 
 loadSelects();
+
+function formatFloorName(value) {
+  const floorNumber = Number(value);
+  return floorNumber === 0 ? 'Giriş Kat' : floorNumber + '. Kat';
+}
+
+function isValidFloorValue(value) {
+  const floorNumber = Number(value);
+  return value !== '' && Number.isInteger(floorNumber) && floorNumber >= -2;
+}
 
 // Resim önizleme
 let selectedFiles = [];
@@ -316,7 +324,7 @@ async function submitIlan() {
   const cityId      = document.getElementById('city').value;
   const districtId  = document.getElementById('district').value;
   const neighborhoodId = document.getElementById('neighborhood').value;
-  const floorId     = document.getElementById('floor').value;
+  const floorValue  = document.getElementById('floor').value;
   const description = document.getElementById('description').value.trim();
 
   if (!title)  { showToast('İlan başlığı zorunludur.', 'error'); return; }
@@ -324,6 +332,7 @@ async function submitIlan() {
   if (!typeId) { showToast('İlan tipi seçiniz.', 'error'); return; }
   if (!catId)  { showToast('Kategori seçiniz.', 'error'); return; }
   if (!cityId) { showToast('Şehir seçiniz.', 'error'); return; }
+  if (!isValidFloorValue(floorValue)) { showToast('Kat alanı zorunludur. -2, -1, 0 veya pozitif tam sayı giriniz.', 'error'); return; }
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
@@ -337,7 +346,7 @@ async function submitIlan() {
       city:         cityId ? { id: parseInt(cityId) }  : null,
       district:     districtId ? { id: parseInt(districtId) } : null,
       neighborhood: neighborhoodId ? { id: parseInt(neighborhoodId) } : null,
-      floor:        floorId ? { id: parseInt(floorId) } : null,
+      floor:        { name: formatFloorName(floorValue) },
       user:         user?.id ? { id: parseInt(user.id) } : null
     };
 

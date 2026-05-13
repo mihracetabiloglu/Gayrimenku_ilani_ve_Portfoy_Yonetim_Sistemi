@@ -4,6 +4,7 @@
   const USER_KEY = 'emlakprime_user';
   const FAVORITES_KEY = 'emlakprime_favorites';
   const REMEMBER_KEY = 'emlakprime_remember_me';
+  const REMEMBERED_LOGIN_KEY = 'emlakprime_remembered_login';
   const LAST_ACTIVE_KEY = 'emlakprime_last_activity';
   const LOGIN_TIME_KEY = 'loginTime';
   const EXPIRES_AT_KEY = 'expiresAt';
@@ -152,6 +153,18 @@
     return readStored(REMEMBER_KEY) === 'true';
   }
 
+  function getRememberedLogin() {
+    return localStorage.getItem(REMEMBERED_LOGIN_KEY) || '';
+  }
+
+  function saveRememberedLogin(loginId, rememberMe) {
+    if (rememberMe && loginId) {
+      localStorage.setItem(REMEMBERED_LOGIN_KEY, loginId);
+      return;
+    }
+    localStorage.removeItem(REMEMBERED_LOGIN_KEY);
+  }
+
   function parseStoredJson(key, fallback) {
     const raw = readStored(key);
     if (!raw) return fallback;
@@ -189,6 +202,7 @@
     const storage = rememberMe ? localStorage : sessionStorage;
 
     clearSession();
+    saveRememberedLogin((auth && auth.loginId) || username, rememberMe);
     storage.setItem(TOKEN_KEY, token);
     storage.setItem('token', token);
     storage.setItem('roles', JSON.stringify(roles));
@@ -267,6 +281,8 @@
     getUser: getUser,
     getRoles: getRoles,
     isRemembered: isRemembered,
+    getRememberedLogin: getRememberedLogin,
+    saveRememberedLogin: saveRememberedLogin,
     API_BASE_URL: API_BASE_URL,
     normalizeApiUrl: normalizeApiUrl
   };
@@ -283,6 +299,8 @@
       requestInput = new Request(normalizeApiUrl(input.url), input);
     }
 
+    let skipAuthRedirect = false;
+
     if (isApiRequest(requestInput)) {
       publicRequest = isPublicRequest(requestInput, requestInit);
       if (!publicRequest && getToken() && !validateSession({ redirect: true })) {
@@ -290,6 +308,8 @@
       }
 
       const headers = new Headers(requestInit.headers || (requestInput instanceof Request ? requestInput.headers : undefined));
+      skipAuthRedirect = headers.get('X-Silent-Auth') === 'true';
+      headers.delete('X-Silent-Auth');
       const token = getToken();
       if (token && !headers.has('Authorization')) {
         headers.set('Authorization', 'Bearer ' + token);
@@ -298,7 +318,7 @@
     }
 
     return nativeFetch(requestInput, requestInit).then(function (response) {
-      if (isApiRequest(requestInput) && !publicRequest && response.status === 401) {
+      if (isApiRequest(requestInput) && !publicRequest && !skipAuthRedirect && response.status === 401) {
         clearSession();
         showTimeoutMessage();
         redirectToLogin();

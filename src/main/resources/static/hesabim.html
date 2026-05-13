@@ -162,6 +162,9 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:2.5rem 2rem;ma
 .msg-sender{font-size:.88rem;font-weight:600;color:var(--gray-800)}
 .msg-item.unread .msg-sender{font-weight:700;color:var(--navy)}
 .msg-date{font-size:.72rem;color:var(--gray-400);white-space:nowrap;flex-shrink:0}
+.msg-direction{display:inline-flex;align-items:center;margin-right:.4rem;padding:.1rem .45rem;border-radius:999px;font-size:.68rem;font-weight:700;background:var(--gray-100);color:var(--gray-600)}
+.msg-direction.sent{background:#dbeafe;color:#1d4ed8}
+.msg-direction.received{background:rgba(201,168,76,.16);color:var(--navy)}
 .msg-property{font-size:.75rem;color:var(--navy);font-weight:600;margin-bottom:.15rem}
 .msg-preview{font-size:.8rem;color:var(--gray-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .msg-unread-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:.3rem}
@@ -258,7 +261,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:2.5rem 2rem;ma
     <button class="sidebar-item" onclick="showPanel('password',this)"><span class="icon">🔒</span>Şifre Değiştir</button>
     <div class="sidebar-divider" id="agentDivider" style="display:none"></div>
     <button class="sidebar-item" id="agentSidebarBtn" style="display:none" onclick="showPanel('ilanlar',this);loadIlanlar()"><span class="icon">🏠</span>İlanlarım</button>
-    <button class="sidebar-item" id="mesajSidebarBtn" style="display:none" onclick="showPanel('mesajlar',this);loadMesajlar()"><span class="icon">✉️</span>Mesajlarım <span id="mesajUnreadBadge" style="display:none;background:var(--accent);color:var(--navy);font-size:.65rem;font-weight:800;padding:.1rem .45rem;border-radius:50px;margin-left:.25rem"></span></button>
+    <button class="sidebar-item" id="mesajSidebarBtn" style="display:none" onclick="openMesajlarPanel()"><span class="icon">✉️</span>Mesajlarım <span id="mesajUnreadBadge" style="display:none;background:var(--accent);color:var(--navy);font-size:.65rem;font-weight:800;padding:.1rem .45rem;border-radius:50px;margin-left:.25rem"></span></button>
     <div class="sidebar-divider"></div>
     <button class="sidebar-item" onclick="logout()" style="color:#E24B4A"><span class="icon">🚪</span>Çıkış Yap</button>
   </div>
@@ -377,7 +380,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:2.5rem 2rem;ma
           <div class="edit-field"><label>Şehir</label><select id="editCity"><option value="">Seçin...</option></select></div>
           <div class="edit-field"><label>İlçe</label><select id="editDistrict"><option value="">Seçin...</option></select></div>
           <div class="edit-field"><label>Mahalle</label><select id="editNeighborhood"><option value="">Mahalle seçin...</option></select></div>
-          <div class="edit-field"><label>Kat</label><select id="editFloor"><option value="">Kat seçin...</option></select></div>
+          <div class="edit-field"><label>Kat *</label><input type="number" id="editFloor" min="-2" step="1" required placeholder="Örn: -1, 0, 3"></div>
         </div>
         <div class="edit-field" style="margin-bottom:1.25rem">
           <label>İlan Açıklaması</label>
@@ -470,7 +473,7 @@ function renderNav(user) {
         </div>
         <a href="hesabim.html" class="dd-item active-page">👤 Hesabım</a>
         <a href="favoriler.html" class="dd-item">❤ Favorilerim${badge}</a>
-        <button class="dd-item" onclick="showPanel('mesajlar',document.getElementById('mesajSidebarBtn'));loadMesajlar()">✉️ Mesajlarım</button>
+        <a href="hesabim.html?panel=mesajlar" class="dd-item" onclick="event.preventDefault();openMesajlarPanel()">✉️ Mesajlarım</a>
         ${agentItems}
         ${adminItem}
         <div class="dd-divider"></div>
@@ -723,6 +726,13 @@ async function deleteIlan(id) {
 // ── Mesajlarım ────────────────────────────────────────────────────────────────
 let _currentOtherUserId = null;
 let _currentPropertyId  = null;
+let _messageConversations = [];
+
+function openMesajlarPanel() {
+  showPanel('mesajlar', document.getElementById('mesajSidebarBtn'));
+  showMesajList();
+  loadMesajlar();
+}
 
 async function loadMesajlar() {
   const token = getImageAuthToken();
@@ -730,28 +740,32 @@ async function loadMesajlar() {
   const list = document.getElementById('mesajList');
   if (!u || !token) { if(list) list.innerHTML = '<div class="msg-empty">Giriş yapmanız gerekiyor.</div>'; return; }
   try {
-    const res = await fetch('/api/messages/inbox', { headers: { 'Authorization': 'Bearer ' + token } });
+    const res = await fetch('/api/messages', { headers: { 'Authorization': 'Bearer ' + token } });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const msgs = await res.json();
 
-    const unread = msgs.filter(m => !m.read).length;
+    const unread = msgs.filter(m => String(m.receiver?.id) === String(u.id) && !m.read).length;
     const badge = document.getElementById('mesajUnreadBadge');
     const label = document.getElementById('mesajUnreadLabel');
     if (unread > 0) { badge.style.display=''; badge.textContent=unread; label.style.display=''; label.textContent=unread+' okunmamış'; }
     else { badge.style.display='none'; label.style.display='none'; }
 
-    if (!msgs.length) { list.innerHTML = '<div class="msg-empty">Henüz mesaj almadınız.</div>'; return; }
+    if (!msgs.length) { list.innerHTML = '<div class="msg-empty">Henüz mesajınız yok.</div>'; return; }
 
-    list.innerHTML = msgs.map(m => {
-      const senderName = m.sender?.name || 'Bilinmeyen';
+    _messageConversations = buildMessageConversations(msgs, u.id);
+    list.innerHTML = _messageConversations.map((conv, index) => {
+      const m = conv.lastMessage;
+      const isSent = String(m.sender?.id) === String(u.id);
+      const personName = conv.otherUser?.name || 'Bilinmeyen';
+      const directionText = isSent ? 'Gönderilen' : 'Gelen';
       const preview = (m.content || '').replace(/\n/g,' ').substring(0,75) + ((m.content||'').length>75?'…':'');
       const date = m.createdAt ? new Date(m.createdAt).toLocaleDateString('tr-TR') : '';
-      const isUnread = !m.read;
-      return `<div class="msg-item${isUnread?' unread':''}" data-msg-id="${m.id}" onclick="openMesaj(${m.id})">
-        <div class="msg-avatar-sm">${escapeHtml(senderName.charAt(0).toUpperCase())}</div>
+      const isUnread = conv.unreadMessageIds.length > 0;
+      return `<div class="msg-item${isUnread?' unread':''}" data-conversation-index="${index}" onclick="openConversation(${index})">
+        <div class="msg-avatar-sm">${escapeHtml(personName.charAt(0).toUpperCase())}</div>
         <div class="msg-item-body">
           <div class="msg-item-header">
-            <span class="msg-sender">${escapeHtml(senderName)}</span>
+            <span class="msg-sender"><span class="msg-direction ${isSent ? 'sent' : 'received'}">${directionText}</span>${escapeHtml(personName)}</span>
             <span class="msg-date">${date}</span>
           </div>
           ${m.property ? `<div class="msg-property">📌 ${escapeHtml(m.property.title||'')}</div>` : ''}
@@ -764,6 +778,81 @@ async function loadMesajlar() {
     console.error('[loadMesajlar]', e);
     list.innerHTML = '<div class="msg-empty">Mesajlar yüklenemedi.</div>';
   }
+}
+
+function buildMessageConversations(messages, myId) {
+  const groups = new Map();
+  messages.forEach(m => {
+    const isSent = String(m.sender?.id) === String(myId);
+    const isReceived = String(m.receiver?.id) === String(myId);
+    const otherUser = isSent ? m.receiver : m.sender;
+    const otherId = otherUser?.id ?? 'unknown';
+    const property = m.property || (m.listingId ? { id: m.listingId, title: m.listingTitle } : null);
+    const propertyId = property?.id ?? 'none';
+    const key = `${otherId}:${propertyId}`;
+
+    if (!groups.has(key)) {
+      groups.set(key, {
+        otherUser,
+        property,
+        lastMessage: m,
+        unreadMessageIds: []
+      });
+    }
+
+    const conv = groups.get(key);
+    const lastTime = new Date(conv.lastMessage?.createdAt || 0).getTime();
+    const messageTime = new Date(m.createdAt || 0).getTime();
+    if (messageTime > lastTime) conv.lastMessage = m;
+    if (isReceived && !m.read) conv.unreadMessageIds.push(m.id);
+  });
+
+  return Array.from(groups.values())
+    .sort((a, b) => new Date(b.lastMessage?.createdAt || 0) - new Date(a.lastMessage?.createdAt || 0));
+}
+
+async function openConversation(index) {
+  const conv = _messageConversations[index];
+  const token = getImageAuthToken();
+  const u = getUser();
+  if (!conv || !u || !token) { showToast('Konusma acilamadi.'); return; }
+
+  _currentOtherUserId = conv.otherUser?.id || null;
+  _currentPropertyId = conv.property?.id || null;
+
+  document.getElementById('detailSender').textContent = conv.otherUser?.name || 'Bilinmeyen';
+  document.getElementById('detailEmail').textContent = conv.otherUser?.email || '-';
+  document.getElementById('detailProperty').textContent = conv.property ? '\uD83D\uDCCC ' + conv.property.title : '-';
+  document.getElementById('detailDate').textContent = conv.lastMessage?.createdAt ? new Date(conv.lastMessage.createdAt).toLocaleString('tr-TR') : '-';
+
+  if (conv.unreadMessageIds.length) {
+    await Promise.all(conv.unreadMessageIds.map(id =>
+      fetch('/api/messages/' + id + '/read', { method:'PATCH', headers:{ 'Authorization':'Bearer '+token } }).catch(()=>{})
+    ));
+    const item = document.querySelector(`[data-conversation-index="${index}"]`);
+    if (item) { item.classList.remove('unread'); item.querySelector('.msg-unread-dot')?.remove(); }
+
+    const badge = document.getElementById('mesajUnreadBadge');
+    const label = document.getElementById('mesajUnreadLabel');
+    const nextUnread = Math.max(0, parseInt(badge?.textContent || '0') - conv.unreadMessageIds.length);
+    if (nextUnread === 0) {
+      if (badge) badge.style.display = 'none';
+      if (label) label.style.display = 'none';
+    } else {
+      if (badge) badge.textContent = nextUnread;
+      if (label) label.textContent = nextUnread + ' okunmamis';
+    }
+    conv.unreadMessageIds = [];
+  }
+
+  await loadThread(u.id, _currentOtherUserId, _currentPropertyId, token);
+
+  document.getElementById('mesajListView').style.display   = 'none';
+  document.getElementById('mesajDetailView').style.display = 'block';
+  document.getElementById('replyText').value = '';
+
+  const tw = document.getElementById('threadWrap');
+  if (tw) tw.scrollTop = tw.scrollHeight;
 }
 
 async function openMesaj(id) {
@@ -783,7 +872,7 @@ async function openMesaj(id) {
     console.log('[openMesaj] Mesaj:', m);
 
     // Okundu işaretle
-    if (!m.read) {
+    if (String(m.receiver?.id) === String(u.id) && !m.read) {
       fetch('/api/messages/' + id + '/read', { method:'PATCH', headers:{ 'Authorization':'Bearer '+token } }).catch(()=>{});
       const item = document.querySelector(`[data-msg-id="${id}"]`);
       if (item) { item.classList.remove('unread'); item.querySelector('.msg-unread-dot')?.remove(); }
@@ -799,8 +888,9 @@ async function openMesaj(id) {
     _currentPropertyId  = m.property?.id || null;
 
     // Info grid doldur
-    const senderName  = m.sender?.name  || 'Bilinmeyen';
-    const senderEmail = m.sender?.email || '—';
+    const detailUser = String(m.sender?.id) === String(u.id) ? m.receiver : m.sender;
+    const senderName  = detailUser?.name  || 'Bilinmeyen';
+    const senderEmail = detailUser?.email || '—';
     document.getElementById('detailSender').textContent   = senderName;
     document.getElementById('detailEmail').textContent    = senderEmail;
     document.getElementById('detailProperty').textContent = m.property ? '📌 ' + m.property.title : '—';
@@ -927,16 +1017,33 @@ async function openEditPanel(id) {
 
 let editDropdownData = { districts: [], neighborhoods: [], floors: [] };
 
+function formatFloorName(value) {
+  const floorNumber = Number(value);
+  return floorNumber === 0 ? 'Giriş Kat' : floorNumber + '. Kat';
+}
+
+function floorNameToNumber(floor) {
+  const name = String(floor?.name || '').trim();
+  if (!name) return '';
+  if (/giri[sş]|zemin/i.test(name)) return 0;
+  const match = name.match(/-?\d+/);
+  return match ? Number(match[0]) : '';
+}
+
+function isValidFloorValue(value) {
+  const floorNumber = Number(value);
+  return value !== '' && Number.isInteger(floorNumber) && floorNumber >= -2;
+}
+
 async function loadEditDropdowns(ilan) {
-  const [types, cats, cities, districts, neighborhoods, floors] = await Promise.all([
+  const [types, cats, cities, districts, neighborhoods] = await Promise.all([
     fetch('/api/property-types').then(r => r.json()).catch(() => []),
     fetch('/api/categories').then(r => r.json()).catch(() => []),
     fetch('/api/cities').then(r => r.json()).catch(() => []),
     fetch('/api/districts').then(r => r.json()).catch(() => []),
     fetch('/api/neighborhoods').then(r => r.json()).catch(() => []),
-    fetch('/api/floors').then(r => r.json()).catch(() => []),
   ]);
-  editDropdownData = { districts, neighborhoods, floors };
+  editDropdownData = { districts, neighborhoods, floors: [] };
   const fill = (elId, items, selectedId) => {
     const el = document.getElementById(elId);
     if (!el) return;
@@ -948,7 +1055,7 @@ async function loadEditDropdowns(ilan) {
   fill('editCity', cities, ilan.city?.id);
   fillEditDistricts(ilan.city?.id, ilan.district?.id);
   fillEditNeighborhoods(ilan.district?.id, ilan.neighborhood?.id);
-  fill('editFloor', floors, ilan.floor?.id);
+  document.getElementById('editFloor').value = floorNameToNumber(ilan.floor);
 }
 
 function fillEditSelect(elId, items, selectedId, emptyText) {
@@ -1091,7 +1198,8 @@ async function saveIlan() {
   const cityId = Number(document.getElementById('editCity').value);
   const distId = Number(document.getElementById('editDistrict').value);
   const neighborhoodId = Number(document.getElementById('editNeighborhood').value);
-  const floorId = Number(document.getElementById('editFloor').value);
+  const floorValue = document.getElementById('editFloor').value;
+  if (!isValidFloorValue(floorValue)) { showToast('Kat alanı zorunludur. -2, -1, 0 veya pozitif tam sayı giriniz.'); return; }
   const body = {
     title,
     description: document.getElementById('editDesc').value.trim(),
@@ -1101,7 +1209,7 @@ async function saveIlan() {
     ...(cityId && { city: { id: cityId } }),
     ...(distId && { district: { id: distId } }),
     neighborhood: neighborhoodId ? { id: neighborhoodId } : null,
-    floor: floorId ? { id: floorId } : null,
+    floor: { name: formatFloorName(floorValue) },
   };
   try {
     const res = await fetch('/api/properties/' + id, {
@@ -1131,7 +1239,8 @@ async function saveIlan() {
 // Init
 const user = getUser();
 if (!user) {
-  window.location.href = 'login.html?redirect=hesabim.html';
+  const target = 'hesabim.html' + window.location.search;
+  window.location.href = 'login.html?redirect=' + encodeURIComponent(target);
 } else {
   if (!user.joinDate) { user.joinDate = new Date().toLocaleDateString('tr-TR'); saveUserData(user); }
   fillPage(user);
@@ -1139,7 +1248,11 @@ if (!user) {
   fetchUserProfile();
   // Mesajlarım — tüm giriş yapmış kullanıcılar için
   document.getElementById('mesajSidebarBtn').style.display = '';
-  loadMesajlar();
+  if (new URLSearchParams(window.location.search).get('panel') === 'mesajlar') {
+    openMesajlarPanel();
+  } else {
+    loadMesajlar();
+  }
 
   const isAgent = (user.roles||[]).some(r => r.includes('AGENT') || r.includes('ADMIN'));
   if (isAgent) {

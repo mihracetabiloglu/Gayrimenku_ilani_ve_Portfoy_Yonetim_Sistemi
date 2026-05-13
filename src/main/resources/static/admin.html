@@ -481,9 +481,8 @@ tr:hover td{background:var(--gray-50)}
           <div class="field"><label>Şehir</label><select><option value="">Şehir seçin...</option></select></div>
           <div class="field"><label>İlçe</label><select><option value="">İlçe seçin...</option></select></div>
           <div class="field"><label>Mahalle</label><select><option value="">Mahalle seçin...</option></select></div>
-          <div class="field"><label>Kat</label><select><option value="">Kat seçin...</option></select></div>
+          <div class="field"><label>Kat *</label><input type="number" min="-2" step="1" required placeholder="Örn: -1, 0, 3"></div>
           <div class="field"><label>Fiyat (₺)</label><input type="number" placeholder="0"></div>
-          <div class="field"><label>Oda Sayısı</label><select><option value="">Seçin...</option><option>1+0</option><option>1+1</option><option>2+1</option><option>3+1</option><option>4+1</option><option>5+1</option></select></div>
           <div class="field"><label>Alan (m²)</label><input type="number" placeholder="0"></div>
         </div>
         <div class="field" style="margin-top:1rem"><label>Açıklama</label><textarea placeholder="İlan açıklaması..."></textarea></div>
@@ -508,7 +507,7 @@ tr:hover td{background:var(--gray-50)}
           <div class="field"><label>Şehir</label><select><option value="">Şehir seçin...</option></select></div>
           <div class="field"><label>İlçe</label><select><option value="">İlçe seçin...</option></select></div>
           <div class="field"><label>Mahalle</label><select><option value="">Mahalle seçin...</option></select></div>
-          <div class="field"><label>Kat</label><select><option value="">Kat seçin...</option></select></div>
+          <div class="field"><label>Kat *</label><input type="number" min="-2" step="1" required placeholder="Örn: -1, 0, 3"></div>
           <div class="field"><label>Fiyat (₺)</label><input type="number" placeholder="0"></div>
         </div>
         <div class="form-grid one" style="margin-top:.75rem">
@@ -945,7 +944,7 @@ function closeModal(){document.getElementById('confirmModal').classList.remove('
 document.getElementById('confirmModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
 
 const AdminApi=(function(){
-  const API_BASE_URL='http://localhost:8080/api';
+  const API_BASE_URL=(window.EmlakAuth?.API_BASE_URL||'')+'/api';
   const state={users:[],roles:[],properties:[],categories:[],cities:[],districts:[],neighborhoods:[],floors:[],types:[],logs:[],activePage:'dashboard',logSortDir:'desc'};
   const originalShowPage=showPage;
   showPage=function(id,triggerEl){
@@ -1007,9 +1006,9 @@ const AdminApi=(function(){
     }
     const user=localUser();
     const roles=localRoles().length?localRoles():(user?.roles||[]);
-    const allowed=roles.some(role=>['ADMIN','AGENT'].includes(roleKey(role)));
+    const allowed=roles.some(role=>roleKey(role)==='ADMIN');
     if(!allowed){
-      showToast('Admin paneli icin yetkili rol gerekiyor.');
+      showToast('Admin paneli icin ADMIN rolu gerekiyor.');
       return false;
     }
     return true;
@@ -1055,6 +1054,7 @@ const AdminApi=(function(){
     }
     const url=apiUrl(path);
     const headers={...(fetchOptions.body instanceof FormData?{}:{'Content-Type':'application/json'}),...authHeaders(),...(fetchOptions.headers||{})};
+    if(silentUnauthorized)headers['X-Silent-Auth']='true';
     console.log('API URL:',url);
     const res=await fetch(url,{...fetchOptions,headers});
     console.log('HTTP status:',res.status);
@@ -1111,6 +1111,21 @@ const AdminApi=(function(){
     if(!select)return;
     select.innerHTML=`<option value="">${placeholder}</option>`+items.map(x=>`<option value="${esc(x[value])}">${esc(label(x))}</option>`).join('');
   }
+  function formatFloorName(value){
+    const floorNumber=Number(value);
+    return floorNumber===0?'Giriş Kat':floorNumber+'. Kat';
+  }
+  function floorNameToNumber(floor){
+    const name=String(floor?.name||'').trim();
+    if(!name)return '';
+    if(/giri[sş]|zemin/i.test(name))return 0;
+    const match=name.match(/-?\d+/);
+    return match?Number(match[0]):'';
+  }
+  function isValidFloorValue(value){
+    const floorNumber=Number(value);
+    return value!==''&&Number.isInteger(floorNumber)&&floorNumber>=-2;
+  }
   function currentUserId(){
     const u=localUser()||{};
     return readStored('userId')||u.id||u.userId||null;
@@ -1118,7 +1133,7 @@ const AdminApi=(function(){
 
   async function loadBase(){
     const [properties,categories,cities,districts,neighborhoods,floors,types]=await Promise.all([
-      api('/api/listings').catch(()=>[]),
+      api('/api/listings').catch(err=>{console.error('Ilanlar yuklenemedi:',err);showToast('Ilanlar yuklenemedi. API baglantisini kontrol edin.');return [];}), 
       api('/api/categories').catch(()=>[]),
       api('/api/cities').catch(()=>[]),
       api('/api/districts').catch(()=>[]),
@@ -1156,14 +1171,12 @@ const AdminApi=(function(){
     setOptions(addListing[3],state.cities,x=>x.name,'id','Sehir secin...');
     setOptions(addListing[4],state.districts,x=>`${x.name} (${x.city?.name||''})`,'id','Ilce secin...');
     setOptions(addListing[5],state.neighborhoods,x=>`${x.name} (${x.district?.name||''})`,'id','Mahalle secin...');
-    setOptions(addListing[6],state.floors,x=>x.name,'id','Kat secin...');
     const updateListing=inputs('listing-update');
     setOptions(updateListing[1],state.types,x=>x.name);
     setOptions(updateListing[2],state.categories,x=>x.name);
     setOptions(updateListing[3],state.cities,x=>x.name,'id','Şehir seçin...');
     setOptions(updateListing[4],state.districts,x=>`${x.name} (${x.city?.name||''})`,'id','İlçe seçin...');
     setOptions(updateListing[5],state.neighborhoods,x=>`${x.name} (${x.district?.name||''})`,'id','Mahalle secin...');
-    setOptions(updateListing[6],state.floors,x=>x.name,'id','Kat secin...');
     setOptions(inputs('listing-images')[0],state.properties,x=>`#${x.id} ${x.title}`);
     setOptions(inputs('district-add')[1],state.cities,x=>x.name,'id','Sehir secin...');
     setOptions(inputs('district-update')[1],state.cities,x=>x.name,'id','Sehir secin...');
@@ -1353,6 +1366,7 @@ const AdminApi=(function(){
 
   async function createPropertyFromAdmin(){
     const f=inputs('listing-add');
+    if(!isValidFloorValue(f[6].value)){showToast('Kat alani zorunludur. -2, -1, 0 veya pozitif tam sayi giriniz.');return;}
     const saved=await saveResource('property',null,{
       title:f[0].value,
       propertyType:{id:Number(f[1].value)},
@@ -1360,7 +1374,7 @@ const AdminApi=(function(){
       city:{id:Number(f[3].value)},
       district:{id:Number(f[4].value)},
       neighborhood:f[5].value?{id:Number(f[5].value)}:null,
-      floor:f[6].value?{id:Number(f[6].value)}:null,
+      floor:{name:formatFloorName(f[6].value)},
       price:Number(f[7].value||0),
       description:f[10].value,
       user:currentUserId()?{id:currentUserId()}:null,
@@ -1499,6 +1513,7 @@ const AdminApi=(function(){
     page('listing-update')?.querySelector('.btn-primary')?.addEventListener('click',()=>{
       const f=inputs('listing-update');
       const pid=page('listing-update').dataset.id;
+      if(!isValidFloorValue(f[6].value)){showToast('Kat alani zorunludur. -2, -1, 0 veya pozitif tam sayi giriniz.');return Promise.resolve();}
       return saveResource('property',pid,{
         title:f[0].value,
         propertyType:{id:Number(f[1].value)},
@@ -1506,7 +1521,7 @@ const AdminApi=(function(){
         city:{id:Number(f[3].value)},
         district:{id:Number(f[4].value)},
         neighborhood:f[5].value?{id:Number(f[5].value)}:null,
-        floor:f[6].value?{id:Number(f[6].value)}:null,
+        floor:{name:formatFloorName(f[6].value)},
         price:Number(f[7].value||0),
         description:f[8].value,
         active:statusPayload(f[9].value)
@@ -1556,7 +1571,7 @@ const AdminApi=(function(){
       f[3].value=p.city?.id||'';
       f[4].value=p.district?.id||'';
       f[5].value=p.neighborhood?.id||'';
-      f[6].value=p.floor?.id||'';
+      f[6].value=floorNameToNumber(p.floor);
       f[7].value=p.price||'';
       f[8].value=p.description||'';
       f[9].value=isActiveRecord(p)?'Aktif':'Pasif';

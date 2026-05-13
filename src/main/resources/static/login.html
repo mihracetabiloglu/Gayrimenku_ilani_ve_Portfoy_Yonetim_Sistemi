@@ -734,6 +734,18 @@ const container = document.getElementById('container');
 document.getElementById('signUp').addEventListener('click', () => container.classList.add('right-panel-active'));
 document.getElementById('signIn').addEventListener('click', () => container.classList.remove('right-panel-active'));
 
+function fillRememberedLogin() {
+  const loginInput = document.getElementById('loginEmail');
+  const rememberInput = document.getElementById('rememberMe');
+  const rememberedLogin = window.EmlakAuth?.getRememberedLogin?.() || localStorage.getItem('emlakprime_remembered_login') || '';
+  if (!loginInput || !rememberInput || !rememberedLogin) return;
+  loginInput.value = rememberedLogin;
+  rememberInput.checked = true;
+  document.getElementById('loginPw')?.focus();
+}
+
+fillRememberedLogin();
+
 function getRedirect() {
   const p = new URLSearchParams(window.location.search);
   return p.get('redirect') || 'index.html';
@@ -762,6 +774,7 @@ async function submitLogin() {
     if (res.ok) {
       const auth = await res.json();
       auth.rememberMe = rememberMe;
+      auth.loginId = loginId;
       const userSession = {
         id: auth.userId,
         username: auth.username,
@@ -775,6 +788,8 @@ async function submitLogin() {
       } else {
         const storage = rememberMe ? localStorage : sessionStorage;
         [localStorage, sessionStorage].forEach(s => ['emlakprime_token','token','roles','username','userId','emlakprime_user','loginTime','expiresAt'].forEach(k => s.removeItem(k)));
+        if (rememberMe) localStorage.setItem('emlakprime_remembered_login', loginId);
+        else localStorage.removeItem('emlakprime_remembered_login');
         storage.setItem('emlakprime_token', auth.token);
         storage.setItem('token', auth.token);
         storage.setItem('roles', JSON.stringify(auth.roles || []));

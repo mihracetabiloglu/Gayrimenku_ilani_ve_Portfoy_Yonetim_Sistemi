@@ -66,6 +66,14 @@ public class MessageService {
                 .toList();
     }
 
+    public List<MessageResponse> getMessages(String username) {
+        User user = getUser(username);
+        return messageRepository.findVisibleToUserOrderByCreatedAtDesc(user.getId())
+                .stream()
+                .map(MessageResponse::from)
+                .toList();
+    }
+
     public List<MessageResponse> getSentMessages(String username) {
         User user = getUser(username);
         return messageRepository.findBySenderIdOrderByCreatedAtDesc(user.getId())
