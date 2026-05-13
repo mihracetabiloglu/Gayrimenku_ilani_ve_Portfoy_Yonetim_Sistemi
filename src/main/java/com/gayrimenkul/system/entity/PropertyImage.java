@@ -23,6 +23,27 @@ public class PropertyImage {
     @Column(nullable = false)
     private String imageUrl;
 
+    public String getImageUrl() {
+        if (imageUrl == null || imageUrl.isBlank()) {
+            return imageUrl;
+        }
+
+        String normalized = imageUrl.trim();
+        if (normalized.startsWith("http://")
+                || normalized.startsWith("https://")
+                || normalized.startsWith("/")
+                || normalized.startsWith("data:")
+                || normalized.startsWith("blob:")) {
+            return normalized;
+        }
+
+        if (normalized.startsWith("uploads/")) {
+            return "/" + normalized;
+        }
+
+        return "/uploads/" + normalized;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "property_id", nullable = false)
     @JsonIgnore

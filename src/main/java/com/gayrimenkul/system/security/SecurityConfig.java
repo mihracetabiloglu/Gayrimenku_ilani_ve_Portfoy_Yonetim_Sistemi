@@ -72,7 +72,8 @@ public class SecurityConfig {
                     "/*.svg",
                     "/*.ico",
                     "/uploads/**",
-                    "/favicon.ico"
+                    "/favicon.ico",
+                    "/error"
                 ).permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
