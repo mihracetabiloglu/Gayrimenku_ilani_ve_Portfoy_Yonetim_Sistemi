@@ -77,6 +77,9 @@ public class SecurityConfig {
                 ).permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
+                .requestMatchers("/api/users/password-reset-request").permitAll()
+                .requestMatchers("/api/users/password-reset").permitAll()
+                .requestMatchers("/api/users/change-password").authenticated()
                 
                 // Category - herkes görebilir
                 .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
