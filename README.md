@@ -53,4 +53,5 @@ Uygulama başarıyla çalıştığında http://localhost:8080 adresinden erişil
 
 ### 5. Sistem Canlıya Alındıktan Sonra Yapılan Güncellemeler
 Artık sistem canlıda olduğu için yaptığınız değişiklikleri github-a yükledikten sonra link üzerinde görebileceksiniz. Değişiklikler Github-a yüklendikten 10-15 saniye sonra render üzerinde deploy edilecek. Deploy edildikten sonra yaptığınız değişiklikler linke yansıyacaktır. 
+Link: https://gayrimenku-ilani-ve-portfoy-yonetim-bxdy.onrender.com
 
