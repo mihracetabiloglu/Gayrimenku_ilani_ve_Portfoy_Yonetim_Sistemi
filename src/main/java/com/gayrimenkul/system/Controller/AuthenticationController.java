@@ -1,4 +1,4 @@
-package com.gayrimenkul.system.Controller;
+package com.gayrimenkul.system.controller;
 
 import com.gayrimenkul.system.dto.AuthenticationRequest;
 import com.gayrimenkul.system.dto.AuthenticationResponse;

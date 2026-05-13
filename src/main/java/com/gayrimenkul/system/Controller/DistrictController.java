@@ -1,4 +1,4 @@
-package com.gayrimenkul.system.Controller;
+package com.gayrimenkul.system.controller;
 
 import com.gayrimenkul.system.entity.District;
 import com.gayrimenkul.system.service.DistrictService;
