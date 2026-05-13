@@ -818,7 +818,41 @@ async function submitLogin() {
     msg.textContent = 'Sunucuya bağlanılamadı.';
   }
 }
+async function submitForgot() {
+  const email = document.getElementById('forgotEmail').value.trim();
+  if (!email || !/\S+@\S+\.\S+/.test(email)) { 
+    showToast('Geçerli bir e-posta adresi girin.'); 
+    return; 
+  }
 
+  const btn = document.querySelector('.btn-modal');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Gönderiliyor...';
+
+  try {
+    // Canlıdaki adrese göre dinamik URL oluşturur
+    const baseUrl = window.location.origin; 
+    const res = await fetch(`${baseUrl}/api/users/password-reset-request?email=${encodeURIComponent(email)}`, {
+      method: 'POST'
+    });
+
+    if (res.ok) {
+      // Sadece backend 'başarılı' derse bu ekranı göster:
+      document.getElementById('forgotForm').style.display = 'none';
+      document.getElementById('forgotSuccess').style.display = 'block';
+    } else {
+      const errorText = await res.text();
+      showToast('Hata: ' + (errorText || 'İstek başarısız oldu.'));
+    }
+  } catch (err) {
+    console.error('Mail Hatası:', err);
+    showToast('Sunucuya ulaşılamadı. Lütfen internetinizi kontrol edin.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+}
 async function submitRegister() {
   const name     = document.getElementById('regName').value.trim();
   const username = document.getElementById('regUsername').value.trim();
