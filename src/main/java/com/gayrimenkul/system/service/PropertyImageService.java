@@ -79,12 +79,17 @@ public class PropertyImageService {
             return saveImageLocally(image);
         }
 
-        Map<String, Object> uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.emptyMap());
-        Object secureUrl = uploadResult.get("secure_url");
-        if (secureUrl != null) {
-            return secureUrl.toString();
+        try {
+            Map<String, Object> uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.emptyMap());
+            Object secureUrl = uploadResult.get("secure_url");
+            if (secureUrl != null) {
+                return secureUrl.toString();
+            }
+            return uploadResult.get("url").toString();
+        } catch (Exception e) {
+            log.warn("Cloudinary upload failed, saving image locally instead", e);
+            return saveImageLocally(image);
         }
-        return uploadResult.get("url").toString();
     }
 
     private boolean isCloudinaryConfigured() {
