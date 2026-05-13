@@ -1,5 +1,5 @@
 (function () {
-  const API_BASE_URL = 'http://localhost:8080/api';
+  const API_BASE_URL = '';
   const TOKEN_KEY = 'emlakprime_token';
   const USER_KEY = 'emlakprime_user';
   const FAVORITES_KEY = 'emlakprime_favorites';
