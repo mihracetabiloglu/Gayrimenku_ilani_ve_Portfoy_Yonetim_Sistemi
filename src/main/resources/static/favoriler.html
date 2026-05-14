@@ -364,7 +364,6 @@ function renderFavs() {
         <div class="card-loc">📍 ${item.district}, ${item.city}</div>
         <div class="card-features">
           ${item.rooms !== '—' ? `<div class="feat">🏠 ${item.rooms} Oda</div>` : ''}
-          <div class="feat">📐 ${item.sqm} m²</div>
         </div>
         <button class="btn-detail" onclick="event.stopPropagation();window.location.href='ilan-detay.html?id=${item.id}'">Detayları Gör</button>
       </div>

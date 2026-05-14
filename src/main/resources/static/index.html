@@ -1360,7 +1360,7 @@ function renderNav() {
     const isAdmin = (user.roles||[]).some(r => r.includes('ADMIN'));
     const agentItems = isAgent ? `
       <a href="ilan-ekle.html" class="dd-item">🏠 İlan Ver</a>
-      <a href="hesabim.html" class="dd-item">📋 İlanlarım</a>` : '';
+      <a href="hesabim.html?panel=ilanlar" class="dd-item">📋 İlanlarım</a>` : '';
     const adminItem = isAdmin ? `<a href="admin.html" class="dd-item" style="color:#C9A84C;font-weight:600">⚙ Admin Paneli</a>` : '';
     document.getElementById('navAuthArea').innerHTML = `
       <div class="hesabim-wrap">
@@ -1533,7 +1533,6 @@ function renderCards(gridId,type,catFilter){
         <div class="card-features">
           ${item.rooms !== '—' ? `<div class="feat">🏠 ${item.rooms} Oda</div>` : ''}
           <div class="feat">Kat ${item.floor || '-'}</div>
-          <div class="feat">📐 ${item.sqm} m²</div>
         </div>
 
         <button class="btn-detail" onclick="event.stopPropagation();window.location.href='ilan-detay.html?id=${item.id}'">

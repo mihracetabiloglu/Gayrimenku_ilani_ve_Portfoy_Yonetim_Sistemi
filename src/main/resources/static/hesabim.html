@@ -1285,7 +1285,8 @@ if (!user) {
   fetchUserProfile();
   // Mesajlarım — tüm giriş yapmış kullanıcılar için
   document.getElementById('mesajSidebarBtn').style.display = '';
-  if (new URLSearchParams(window.location.search).get('panel') === 'mesajlar') {
+  const requestedPanel = new URLSearchParams(window.location.search).get('panel');
+  if (requestedPanel === 'mesajlar') {
     openMesajlarPanel();
   } else {
     loadMesajlar();
@@ -1295,6 +1296,9 @@ if (!user) {
   if (isAgent) {
     document.getElementById('agentSidebarBtn').style.display = '';
     document.getElementById('agentDivider').style.display = '';
+    if (requestedPanel === 'ilanlar') {
+      showPanel('ilanlar', document.getElementById('agentSidebarBtn'));
+    }
     loadIlanlar();
   }
 }

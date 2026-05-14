@@ -324,7 +324,7 @@ function renderNav() {
   const isAgent = roles.some(r => r.includes('AGENT') || r.includes('ADMIN'));
   const isAdmin = roles.some(r => r.includes('ADMIN'));
   const agentItems = isAgent
-    ? '<a href="ilan-ekle.html" class="dd-item">&#127968; İlan Ver</a><a href="hesabim.html" class="dd-item">&#128203; İlanlarım</a>'
+    ? '<a href="ilan-ekle.html" class="dd-item">&#127968; İlan Ver</a><a href="hesabim.html?panel=ilanlar" class="dd-item">&#128203; İlanlarım</a>'
     : '';
   const adminItem = isAdmin
     ? '<a href="admin.html" class="dd-item" style="color:#C9A84C;font-weight:600">&#9881; Admin Paneli</a>'
