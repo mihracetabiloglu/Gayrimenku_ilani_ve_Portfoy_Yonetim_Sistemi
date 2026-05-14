@@ -26,7 +26,7 @@ public class EmailService {
     public void sendPasswordResetMail(String toEmail, String token) {
         try {
             if (mailUsername == null || mailUsername.isBlank() || mailPassword == null || mailPassword.isBlank()) {
-                throw new RuntimeException("Mail ayarlari eksik. PowerShell'de MAIL_USERNAME ve MAIL_PASSWORD tanimlanmali.");
+                throw new RuntimeException("Mail ayarlari eksik. Render'da SPRING_MAIL_USERNAME/SPRING_MAIL_PASSWORD veya localde MAIL_USERNAME/MAIL_PASSWORD tanimlanmali.");
             }
 
             String resetLink = frontendUrl + "/reset-password.html?token=" + token;
