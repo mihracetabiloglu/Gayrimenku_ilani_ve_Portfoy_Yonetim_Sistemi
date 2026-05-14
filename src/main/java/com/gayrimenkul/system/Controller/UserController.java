@@ -1,13 +1,13 @@
 package com.gayrimenkul.system.Controller;
 
 import com.gayrimenkul.system.entity.User;
-import com.gayrimenkul.system.service.UserService;
 import com.gayrimenkul.system.service.PasswordResetService;
+import com.gayrimenkul.system.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,49 +15,52 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
-@RequiredArgsConstructor // @Autowired yerine bunu kullanmak daha temizdir
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final PasswordResetService passwordResetService;
 
-    // ŞİFRE SIFIRLAMA TALEBİ (Mail Gönderir)
     @PostMapping("/password-reset-request")
-    public ResponseEntity<String> requestPasswordReset(@RequestParam String email) {
-        String token = passwordResetService.createPasswordResetToken(email);
-        if (token == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Kullanıcı bulunamadı.");
-        }
-        return ResponseEntity.ok("Şifre sıfırlama linki email adresinize gönderildi.");
-    }
-
-    // UNUTULAN ŞİFREYİ SIFIRLAMA (Token ile)
-    @PostMapping("/password-reset")
-    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
-        boolean result = passwordResetService.resetPassword(token, newPassword);
-        if (result) {
-            return ResponseEntity.ok("Şifre başarıyla güncellendi.");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token geçersiz veya süresi dolmuş.");
-        }
-    }
-
-    // YENİ EKLENEN: GİRİŞ YAPMIŞ KULLANICININ ŞİFRESİNİ DEĞİŞTİRMESİ
-    @PostMapping("/change-password")
-    public ResponseEntity<String> changePassword(Authentication authentication, 
-                                                 @RequestBody Map<String, String> passwords) {
+    public ResponseEntity<String> requestPasswordReset(@RequestParam(required = false) String email,
+                                                       @RequestBody(required = false) Map<String, String> body) {
+        String requestEmail = email != null ? email : body != null ? body.get("email") : null;
         try {
-            String oldPassword = passwords.get("oldPassword");
-            String newPassword = passwords.get("newPassword");
-            
-            userService.changeUserPassword(authentication.getName(), oldPassword, newPassword);
-            return ResponseEntity.ok("Şifreniz başarıyla değiştirildi.");
+            passwordResetService.createPasswordResetToken(requestEmail);
+            return ResponseEntity.ok("Sifre sifirlama baglantisi e-posta adresinize gonderildi.");
+        } catch (RuntimeException e) {
+            HttpStatus status = e.getMessage().contains("bulunamadi") ? HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST;
+            return ResponseEntity.status(status).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/password-reset")
+    public ResponseEntity<String> resetPassword(@RequestParam(required = false) String token,
+                                                @RequestParam(required = false) String newPassword,
+                                                @RequestBody(required = false) Map<String, String> body) {
+        String requestToken = token != null ? token : body != null ? body.get("token") : null;
+        String requestPassword = newPassword != null ? newPassword : body != null ? body.get("newPassword") : null;
+        try {
+            passwordResetService.resetPassword(requestToken, requestPassword);
+            return ResponseEntity.ok("Sifre basariyla guncellendi.");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    // --- Mevcut Diğer Endpointler ---
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(Authentication authentication,
+                                                 @RequestBody Map<String, String> passwords) {
+        try {
+            String oldPassword = passwords.get("oldPassword");
+            String newPassword = passwords.get("newPassword");
+
+            userService.changeUserPassword(authentication.getName(), oldPassword, newPassword);
+            return ResponseEntity.ok("Sifreniz basariyla degistirildi.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")

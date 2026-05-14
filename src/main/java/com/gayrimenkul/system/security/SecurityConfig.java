@@ -62,6 +62,8 @@ public class SecurityConfig {
                 // Public endpoints
                 .requestMatchers(
                     "/",
+                    "/login.html",
+                    "/reset-password.html",
                     "/*.html",
                     "/*.js",
                     "/*.css",
@@ -71,6 +73,9 @@ public class SecurityConfig {
                     "/*.gif",
                     "/*.svg",
                     "/*.ico",
+                    "/css/**",
+                    "/js/**",
+                    "/images/**",
                     "/uploads/**",
                     "/favicon.ico",
                     "/error"

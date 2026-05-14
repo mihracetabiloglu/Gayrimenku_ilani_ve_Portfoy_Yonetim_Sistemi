@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
@@ -695,6 +695,8 @@ select{
 
 <script src="auth-session.js"></script>
 <script>
+const API_BASE_URL = "http://localhost:8080/api";
+
 function isAdminUser(user) {
   function roleKey(role) {
     return String(role?.name || role?.authority || role)
@@ -831,10 +833,10 @@ async function submitForgot() {
   btn.textContent = 'Gönderiliyor...';
 
   try {
-    // Canlıdaki adrese göre dinamik URL oluşturur
-    const baseUrl = window.location.origin; 
-    const res = await fetch(`${baseUrl}/api/users/password-reset-request?email=${encodeURIComponent(email)}`, {
-      method: 'POST'
+    const res = await fetch(`${API_BASE_URL}/users/password-reset-request`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
     });
 
     if (res.ok) {
@@ -921,13 +923,6 @@ function openForgot() {
 
 function closeForgot() {
   document.getElementById('forgotModal').classList.remove('open');
-}
-
-function submitForgot() {
-  const email = document.getElementById('forgotEmail').value;
-  if (!email || !/\S+@\S+\.\S+/.test(email)) { showToast('Geçerli bir e-posta adresi girin.'); return; }
-  document.getElementById('forgotForm').style.display = 'none';
-  document.getElementById('forgotSuccess').style.display = 'block';
 }
 
 document.getElementById('forgotModal').addEventListener('click', function(e) {
